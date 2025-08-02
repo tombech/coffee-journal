@@ -17,6 +17,15 @@ ENV REACT_APP_API_URL=/api
 # Copy source code
 COPY src/coffeejournal/frontend/ ./
 
+# Set build-time environment variables for version info
+ARG GIT_SHA=unknown
+ARG BUILD_DATE=unknown
+ARG VERSION=0.1.0
+
+ENV REACT_APP_GIT_SHA=${GIT_SHA}
+ENV REACT_APP_BUILD_DATE=${BUILD_DATE}
+ENV REACT_APP_VERSION=${VERSION}
+
 # Build the application
 RUN npm run build
 

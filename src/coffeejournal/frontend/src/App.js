@@ -25,6 +25,7 @@ import ScaleManager from './components/lookup/ScaleManager';
 import DecafMethodManager from './components/lookup/DecafMethodManager';
 import LookupDetail from './components/LookupDetail';
 import { ToastProvider } from './components/Toast';
+import VersionFooter from './components/VersionFooter';
 import './App.css'; // Import the CSS file
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
               <Route path="/decaf-methods/:id" element={<LookupDetail type="decaf_methods" singularName="Decaf Method" pluralName="Decaf Methods" />} />
             </Routes>
           </main>
+          <VersionFooter />
         </div>
       </Router>
     </ToastProvider>
