@@ -276,7 +276,6 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
     }
   };
 
-  if (error) return <p className="error-message">{error}</p>;
   if (initialLoading) return <div>Loading...</div>;
 
   return (
@@ -286,6 +285,19 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
       data-testid="brew-session-form"
     >
       <h4>{isEditMode ? 'Edit Brew Session' : 'Add New Brew Session'}</h4>
+      
+      {error && (
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#f8d7da',
+          border: '1px solid #f5c6cb',
+          borderRadius: '4px',
+          color: '#721c24',
+          marginBottom: '16px'
+        }}>
+          {error}
+        </div>
+      )}
       
       {/* Basic Info Section */}
       <div style={{
@@ -391,19 +403,45 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="recipe" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Recipe
           </label>
-          <input
-            type="text"
-            id="recipe"
-            name="recipe"
-            value={formData.recipe}
-            onChange={handleChange}
-            list="recipesOptions"
-            data-list="recipesOptions"
-            onFocus={handleMobileDatalistFocus}
-            onBlur={handleMobileDatalistBlur}
-            placeholder="e.g., James Hoffmann V60"
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              type="text"
+              id="recipe"
+              name="recipe"
+              value={formData.recipe}
+              onChange={handleChange}
+              list="recipesOptions"
+              data-list="recipesOptions"
+              onFocus={handleMobileDatalistFocus}
+              onBlur={handleMobileDatalistBlur}
+              placeholder="e.g., James Hoffmann V60"
+              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
+            />
+            {formData.recipe && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, recipe: '' }))}
+                style={{
+                  position: 'absolute',
+                  right: '4px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  padding: '0',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear recipe"
+              >
+                ×
+              </button>
+            )}
+          </div>
           <datalist id="recipesOptions">
             {recipes.map((r) => (
               <option key={r.id} value={r.name} />
@@ -415,19 +453,45 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="grinder" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Grinder
           </label>
-          <input
-            type="text"
-            id="grinder"
-            name="grinder"
-            value={formData.grinder}
-            onChange={handleChange}
-            list="grindersOptions"
-            data-list="grindersOptions"
-            onFocus={handleMobileDatalistFocus}
-            onBlur={handleMobileDatalistBlur}
-            placeholder="e.g., Comandante, Wilfa Uniform"
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              type="text"
+              id="grinder"
+              name="grinder"
+              value={formData.grinder}
+              onChange={handleChange}
+              list="grindersOptions"
+              data-list="grindersOptions"
+              onFocus={handleMobileDatalistFocus}
+              onBlur={handleMobileDatalistBlur}
+              placeholder="e.g., Comandante, Wilfa Uniform"
+              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
+            />
+            {formData.grinder && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, grinder: '' }))}
+                style={{
+                  position: 'absolute',
+                  right: '4px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  padding: '0',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear grinder"
+              >
+                ×
+              </button>
+            )}
+          </div>
           <datalist id="grindersOptions">
             {grinders.map((g) => (
               <option key={g.id} value={g.name} />
@@ -454,19 +518,45 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="filter" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Filter
           </label>
-          <input
-            type="text"
-            id="filter"
-            name="filter"
-            value={formData.filter}
-            onChange={handleChange}
-            list="filtersOptions"
-            data-list="filtersOptions"
-            onFocus={handleMobileDatalistFocus}
-            onBlur={handleMobileDatalistBlur}
-            placeholder="e.g., Hario V60, Paper Filter"
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              type="text"
+              id="filter"
+              name="filter"
+              value={formData.filter}
+              onChange={handleChange}
+              list="filtersOptions"
+              data-list="filtersOptions"
+              onFocus={handleMobileDatalistFocus}
+              onBlur={handleMobileDatalistBlur}
+              placeholder="e.g., Hario V60, Paper Filter"
+              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
+            />
+            {formData.filter && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, filter: '' }))}
+                style={{
+                  position: 'absolute',
+                  right: '4px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  padding: '0',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear filter"
+              >
+                ×
+              </button>
+            )}
+          </div>
           <datalist id="filtersOptions">
             {filters.map((f) => (
               <option key={f.id} value={f.name} />
@@ -478,19 +568,45 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="kettle" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Kettle
           </label>
-          <input
-            type="text"
-            id="kettle"
-            name="kettle"
-            value={formData.kettle}
-            onChange={handleChange}
-            list="kettlesOptions"
-            data-list="kettlesOptions"
-            onFocus={handleMobileDatalistFocus}
-            onBlur={handleMobileDatalistBlur}
-            placeholder="e.g., Hario Buono, Fellow Stagg"
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              type="text"
+              id="kettle"
+              name="kettle"
+              value={formData.kettle}
+              onChange={handleChange}
+              list="kettlesOptions"
+              data-list="kettlesOptions"
+              onFocus={handleMobileDatalistFocus}
+              onBlur={handleMobileDatalistBlur}
+              placeholder="e.g., Hario Buono, Fellow Stagg"
+              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
+            />
+            {formData.kettle && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, kettle: '' }))}
+                style={{
+                  position: 'absolute',
+                  right: '4px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  padding: '0',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear kettle"
+              >
+                ×
+              </button>
+            )}
+          </div>
           <datalist id="kettlesOptions">
             {kettles.map((k) => (
               <option key={k.id} value={k.name} />
@@ -502,19 +618,45 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="scale" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Scale
           </label>
-          <input
-            type="text"
-            id="scale"
-            name="scale"
-            value={formData.scale}
-            onChange={handleChange}
-            list="scalesOptions"
-            data-list="scalesOptions"
-            onFocus={handleMobileDatalistFocus}
-            onBlur={handleMobileDatalistBlur}
-            placeholder="e.g., Acaia Pearl, Hario V60"
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              type="text"
+              id="scale"
+              name="scale"
+              value={formData.scale}
+              onChange={handleChange}
+              list="scalesOptions"
+              data-list="scalesOptions"
+              onFocus={handleMobileDatalistFocus}
+              onBlur={handleMobileDatalistBlur}
+              placeholder="e.g., Acaia Pearl, Hario V60"
+              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
+            />
+            {formData.scale && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, scale: '' }))}
+                style={{
+                  position: 'absolute',
+                  right: '4px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  padding: '0',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Clear scale"
+              >
+                ×
+              </button>
+            )}
+          </div>
           <datalist id="scalesOptions">
             {scales.map((s) => (
               <option key={s.id} value={s.name} />
@@ -613,133 +755,138 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
 
       {/* Tasting Notes Section */}
       <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+        gap: '8px',
+        marginBottom: '16px',
         padding: '12px',
         backgroundColor: '#fff3cd',
-        borderRadius: '4px',
-        marginBottom: '16px'
+        borderRadius: '4px'
       }}>
-        <h5 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>Tasting Notes (1-10)</h5>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
-          gap: '8px',
-          marginBottom: '12px'
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="sweetness" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Sweetness
-            </label>
-            <input 
-              type="number" 
-              id="sweetness"
-              name="sweetness" 
-              value={formData.sweetness} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="acidity" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Acidity
-            </label>
-            <input 
-              type="number" 
-              id="acidity"
-              name="acidity" 
-              value={formData.acidity} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="bitterness" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Bitterness
-            </label>
-            <input 
-              type="number" 
-              id="bitterness"
-              name="bitterness" 
-              value={formData.bitterness} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="body" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Body
-            </label>
-            <input 
-              type="number" 
-              id="body"
-              name="body" 
-              value={formData.body} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="aroma" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Aroma
-            </label>
-            <input 
-              type="number" 
-              id="aroma"
-              name="aroma" 
-              value={formData.aroma} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="flavor_profile_match" style={{ fontSize: '11px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-              Profile Match
-            </label>
-            <input 
-              type="number" 
-              id="flavor_profile_match"
-              name="flavor_profile_match" 
-              value={formData.flavor_profile_match} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '50px', fontSize: '12px', padding: '2px', textAlign: 'center' }}
-            />
-          </div>
+        <div>
+          <label htmlFor="sweetness" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Sweetness
+          </label>
+          <input 
+            type="number" 
+            id="sweetness"
+            name="sweetness" 
+            value={formData.sweetness} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
         </div>
         
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center' }}>
-            <label htmlFor="score" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
-              Overall Score (1-10)
-            </label>
-            <input 
-              type="number" 
-              id="score"
-              name="score" 
-              value={formData.score} 
-              onChange={handleChange} 
-              min="0" 
-              max="10" 
-              step="0.5"
-              style={{ width: '60px', fontSize: '14px', padding: '4px', textAlign: 'center' }}
-            />
-          </div>
+        <div>
+          <label htmlFor="acidity" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Acidity
+          </label>
+          <input 
+            type="number" 
+            id="acidity"
+            name="acidity" 
+            value={formData.acidity} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="bitterness" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Bitterness
+          </label>
+          <input 
+            type="number" 
+            id="bitterness"
+            name="bitterness" 
+            value={formData.bitterness} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="body" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Body
+          </label>
+          <input 
+            type="number" 
+            id="body"
+            name="body" 
+            value={formData.body} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="aroma" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Aroma
+          </label>
+          <input 
+            type="number" 
+            id="aroma"
+            name="aroma" 
+            value={formData.aroma} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="flavor_profile_match" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Profile Match
+          </label>
+          <input 
+            type="number" 
+            id="flavor_profile_match"
+            name="flavor_profile_match" 
+            value={formData.flavor_profile_match} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="score" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Overall Score
+          </label>
+          <input 
+            type="number" 
+            id="score"
+            name="score" 
+            value={formData.score} 
+            onChange={handleChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
         </div>
       </div>
 
