@@ -65,8 +65,10 @@ function GrinderDetail() {
   };
 
   const handleEdit = () => {
-    // Navigate back to the settings page for grinder where editing can occur
-    navigate('/settings/grinders');
+    // Navigate back to the settings page with the grinder to edit
+    navigate('/settings/grinders', { 
+      state: { editItem: grinder }
+    });
   };
 
   const handleDelete = async () => {
@@ -116,31 +118,6 @@ function GrinderDetail() {
     setUsageInfo(null);
   };
 
-  const handleUpdateManualGround = async () => {
-    const amount = prompt("Enter additional manually ground amount (grams):");
-    if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
-      try {
-        const newTotal = (grinder.manually_ground_grams || 0) + parseFloat(amount);
-        const response = await apiFetch(`/grinders/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...grinder,
-            manually_ground_grams: newTotal
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        addToast(`Added ${amount}g manually ground coffee`, 'success');
-        fetchGrinderDetail(); // Refresh data
-      } catch (err) {
-        setError("Failed to update manual ground amount: " + err.message);
-      }
-    }
-  };
 
   if (loading) return <p className="loading-message">Loading grinder details...</p>;
   if (error) return <p className="error-message">{error}</p>;
@@ -149,19 +126,6 @@ function GrinderDetail() {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <button 
-          onClick={() => navigate(-1)}
-          style={{ 
-            padding: '6px 8px', 
-            border: 'none', 
-            background: 'none', 
-            cursor: 'pointer', 
-            fontSize: '16px'
-          }}
-          title="Go Back"
-        >
-          ← Back
-        </button>
         <h2 id="item-title" data-testid="item-title" style={{ margin: 0, marginRight: 'auto' }}>{grinder.name}</h2>
         <button 
           onClick={handleEdit}
@@ -203,12 +167,28 @@ function GrinderDetail() {
             background: 'none', 
             cursor: 'pointer', 
             fontSize: '16px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            marginRight: '5px'
           }}
           title="Manage Grinders"
+          aria-label="Manage Grinders"
         >
-          ⚙️
+          {ICONS.SETTINGS}
         </Link>
+        <button 
+          onClick={() => navigate(-1)}
+          style={{ 
+            padding: '6px 8px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px'
+          }}
+          title="Go Back"
+          aria-label="Go Back"
+        >
+          {ICONS.BACK}
+        </button>
       </div>
 
       {/* Grinder Details */}
@@ -259,21 +239,6 @@ function GrinderDetail() {
         <div style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#e8f5e8', borderRadius: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
             <h3 style={{ margin: 0 }}>📊 Usage Statistics</h3>
-            <button 
-              onClick={handleUpdateManualGround}
-              style={{ 
-                padding: '6px 12px', 
-                backgroundColor: '#6d4c41', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '4px', 
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-              title="Add manually ground coffee (for seasoning)"
-            >
-              + Manual Ground
-            </button>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>

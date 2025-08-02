@@ -69,8 +69,10 @@ function RoasterDetail() {
   };
 
   const handleEdit = () => {
-    // Navigate back to the settings page for this roaster where editing can occur
-    navigate('/settings/roasters');
+    // Navigate back to the settings page with the roaster to edit
+    navigate('/settings/roasters', { 
+      state: { editItem: roaster }
+    });
   };
 
   const handleDelete = async () => {
@@ -136,19 +138,6 @@ function RoasterDetail() {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <button 
-          onClick={() => navigate(-1)}
-          style={{ 
-            padding: '6px 8px', 
-            border: 'none', 
-            background: 'none', 
-            cursor: 'pointer', 
-            fontSize: '16px'
-          }}
-          title="Go Back"
-        >
-          ← Back
-        </button>
         <h2 id="item-title" data-testid="item-title" style={{ margin: 0, marginRight: 'auto' }}>{roaster.name}</h2>
         <button 
           onClick={handleEdit}
@@ -190,12 +179,28 @@ function RoasterDetail() {
             background: 'none', 
             cursor: 'pointer', 
             fontSize: '16px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            marginRight: '5px'
           }}
           title="Manage Roasters"
+          aria-label="Manage Roasters"
         >
-          ⚙️
+          {ICONS.SETTINGS}
         </Link>
+        <button 
+          onClick={() => navigate(-1)}
+          style={{ 
+            padding: '6px 8px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px'
+          }}
+          title="Go Back"
+          aria-label="Go Back"
+        >
+          {ICONS.BACK}
+        </button>
       </div>
 
       {/* Roaster Details */}
