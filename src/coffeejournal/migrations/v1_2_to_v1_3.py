@@ -17,23 +17,63 @@ from typing import Dict, List, Any
 
 def migrate_1_2_to_1_3(data_dir: str):
     """Migrate data from v1.2 to v1.3"""
-    print("Starting migration from v1.2 to v1.3...")
-    
-    # Load required data
-    products = load_json_file(data_dir, 'products.json')
-    countries = load_json_file(data_dir, 'countries.json')
-    
-    # Extract unique regions from products
-    regions, region_name_to_id = extract_regions_from_products(products, countries)
-    
-    # Create regions.json file
-    create_regions_file(data_dir, regions)
-    
-    # Update products to use region_id arrays and remove denormalized fields
-    update_products_schema_compliance(data_dir, products, region_name_to_id)
-    
-    print("Migration v1.2 -> v1.3 completed successfully")
-    print("New features: separate regions table, schema compliance, inline region management")
+    try:
+        print("Starting migration from v1.2 to v1.3...")
+        
+        # Check if migration has already been applied
+        regions_file = os.path.join(data_dir, 'regions.json')
+        if os.path.exists(regions_file):
+            print("Migration already applied: regions.json exists")
+            # Ensure schema compliance by checking product structure
+            products = load_json_file(data_dir, 'products.json')
+            needs_product_update = False
+            for product in products:
+                if any(field in product for field in ['roaster', 'bean_type', 'country', 'region', 'decaf_method']):
+                    needs_product_update = True
+                    break
+            
+            if needs_product_update:
+                print("Cleaning up remaining denormalized fields...")
+                update_products_schema_compliance(data_dir, products, {})
+            else:
+                print("Products already schema compliant")
+            return
+        
+        # Load required data
+        products = load_json_file(data_dir, 'products.json')
+        countries = load_json_file(data_dir, 'countries.json')
+        
+        # Extract unique regions from products
+        regions, region_name_to_id = extract_regions_from_products(products, countries)
+        
+        # Create regions.json file
+        create_regions_file(data_dir, regions)
+        
+        # Update products to use region_id arrays and remove denormalized fields
+        update_products_schema_compliance(data_dir, products, region_name_to_id)
+        
+        print("Migration v1.2 -> v1.3 completed successfully")
+        print("New features: separate regions table, schema compliance, inline region management")
+        
+    except Exception as e:
+        print(f"Migration v1.2 -> v1.3 failed with error: {e}")
+        print("This might indicate mixed data states or corrupted data files")
+        
+        # Try to provide helpful debugging info
+        try:
+            products = load_json_file(data_dir, 'products.json')
+            print(f"Found {len(products)} products in data")
+            if products:
+                sample_product = products[0]
+                print(f"Sample product keys: {list(sample_product.keys())}")
+                if 'region' in sample_product:
+                    print(f"Region field type: {type(sample_product['region'])}")
+                if 'region_id' in sample_product:
+                    print(f"Region_id field type: {type(sample_product['region_id'])}")
+        except Exception as debug_err:
+            print(f"Could not load debug info: {debug_err}")
+        
+        raise e
 
 
 def load_json_file(data_dir: str, filename: str) -> Any:
@@ -69,12 +109,17 @@ def extract_regions_from_products(products: List[Dict], countries: List[Dict]) -
         country_name = product.get('country')
         country_id = product.get('country_id')
         
-        if region_name and region_name.strip() and country_id:
-            if region_name not in region_data:
-                region_data[region_name] = {
-                    'country_id': country_id,
-                    'country_name': country_name
-                }
+        # Handle both string and list region data (mixed migration state)
+        if region_name:
+            if isinstance(region_name, str) and region_name.strip() and country_id:
+                if region_name not in region_data:
+                    region_data[region_name] = {
+                        'country_id': country_id,
+                        'country_name': country_name
+                    }
+            elif isinstance(region_name, list):
+                # Data is already in v1.3 format, skip this product
+                continue
     
     # Convert to regions list with auto-incrementing IDs
     regions = []
@@ -118,7 +163,7 @@ def update_products_schema_compliance(data_dir: str, products: List[Dict], regio
         region_name = product.get('region')
         
         # Handle region_id conversion
-        if region_name and region_name.strip() and region_name in region_name_to_id:
+        if region_name and isinstance(region_name, str) and region_name.strip() and region_name in region_name_to_id:
             product['region_id'] = [region_name_to_id[region_name]]
             updated_count += 1
         else:
