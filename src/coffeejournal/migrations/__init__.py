@@ -111,11 +111,28 @@ class MigrationManager:
         """Create a backup of current data before migration."""
         import shutil
         import datetime
+        import os
         
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_dir = f"{self.data_dir}_backup_{timestamp}"
+        # Create backup directory inside data directory to avoid permission issues
+        backup_dir = os.path.join(self.data_dir, f"backup_{timestamp}")
         
-        shutil.copytree(self.data_dir, backup_dir)
+        # Create backup directory if it doesn't exist
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        # Copy all files except existing backup directories
+        for item in os.listdir(self.data_dir):
+            if item.startswith('backup_'):
+                continue  # Skip existing backup directories
+            
+            src_path = os.path.join(self.data_dir, item)
+            dst_path = os.path.join(backup_dir, item)
+            
+            if os.path.isfile(src_path):
+                shutil.copy2(src_path, dst_path)
+            elif os.path.isdir(src_path):
+                shutil.copytree(src_path, dst_path)
+        
         logger.info(f"Data backed up to {backup_dir}")
         return backup_dir
 
@@ -154,6 +171,11 @@ def _load_migration_modules(manager: MigrationManager):
         from . import v1_1_to_v1_2
         if "1.1->1.2" not in manager.migrations:
             manager.migrations["1.1->1.2"] = v1_1_to_v1_2.migrate_1_1_to_1_2
+        
+        # Load v1_2_to_v1_3 migration
+        from . import v1_2_to_v1_3
+        if "1.2->1.3" not in manager.migrations:
+            manager.migrations["1.2->1.3"] = v1_2_to_v1_3.migrate_1_2_to_1_3
             
     except ImportError as e:
         logger.warning(f"Could not load migration module: {e}")
