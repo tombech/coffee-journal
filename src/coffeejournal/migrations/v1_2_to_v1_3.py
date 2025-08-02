@@ -98,16 +98,25 @@ def save_json_file(data_dir: str, filename: str, data: Any) -> None:
 
 def extract_regions_from_products(products: List[Dict], countries: List[Dict]) -> tuple[List[Dict], Dict[str, int]]:
     """Extract unique region data from products and create mapping."""
+    print(f"Extracting regions from {len(products)} products...")
+    
     # Create country name to ID mapping
     country_map = {country['name']: country['id'] for country in countries}
+    print(f"Found {len(countries)} countries in mapping")
     
     # Collect unique regions with their country associations
     region_data = {}  # region_name -> {country_id, country_name}
+    products_with_regions = 0
+    products_already_v13 = 0
+    products_without_regions = 0
     
-    for product in products:
+    for i, product in enumerate(products):
         region_name = product.get('region')
         country_name = product.get('country')
         country_id = product.get('country_id')
+        
+        if i < 3:  # Log first 3 products for debugging
+            print(f"Product {i+1}: region={region_name} (type: {type(region_name)}), country_id={country_id}")
         
         # Handle both string and list region data (mixed migration state)
         if region_name:
@@ -117,9 +126,19 @@ def extract_regions_from_products(products: List[Dict], countries: List[Dict]) -
                         'country_id': country_id,
                         'country_name': country_name
                     }
+                    products_with_regions += 1
             elif isinstance(region_name, list):
                 # Data is already in v1.3 format, skip this product
+                products_already_v13 += 1
                 continue
+        else:
+            products_without_regions += 1
+    
+    print(f"Region extraction summary:")
+    print(f"  Products with string regions (v1.2): {products_with_regions}")
+    print(f"  Products with array regions (v1.3): {products_already_v13}")
+    print(f"  Products without regions: {products_without_regions}")
+    print(f"  Unique regions found: {len(region_data)}")
     
     # Convert to regions list with auto-incrementing IDs
     regions = []

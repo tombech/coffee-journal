@@ -47,20 +47,28 @@ def create_app(test_config=None):
     
     # Check and run migrations if needed
     try:
+        app.logger.info(f"Initializing migration system for data directory: {app.config['DATA_DIR']}")
         migration_manager = get_migration_manager(app.config['DATA_DIR'])
+        
+        current_schema = migration_manager.get_current_schema_version()
+        current_data = migration_manager.get_data_version()
+        app.logger.info(f"Schema version: {current_schema}, Data version: {current_data}")
+        
         if migration_manager.needs_migration():
-            app.logger.info("Data migration required, creating backup and running migrations...")
+            app.logger.info(f"Data migration required: {current_data} -> {current_schema}")
+            app.logger.info("Creating backup and running migrations...")
             backup_dir = migration_manager.backup_data()
             app.logger.info(f"Data backed up to: {backup_dir}")
             
             if migration_manager.run_migrations():
                 app.logger.info("Data migration completed successfully")
             else:
-                app.logger.error("Data migration failed - check logs")
+                app.logger.error("Data migration failed - check logs for details")
         else:
-            app.logger.info("Data schema is up to date")
+            app.logger.info("Data schema is up to date - no migration needed")
     except Exception as e:
         app.logger.error(f"Error during migration check: {str(e)}")
+        app.logger.error("Application will continue with potentially outdated data schema")
     
     # Register blueprints
     from .main import api

@@ -84,27 +84,36 @@ class MigrationManager:
         data_version = self.get_data_version()
         schema_version = self.get_current_schema_version()
         
-        logger.info(f"Migrating data from version {data_version} to {schema_version}")
+        logger.info(f"Starting migration process:")
+        logger.info(f"  Current data version: {data_version}")
+        logger.info(f"  Target schema version: {schema_version}")
+        logger.info(f"  Data directory: {self.data_dir}")
         
         migration_path = self.get_migration_path(data_version, schema_version)
         
         if not migration_path:
             logger.error(f"No migration path available from {data_version} to {schema_version}")
+            logger.error(f"Available migrations: {list(self.migrations.keys())}")
             return False
         
+        logger.info(f"Migration path: {' -> '.join(migration_path)}")
+        
         try:
-            for migration_key in migration_path:
-                logger.info(f"Running migration: {migration_key}")
+            for i, migration_key in enumerate(migration_path, 1):
+                logger.info(f"Running migration {i}/{len(migration_path)}: {migration_key}")
                 migration_func = self.migrations[migration_key]
                 migration_func(self.data_dir)
+                logger.info(f"Migration {migration_key} completed successfully")
             
             # Update data version
+            logger.info(f"Updating data version from {data_version} to {schema_version}")
             self.set_data_version(schema_version)
-            logger.info(f"Migration completed successfully to version {schema_version}")
+            logger.info(f"Migration process completed successfully to version {schema_version}")
             return True
             
         except Exception as e:
-            logger.error(f"Migration failed: {str(e)}")
+            logger.error(f"Migration failed during {migration_key}: {str(e)}")
+            logger.error(f"Migration stack trace:", exc_info=True)
             return False
     
     def backup_data(self) -> str:
@@ -113,16 +122,22 @@ class MigrationManager:
         import datetime
         import os
         
+        logger.info("Creating data backup before migration...")
+        
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         # Create backup directory inside data directory to avoid permission issues
         backup_dir = os.path.join(self.data_dir, f"backup_{timestamp}")
+        
+        logger.info(f"Backup directory: {backup_dir}")
         
         # Create backup directory if it doesn't exist
         os.makedirs(backup_dir, exist_ok=True)
         
         # Copy all files except existing backup directories
+        files_backed_up = 0
         for item in os.listdir(self.data_dir):
             if item.startswith('backup_'):
+                logger.debug(f"Skipping existing backup directory: {item}")
                 continue  # Skip existing backup directories
             
             src_path = os.path.join(self.data_dir, item)
@@ -130,10 +145,14 @@ class MigrationManager:
             
             if os.path.isfile(src_path):
                 shutil.copy2(src_path, dst_path)
+                files_backed_up += 1
+                logger.debug(f"Backed up file: {item}")
             elif os.path.isdir(src_path):
                 shutil.copytree(src_path, dst_path)
+                files_backed_up += 1
+                logger.debug(f"Backed up directory: {item}")
         
-        logger.info(f"Data backed up to {backup_dir}")
+        logger.info(f"Data backup completed: {files_backed_up} items backed up to {backup_dir}")
         return backup_dir
 
 
