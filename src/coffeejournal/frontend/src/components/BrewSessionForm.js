@@ -6,7 +6,7 @@ import { ICONS } from '../config/icons';
 import DateTimeInput from './DateTimeInput';
 import TimeInput from './TimeInput';
 
-function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialData = null }) {
+function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialData = null, onCancel }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const { addToast } = useToast();
@@ -906,27 +906,49 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
         />
       </div>
 
-      <button 
-        type="button" 
-        disabled={loading}
-        data-testid="submit-brew-session"
-        aria-label={loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
-        style={{ 
-          padding: '10px 15px', 
-          border: 'none', 
-          background: 'none', 
-          cursor: loading ? 'default' : 'pointer', 
-          fontSize: '20px',
-          opacity: loading ? 0.5 : 1
-        }}
-        title={loading ? 'Saving...' : (isEditMode ? 'Update Session' : 'Log Session')}
-        onClick={async (e) => {
-          e.preventDefault();
-          await handleSubmit(e);
-        }}
-      >
-        {loading ? ICONS.LOADING : ICONS.SAVE}
-      </button>
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <button 
+          type="button" 
+          disabled={loading}
+          data-testid="submit-brew-session"
+          aria-label={loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
+          style={{ 
+            padding: '10px 15px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: loading ? 'default' : 'pointer', 
+            fontSize: '20px',
+            opacity: loading ? 0.5 : 1
+          }}
+          title={loading ? 'Saving...' : (isEditMode ? 'Update Session' : 'Log Session')}
+          onClick={async (e) => {
+            e.preventDefault();
+            await handleSubmit(e);
+          }}
+        >
+          {loading ? ICONS.LOADING : ICONS.SAVE}
+        </button>
+        
+        {onCancel && (
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            disabled={loading}
+            style={{ 
+              padding: '10px 15px', 
+              border: 'none', 
+              background: 'none', 
+              cursor: loading ? 'default' : 'pointer', 
+              fontSize: '20px',
+              opacity: loading ? 0.5 : 1
+            }}
+            title="Cancel"
+            aria-label="Cancel"
+          >
+            {ICONS.CANCEL}
+          </button>
+        )}
+      </div>
     </form>
   );
 }
