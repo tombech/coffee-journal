@@ -778,7 +778,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           await handleSubmit(e);
         }}
       >
-{loading ? `${ICONS.LOADING} Saving...` : (isEditMode ? `${ICONS.SAVE} Update` : `${ICONS.SAVE} Create`)}
+        {loading ? ICONS.LOADING : ICONS.SAVE}
       </button>
     </form>
   );

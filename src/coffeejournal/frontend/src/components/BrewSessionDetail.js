@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import StarRating from './StarRating';
+import { ICONS } from '../config/icons';
 
 function BrewSessionDetail() {
   const { id } = useParams();
@@ -96,19 +97,6 @@ function BrewSessionDetail() {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <button 
-          onClick={() => navigate(-1)}
-          style={{ 
-            padding: '6px 8px', 
-            border: 'none', 
-            background: 'none', 
-            cursor: 'pointer', 
-            fontSize: '16px'
-          }}
-          title="Go Back"
-        >
-          ← Back
-        </button>
         <h2 style={{ margin: 0, marginRight: 'auto' }}>
           Brew Session - {formatDateTime(session.timestamp)}
         </h2>
@@ -120,41 +108,57 @@ function BrewSessionDetail() {
             background: 'none', 
             cursor: 'pointer', 
             fontSize: '16px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            marginRight: '5px'
           }}
           title="All Brew Sessions"
+          aria-label="All Brew Sessions"
         >
           📋
         </Link>
         <button
           onClick={() => navigate(`/brew-sessions/${id}/edit`)}
+          title="Edit brew session"
           aria-label="Edit brew session"
           style={{
-            padding: '6px 12px',
-            backgroundColor: '#007bff',
-            color: 'white',
+            padding: '6px 8px',
+            background: 'none',
             border: 'none',
-            borderRadius: '4px',
             cursor: 'pointer',
-            marginLeft: '8px'
+            fontSize: '16px',
+            marginRight: '5px'
           }}
         >
-          Edit
+          {ICONS.EDIT}
         </button>
         <button
           onClick={handleDelete}
+          title="Delete brew session"
           aria-label="Delete brew session"
           style={{
-            padding: '6px 12px',
-            backgroundColor: '#dc3545',
-            color: 'white',
+            padding: '6px 8px',
+            background: 'none',
             border: 'none',
-            borderRadius: '4px',
             cursor: 'pointer',
-            marginLeft: '8px'
+            fontSize: '16px',
+            marginRight: '5px'
           }}
         >
-          Delete
+          {ICONS.DELETE}
+        </button>
+        <button 
+          onClick={() => navigate(-1)}
+          style={{ 
+            padding: '6px 8px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px'
+          }}
+          title="Go Back"
+          aria-label="Go Back"
+        >
+          {ICONS.BACK}
         </button>
       </div>
 

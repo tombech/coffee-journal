@@ -421,9 +421,11 @@ function ProductDetail() {
         </button>
       </div>
 
-      {/* Product Details */}
-      <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 15px', alignItems: 'start' }}>
+      {/* Top Section: Product Details and Flavor Profile */}
+      <div style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {/* Product Details - Left Side */}
+        <div style={{ padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 15px', alignItems: 'start' }}>
           <strong>Roaster:</strong>
           <span>{product.roaster?.name || '-'}</span>
           
@@ -480,6 +482,27 @@ function ProductDetail() {
               <img src={product.image_url} alt={product.bean_type?.map(bt => bt.name).join(', ') || 'Coffee'} style={{ maxWidth: '200px', borderRadius: '8px' }} />
             ) : '-'}
           </span>
+          </div>
+        </div>
+
+        {/* Flavor Profile - Right Side */}
+        <div style={{ 
+          padding: '20px', 
+          borderRadius: '8px',
+          border: '1px solid #ddd',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          backgroundColor: '#f8f9fa'
+        }}>
+          <h3 style={{ margin: '0 0 15px 0', textAlign: 'center' }}>📊 Flavor Profile</h3>
+          {getTastingAverages() ? (
+            <RadarChart data={getTastingAverages()} />
+          ) : (
+            <p style={{ color: '#666', fontStyle: 'italic', textAlign: 'center' }}>
+              No tasting notes recorded yet
+            </p>
+          )}
         </div>
       </div>
 
@@ -489,18 +512,15 @@ function ProductDetail() {
           <button 
             onClick={() => setShowBatchForm(!showBatchForm)}
             data-testid={showBatchForm ? 'cancel-batch-form' : 'add-batch-button'}
-            aria-label={showBatchForm ? 'Cancel adding batch' : 'Add new batch'}
-            style={{ 
-              padding: '8px 16px',
-              backgroundColor: showBatchForm ? '#6c757d' : '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
             title={showBatchForm ? 'Cancel' : 'Add New Batch'}
             aria-label={showBatchForm ? 'Cancel' : 'Add New Batch'}
+            style={{ 
+              padding: '6px 8px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
           >
             {showBatchForm ? ICONS.CANCEL : ICONS.CREATE}
           </button>
@@ -519,11 +539,24 @@ function ProductDetail() {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h4 style={{ margin: 0 }}>
-                    <Link to={`/batches/${batch.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {ICONS.VIEW} Batch #{batch.id}
-                    </Link>
+                    Batch #{batch.id}
                   </h4>
                   <div>
+                    <button 
+                      onClick={() => navigate(`/batches/${batch.id}`)}
+                      style={{ 
+                        padding: '4px 6px', 
+                        border: 'none', 
+                        background: 'none', 
+                        cursor: 'pointer', 
+                        fontSize: '14px',
+                        marginRight: '5px'
+                      }}
+                      title="View Batch"
+                      aria-label="View Batch"
+                    >
+                      {ICONS.VIEW}
+                    </button>
                     <button 
                       onClick={() => handleEditBatch(batch)}
                       style={{ 
@@ -637,25 +670,6 @@ function ProductDetail() {
             onEdit={() => {}}
           />
 
-          {/* Radar Chart */}
-          <div style={{ 
-            padding: '20px', 
-            borderRadius: '8px',
-            border: '1px solid #ddd',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: '30px'
-          }}>
-            <h3 style={{ margin: '0 0 15px 0', textAlign: 'center' }}>📊 Flavor Profile</h3>
-            {getTastingAverages() ? (
-              <RadarChart data={getTastingAverages()} />
-            ) : (
-              <p style={{ color: '#666', fontStyle: 'italic', textAlign: 'center' }}>
-                No tasting notes recorded yet
-              </p>
-            )}
-          </div>
         </div>
       )}
 

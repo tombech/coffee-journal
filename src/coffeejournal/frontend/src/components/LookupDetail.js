@@ -64,43 +64,12 @@ function LookupDetail({ type, singularName, pluralName }) {
     }
   };
 
-  const handleSetDefault = async () => {
-    try {
-      const response = await apiFetch(`/${type}/${id}/set_default`, {
-        method: 'POST'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      addToast(`Set as default ${singularName.toLowerCase()}`, 'success');
-      fetchItemDetail(); // Refresh data
-    } catch (err) {
-      setError(`Failed to set default: ${err.message}`);
-    }
-  };
-
-  const handleClearDefault = async () => {
-    try {
-      const response = await apiFetch(`/${type}/${id}/clear_default`, {
-        method: 'POST'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      addToast(`Cleared default ${singularName.toLowerCase()}`, 'success');
-      fetchItemDetail(); // Refresh data
-    } catch (err) {
-      setError(`Failed to clear default: ${err.message}`);
-    }
-  };
 
   const handleEdit = () => {
-    // Navigate back to the settings page for this type where editing can occur
-    navigate(`/settings/${type.replace('_', '-')}`);
+    // Navigate back to the settings page with the item to edit
+    navigate(`/settings/${type.replace('_', '-')}`, { 
+      state: { editItem: item }
+    });
   };
 
   const handleDelete = async () => {
@@ -157,19 +126,6 @@ function LookupDetail({ type, singularName, pluralName }) {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <button 
-          onClick={() => navigate(-1)}
-          style={{ 
-            padding: '6px 8px', 
-            border: 'none', 
-            background: 'none', 
-            cursor: 'pointer', 
-            fontSize: '16px'
-          }}
-          title="Go Back"
-        >
-{ICONS.BACK}
-        </button>
         <h2 
           id="item-title"
           data-testid="item-title"
@@ -239,12 +195,28 @@ function LookupDetail({ type, singularName, pluralName }) {
             background: 'none', 
             cursor: 'pointer', 
             fontSize: '16px',
-            textDecoration: 'none'
+            textDecoration: 'none',
+            marginRight: '5px'
           }}
           title={`Manage ${pluralName}`}
+          aria-label={`Manage ${pluralName}`}
         >
 {ICONS.SETTINGS}
         </Link>
+        <button 
+          onClick={() => navigate(-1)}
+          style={{ 
+            padding: '6px 8px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: 'pointer', 
+            fontSize: '16px'
+          }}
+          title="Go Back"
+          aria-label="Go Back"
+        >
+          {ICONS.BACK}
+        </button>
       </div>
 
       {/* Item Details */}
@@ -284,40 +256,7 @@ function LookupDetail({ type, singularName, pluralName }) {
           )}
           
           <strong>Default:</strong>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span>{item.is_default ? 'Yes' : 'No'}</span>
-            {item.is_default ? (
-              <button 
-                onClick={handleClearDefault}
-                style={{ 
-                  padding: '4px 8px', 
-                  backgroundColor: '#f44336', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '4px', 
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Clear Default
-              </button>
-            ) : (
-              <button 
-                onClick={handleSetDefault}
-                style={{ 
-                  padding: '4px 8px', 
-                  backgroundColor: '#1976d2', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '4px', 
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Set as Default
-              </button>
-            )}
-          </div>
+          <span>{item.is_default ? 'Yes' : 'No'}</span>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import { apiFetch } from '../config';
 import StarRating from './StarRating';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import BatchForm from './BatchForm';
+import { ICONS } from '../config/icons';
 
 function BatchDetail() {
   const { id } = useParams();
@@ -44,28 +45,6 @@ function BatchDetail() {
     }
   };
 
-  const handleToggleActive = async () => {
-    try {
-      const response = await apiFetch(`/batches/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...batch,
-          is_active: !batch.is_active
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const updatedBatch = await response.json();
-      setBatch(updatedBatch);
-      addToast(`Batch ${updatedBatch.is_active ? 'activated' : 'deactivated'}`, 'success');
-    } catch (err) {
-      setError("Failed to update batch status: " + err.message);
-    }
-  };
 
   const handleDelete = async () => {
     try {
@@ -121,6 +100,9 @@ function BatchDetail() {
     return (
       <div>
         <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <h2 style={{ margin: 0, marginRight: 'auto' }}>
+            Edit Batch #{batch.id}
+          </h2>
           <button 
             onClick={() => navigate(`/batches/${id}`)}
             style={{ 
@@ -131,12 +113,10 @@ function BatchDetail() {
               fontSize: '16px'
             }}
             title="Cancel Edit"
+            aria-label="Cancel Edit"
           >
-            ← Back
+            {ICONS.BACK}
           </button>
-          <h2 style={{ margin: 0, marginRight: 'auto' }}>
-            Edit Batch #{batch.id}
-          </h2>
         </div>
         
         <BatchForm 
@@ -151,6 +131,40 @@ function BatchDetail() {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <h2 style={{ margin: 0, marginRight: 'auto' }}>
+          Batch #{batch.id} Details
+          {!batch.is_active && <span style={{ marginLeft: '8px', fontSize: '14px', color: '#f44336' }}>⚠️ Inactive</span>}
+        </h2>
+        <button
+          onClick={() => navigate(`/batches/${id}/edit`)}
+          title="Edit batch"
+          aria-label="Edit batch"
+          style={{
+            padding: '6px 8px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '16px',
+            marginRight: '5px'
+          }}
+        >
+          {ICONS.EDIT}
+        </button>
+        <button
+          onClick={() => setShowDeleteModal(true)}
+          title="Delete batch"
+          aria-label="Delete batch"
+          style={{
+            padding: '6px 8px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '16px',
+            marginRight: '5px'
+          }}
+        >
+          {ICONS.DELETE}
+        </button>
         <button 
           onClick={() => navigate(-1)}
           style={{ 
@@ -161,59 +175,9 @@ function BatchDetail() {
             fontSize: '16px'
           }}
           title="Go Back"
+          aria-label="Go Back"
         >
-          ← Back
-        </button>
-        <h2 style={{ margin: 0, marginRight: 'auto' }}>
-          Batch #{batch.id} Details
-          {!batch.is_active && <span style={{ marginLeft: '8px', fontSize: '14px', color: '#f44336' }}>⚠️ Inactive</span>}
-        </h2>
-        {product && (
-          <Link 
-            to={`/products/${product.id}`}
-            style={{ 
-              padding: '6px 8px', 
-              border: 'none', 
-              background: 'none', 
-              cursor: 'pointer', 
-              fontSize: '16px',
-              textDecoration: 'none'
-            }}
-            aria-label="View Product"
-            title="View Product"
-          >
-            View Product
-          </Link>
-        )}
-        <button
-          onClick={() => navigate(`/batches/${id}/edit`)}
-          aria-label="Edit batch"
-          style={{
-            padding: '6px 12px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginLeft: '8px'
-          }}
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => setShowDeleteModal(true)}
-          aria-label="Delete batch"
-          style={{
-            padding: '6px 12px',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginLeft: '8px'
-          }}
-        >
-          Delete
+          {ICONS.BACK}
         </button>
       </div>
 
@@ -266,25 +230,9 @@ function BatchDetail() {
           </span>
           
           <strong>Status:</strong>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ color: batch.is_active ? '#4caf50' : '#f44336' }}>
-              {batch.is_active ? 'Active' : 'Inactive'}
-            </span>
-            <button 
-              onClick={handleToggleActive}
-              style={{ 
-                padding: '4px 8px', 
-                backgroundColor: batch.is_active ? '#f44336' : '#4caf50', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '4px', 
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              {batch.is_active ? 'Deactivate' : 'Activate'}
-            </button>
-          </div>
+          <span style={{ color: batch.is_active ? '#4caf50' : '#f44336' }}>
+            {batch.is_active ? 'Active' : 'Inactive'}
+          </span>
           
           {batch.notes && (
             <>
@@ -362,18 +310,18 @@ function BatchDetail() {
           <h3 style={{ margin: 0 }}>🔥 Brew Sessions</h3>
           <button
             onClick={() => navigate(`/brew-sessions/new?batch_id=${id}`)}
+            title="Add Brew Session"
             aria-label="Add Brew Session"
             data-testid="add-brew-session-btn"
             style={{
-              padding: '8px 16px',
-              backgroundColor: '#28a745',
-              color: 'white',
+              padding: '6px 8px',
+              background: 'none',
               border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              fontSize: '16px'
             }}
           >
-            Add Brew Session
+            {ICONS.CREATE}
           </button>
         </div>
         

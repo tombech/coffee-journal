@@ -12,7 +12,8 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
     price: '',
     seller: '',
     notes: '',
-    rating: ''
+    rating: '',
+    is_active: true
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +36,8 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
         price: initialData.price || '',
         seller: initialData.seller || '',
         notes: initialData.notes || '',
-        rating: initialData.rating || ''
+        rating: initialData.rating || '',
+        is_active: initialData.is_active !== undefined ? initialData.is_active : true
       });
     }
   }, [initialData]);
@@ -250,6 +252,20 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
             </div>
           </label>
         </div>
+
+        {isEditMode && (
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                type="checkbox"
+                name="is_active"
+                checked={formData.is_active}
+                onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
+              />
+              <span>Active batch (visible for new brew sessions)</span>
+            </label>
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <button 

@@ -3,7 +3,7 @@ import { API_BASE_URL, apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import { useToast } from './Toast';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function LookupManager({ 
   title, 
@@ -15,6 +15,7 @@ function LookupManager({
 }) {
   const { addToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,6 +56,16 @@ function LookupManager({
   useEffect(() => {
     fetchItems();
   }, [apiEndpoint]);
+
+  useEffect(() => {
+    // Check if we navigated here with an item to edit
+    if (location.state?.editItem) {
+      setEditingItem(location.state.editItem);
+      setShowForm(true);
+      // Clear the state to prevent re-editing on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (editingItem) {
@@ -389,7 +400,12 @@ function LookupManager({
           </thead>
           <tbody>
             {items.map(item => (
-              <tr key={item.id} data-testid={`item-row-${item.id}`}>
+              <tr 
+                key={item.id} 
+                data-testid={`item-row-${item.id}`}
+                onClick={() => viewRoute && handleView(item)}
+                style={{ cursor: viewRoute ? 'pointer' : 'default' }}
+              >
                 <td style={{ 
                   padding: '8px', 
                   border: '1px solid #ddd',
@@ -435,7 +451,10 @@ function LookupManager({
                 <td style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {viewRoute && (
                     <button 
-                      onClick={() => handleView(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleView(item);
+                      }}
                       title={`View ${item.name}`}
                       aria-label={`View ${item.name}`}
                       data-testid={`view-${item.name.toLowerCase().replace(/\s+/g, '-')}-btn`}
@@ -452,7 +471,10 @@ function LookupManager({
                     </button>
                   )}
                   <button 
-                    onClick={() => handleEdit(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(item);
+                    }}
                     title={`Edit ${item.name}`}
                     aria-label={`Edit ${item.name}`}
                     data-testid={`edit-${item.name.toLowerCase().replace(/\s+/g, '-')}-btn`}
@@ -468,7 +490,10 @@ function LookupManager({
 {ICONS.EDIT}
                   </button>
                   <button 
-                    onClick={() => handleDelete(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(item);
+                    }}
                     title={`Delete ${item.name}`}
                     aria-label={`Delete ${item.name}`}
                     data-testid={`delete-${item.name.toLowerCase().replace(/\s+/g, '-')}-btn`}

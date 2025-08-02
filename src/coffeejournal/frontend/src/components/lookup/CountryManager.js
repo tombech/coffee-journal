@@ -373,7 +373,12 @@ function CountryManager() {
               </tr>
             ) : (
               countries.map((country) => (
-                <tr key={country.id} data-testid={`country-row-${country.id}`}>
+                <tr 
+                  key={country.id} 
+                  data-testid={`country-row-${country.id}`}
+                  onClick={() => navigate(`/countries/${country.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <td style={{ 
                     padding: '8px', 
                     border: '1px solid #ddd',
@@ -426,7 +431,10 @@ function CountryManager() {
                   </td>
                   <td style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'center' }}>
                     <button
-                      onClick={() => navigate(`/countries/${country.id}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/countries/${country.id}`);
+                      }}
                       title={`View ${country.name}`}
                       aria-label={`View ${country.name}`}
                       data-testid={`view-${country.name.toLowerCase().replace(/\s+/g, '-')}-btn`}
@@ -442,7 +450,10 @@ function CountryManager() {
                       {ICONS.VIEW}
                     </button>
                     <button
-                      onClick={() => navigate(`/settings/countries/${country.id}/edit`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/settings/countries/${country.id}/edit`);
+                      }}
                       title={`Edit ${country.name} and manage regions`}
                       aria-label={`Edit ${country.name} and manage regions`}
                       data-testid={`edit-${country.name.toLowerCase().replace(/\s+/g, '-')}-btn`}
@@ -458,7 +469,10 @@ function CountryManager() {
                       {ICONS.EDIT}
                     </button>
                     <button
-                      onClick={() => handleDelete(country)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(country);
+                      }}
                       title={`Delete ${country.name}`}
                       aria-label={`Delete ${country.name}`}
                       data-testid={`delete-${country.name.toLowerCase().replace(/\s+/g, '-')}-btn`}

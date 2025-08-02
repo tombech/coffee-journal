@@ -8,7 +8,8 @@ function GrinderManager() {
   const customFields = [
     { name: 'brand', label: 'Brand', type: 'text', required: false },
     { name: 'grinder_type', label: 'Grinder Type (Burr/Blade)', type: 'text', required: false },
-    { name: 'burr_material', label: 'Burr Material', type: 'text', required: false }
+    { name: 'burr_material', label: 'Burr Material', type: 'text', required: false },
+    { name: 'manually_ground_grams', label: 'Manual Ground Amount (grams)', type: 'number', required: false }
   ];
 
   return (
