@@ -1,7 +1,7 @@
 services:
   # Flask Backend API
   backend:
-    image: ghcr.io/tombech/coffeejournal/coffeejournal-backend:latest
+    image: ghcr.io/tombech/coffee-journal/coffeejournal-backend:latest
     container_name: coffeejournal-backend
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
@@ -24,7 +24,7 @@ services:
 
   # React Frontend
   frontend:
-    image: ghcr.io/tombech/coffeejournal/coffeejournal-frontend:latest
+    image: ghcr.io/tombech/coffee-journal/coffeejournal-frontend:latest
     container_name: coffeejournal-frontend
     ports:
       - "3000:80"
