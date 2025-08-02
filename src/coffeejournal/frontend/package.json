@@ -1,0 +1,88 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@headlessui/react": "^2.2.4",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.5.2",
+    "react": "^19.1.0",
+    "react-datepicker": "^8.4.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^6.30.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "test:watch": "react-app-rewired test --watch",
+    "test:ci": "react-app-rewired test --coverage --watchAll=false --ci",
+    "test:coverage": "react-app-rewired test --coverage --watchAll=false",
+    "test:coverage:open": "npm run test:coverage && open coverage/lcov-report/index.html",
+    "test:improved": "react-app-rewired test --testPathPattern=improved.test.js --watchAll=false",
+    "test:debug": "react-app-rewired --inspect-brk test --runInBand --no-cache",
+    "test:e2e": "playwright test --config=playwright.config.grouped.js",
+    "test:e2e:ui": "playwright test --config=playwright.config.grouped.js --ui",
+    "test:e2e:debug": "playwright test --config=playwright.config.grouped.js --debug",
+    "test:e2e:headed": "playwright test --config=playwright.config.grouped.js --headed",
+    "test:e2e:original": "playwright test",
+    "test:e2e:single": "playwright test --project=e2e --workers=1",
+    "test:e2e:grouped": "node scripts/test-grouped-simple.js",
+    "test:e2e:managers": "node scripts/test-grouped-simple.js --group=basic-managers",
+    "test:e2e:views": "node scripts/test-grouped-simple.js --group=lookup-views",
+    "test:e2e:countries": "node scripts/test-grouped-simple.js --group=country-management", 
+    "test:e2e:roasters": "node scripts/test-grouped-simple.js --group=roaster-management",
+    "test:e2e:products": "node scripts/test-grouped-simple.js --group=product-management",
+    "test:e2e:batches": "node scripts/test-grouped-simple.js --group=batch-management",
+    "test:e2e:sessions": "node scripts/test-grouped-simple.js --group=brew-session-management",
+    "test:e2e:duplicates": "node scripts/test-grouped-simple.js --group=session-duplication",
+    "test:e2e:ui": "node scripts/test-grouped-simple.js --group=ui-ux",
+    "test:e2e:forms": "node scripts/test-grouped-simple.js --group=forms-inputs",
+    "test:e2e:debug": "node scripts/test-grouped-simple.js --group=debug-utilities",
+    "test:all": "npm run test:ci && npm run test:e2e:grouped",
+    "test:manager-components": "react-app-rewired test --testPathPattern=Manager --watchAll=false"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(dom-accessibility-api)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "playwright",
+      "__tests__/playwright",
+      "\\.playwright\\."
+    ]
+  },
+  "devDependencies": {
+    "@happy-dom/jest-environment": "^18.0.1",
+    "@playwright/test": "^1.54.1",
+    "identity-obj-proxy": "^3.0.0",
+    "react-app-rewired": "^2.2.1"
+  }
+}

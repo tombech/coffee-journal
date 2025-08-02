@@ -1,0 +1,237 @@
+/* Basic Reset */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f4f4;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.App {
+  padding: 15px;
+  box-sizing: border-box;
+  min-width: fit-content;
+}
+
+/* Header and Navigation */
+.App-header {
+  background-color: #6d4c41; /* Dark coffee brown */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-align: left;
+  min-width: fit-content;
+}
+
+.App-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+}
+
+.App-header nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.App-header nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.App-header nav a:hover {
+  background-color: #a1887f; /* Lighter brown */
+}
+
+/* Main Content Area */
+.App-main {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: fit-content;
+}
+
+/* Common Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fcfcfc;
+}
+
+form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block; /* Ensures label takes full width for flexbox alignment */
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="url"],
+form input[type="date"],
+form textarea,
+form select {
+  width: calc(100% - 20px); /* Account for padding */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+form input[type="submit"],
+form button {
+  background: none;
+  color: inherit;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  align-self: flex-start; /* Align button to start of container */
+}
+
+form button:hover,
+form input[type="submit"]:hover {
+  opacity: 0.7;
+}
+
+/* List Styling */
+.list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.card {
+  background-color: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.product-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 15px;
+  min-height: 160px;
+}
+
+.product-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+}
+
+.product-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card h3 {
+  color: #6d4c41;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.card .actions button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.card .actions button:hover {
+  opacity: 0.7;
+}
+
+.card .actions button.delete {
+    background: none;
+    color: inherit;
+}
+
+.card .actions button.delete:hover {
+    opacity: 0.7;
+}
+
+.link-button {
+  display: inline-block;
+  background: none;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.link-button:hover {
+  opacity: 0.7;
+}
+
+.detail-section {
+    margin-top: 20px;
+    border-top: 1px dashed #ccc;
+    padding-top: 20px;
+}
+
+.brew-session-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Utility classes */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.loading-message {
+    color: #6d4c41;
+    font-style: italic;
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Standard V60"
+  },
+  {
+    "id": 2,
+    "name": "Tetsu Kasuya 4:6 Method"
+  },
+  {
+    "id": 3,
+    "name": "Classic French Press"
+  },
+  {
+    "id": 4,
+    "name": "Inverted AeroPress"
+  },
+  {
+    "id": 5,
+    "name": "Chemex Classic"
+  }
+]

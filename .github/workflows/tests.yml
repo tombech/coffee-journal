@@ -1,0 +1,85 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      
+    - name: Install dependencies
+      run: uv sync
+      
+    - name: Run backend tests
+      run: uv run pytest tests/ -v
+      env:
+        PYTHONPATH: src
+
+  frontend-e2e-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: src/coffeejournal/frontend/package-lock.json
+        
+    - name: Install frontend dependencies
+      working-directory: src/coffeejournal/frontend
+      run: npm ci
+      
+    - name: Install Playwright browsers
+      working-directory: src/coffeejournal/frontend  
+      run: npx playwright install --with-deps
+      
+    - name: Set up Python for backend
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      
+    - name: Install backend dependencies
+      run: uv sync
+      
+    - name: Run E2E tests (Grouped Configuration)
+      working-directory: src/coffeejournal/frontend
+      run: npm run test:e2e
+      env:
+        PYTHONPATH: ../../
+        CI: true
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-results
+        path: src/coffeejournal/frontend/test-results/
+        
+    - name: Upload Playwright report  
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: src/coffeejournal/frontend/playwright-report/

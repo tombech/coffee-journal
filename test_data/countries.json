@@ -1,0 +1,291 @@
+[
+  {
+    "id": 1,
+    "name": "Ethiopia",
+    "short_form": "",
+    "description": "Updated description managers_can_edit_existing_country",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "created_at": "2025-07-31T20:19:16.412755+00:00",
+    "updated_at": "2025-08-01T16:59:23.186116+00:00"
+  },
+  {
+    "id": 2,
+    "name": "Colombia"
+  },
+  {
+    "id": 3,
+    "name": "Brazil"
+  },
+  {
+    "id": 4,
+    "name": "Guatemala"
+  },
+  {
+    "id": 5,
+    "name": "Kenya"
+  },
+  {
+    "id": 6,
+    "name": "Jamaica"
+  },
+  {
+    "id": 7,
+    "name": "Hawaii"
+  },
+  {
+    "id": 8,
+    "name": "Costa Rica"
+  },
+  {
+    "id": 9,
+    "name": "Peru"
+  },
+  {
+    "id": 10,
+    "name": "Indonesia"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 11,
+    "created_at": "2025-07-31T20:19:16.129066+00:00",
+    "updated_at": "2025-07-31T20:19:16.129066+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 12,
+    "created_at": "2025-08-01T12:28:52.602367+00:00",
+    "updated_at": "2025-08-01T12:28:52.602367+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 13,
+    "created_at": "2025-08-01T13:46:58.548505+00:00",
+    "updated_at": "2025-08-01T13:46:58.548505+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 14,
+    "created_at": "2025-08-01T13:52:53.734644+00:00",
+    "updated_at": "2025-08-01T13:52:53.734644+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 15,
+    "created_at": "2025-08-01T13:57:25.307158+00:00",
+    "updated_at": "2025-08-01T13:57:25.307158+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 16,
+    "created_at": "2025-08-01T13:59:30.284525+00:00",
+    "updated_at": "2025-08-01T13:59:30.284525+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 17,
+    "created_at": "2025-08-01T14:01:43.497927+00:00",
+    "updated_at": "2025-08-01T14:01:43.497927+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 18,
+    "created_at": "2025-08-01T14:05:00.571367+00:00",
+    "updated_at": "2025-08-01T14:05:00.571367+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 19,
+    "created_at": "2025-08-01T14:13:48.783931+00:00",
+    "updated_at": "2025-08-01T14:13:48.783931+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 20,
+    "created_at": "2025-08-01T15:09:21.917238+00:00",
+    "updated_at": "2025-08-01T15:09:21.917238+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 21,
+    "created_at": "2025-08-01T15:14:48.720556+00:00",
+    "updated_at": "2025-08-01T15:14:48.720556+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 22,
+    "created_at": "2025-08-01T15:14:57.724077+00:00",
+    "updated_at": "2025-08-01T15:14:57.724077+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 23,
+    "created_at": "2025-08-01T15:15:37.927320+00:00",
+    "updated_at": "2025-08-01T15:15:37.927320+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 24,
+    "created_at": "2025-08-01T15:15:37.940094+00:00",
+    "updated_at": "2025-08-01T15:15:37.940094+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 25,
+    "created_at": "2025-08-01T15:15:37.942388+00:00",
+    "updated_at": "2025-08-01T15:15:37.942388+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 26,
+    "created_at": "2025-08-01T15:22:40.118949+00:00",
+    "updated_at": "2025-08-01T15:22:40.118949+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 27,
+    "created_at": "2025-08-01T15:30:24.348602+00:00",
+    "updated_at": "2025-08-01T15:30:24.348602+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 28,
+    "created_at": "2025-08-01T16:42:52.963817+00:00",
+    "updated_at": "2025-08-01T16:42:52.963817+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 29,
+    "created_at": "2025-08-01T16:52:04.938079+00:00",
+    "updated_at": "2025-08-01T16:52:04.938079+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 30,
+    "created_at": "2025-08-01T16:54:09.718167+00:00",
+    "updated_at": "2025-08-01T16:54:09.718167+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 31,
+    "created_at": "2025-08-01T16:54:44.133335+00:00",
+    "updated_at": "2025-08-01T16:54:44.133335+00:00"
+  },
+  {
+    "name": "Test Country managers_can_add_new_country",
+    "short_form": "",
+    "description": "Test country created by test",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "id": 32,
+    "created_at": "2025-08-01T16:59:22.657088+00:00",
+    "updated_at": "2025-08-01T16:59:22.657088+00:00"
+  }
+]

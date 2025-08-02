@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Delete Modal</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // Simplified version of DeleteConfirmationModal to test the usage text display
+        function DeleteConfirmationModal({ 
+          isOpen, 
+          onClose, 
+          item, 
+          itemType, 
+          apiEndpoint, 
+          usageInfo, 
+          onDeleteConfirmed,
+          availableReplacements = []
+        }) {
+          const [action, setAction] = React.useState('cancel');
+          const [replacementId, setReplacementId] = React.useState('');
+          const [processing, setProcessing] = React.useState(false);
+
+          if (!isOpen || !item) return null;
+
+          const getUsageDescription = () => {
+            if (!usageInfo || !usageInfo.usage_type) return '';
+            
+            const usageType = usageInfo.usage_type;
+            const count = usageInfo.usage_count;
+            
+            // Map usage types to user-friendly descriptions
+            const typeDescriptions = {
+              'products': count === 1 ? 'product' : 'products',
+              'brew_sessions': count === 1 ? 'brew session' : 'brew sessions'
+            };
+            
+            return typeDescriptions[usageType] || usageType.replace('_', ' ');
+          };
+
+          const modalStyle = {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          };
+
+          const contentStyle = {
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '8px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          };
+
+          return React.createElement('div', { style: modalStyle }, 
+            React.createElement('div', { style: contentStyle },
+              React.createElement('h3', null, `Delete ${itemType}: "${item.name}"`),
+              
+              usageInfo.in_use ? 
+                React.createElement('div', null,
+                  React.createElement('p', { 
+                    style: { color: '#d63384', fontWeight: 'bold' } 
+                  }, `⚠️ This ${itemType.toLowerCase()} is currently being used in ${usageInfo.usage_count} ${getUsageDescription()}.`),
+                  React.createElement('p', null, 'Choose how to proceed:'),
+                  React.createElement('div', { style: { margin: '20px 0' } },
+                    React.createElement('label', { style: { display: 'block', marginBottom: '10px' } },
+                      React.createElement('input', {
+                        type: 'radio',
+                        name: 'action',
+                        value: 'cancel',
+                        checked: action === 'cancel',
+                        onChange: (e) => setAction(e.target.value),
+                        style: { marginRight: '8px' }
+                      }),
+                      'Cancel deletion'
+                    )
+                  )
+                ) :
+                React.createElement('p', null, `Are you sure you want to delete "${item.name}"? This action cannot be undone.`),
+              
+              React.createElement('div', { style: { marginTop: '30px', textAlign: 'right' } },
+                React.createElement('button', {
+                  onClick: onClose,
+                  style: {
+                    marginRight: '10px',
+                    padding: '8px 16px',
+                    border: '1px solid #ccc',
+                    backgroundColor: '#f8f9fa',
+                    cursor: 'pointer'
+                  }
+                }, 'Cancel'),
+                React.createElement('button', {
+                  onClick: () => console.log('Delete clicked'),
+                  style: {
+                    padding: '8px 16px',
+                    border: 'none',
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    cursor: 'pointer'
+                  }
+                }, 'Delete')
+              )
+            )
+          );
+        }
+
+        function App() {
+          const [showModal, setShowModal] = React.useState(false);
+          
+          // Test data matching the actual API response
+          const testItem = { id: 1, name: "Blue Bottle Coffee" };
+          const testUsageInfo = {
+            in_use: true,
+            usage_count: 1,
+            usage_type: "products"
+          };
+
+          return React.createElement('div', { style: { padding: '20px' } },
+            React.createElement('h1', null, 'Delete Modal Test'),
+            React.createElement('button', {
+              onClick: () => setShowModal(true),
+              style: {
+                padding: '10px 20px',
+                backgroundColor: '#dc3545',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }
+            }, 'Test Delete Modal'),
+            
+            React.createElement(DeleteConfirmationModal, {
+              isOpen: showModal,
+              onClose: () => setShowModal(false),
+              item: testItem,
+              itemType: "Roaster",
+              apiEndpoint: "roasters",
+              usageInfo: testUsageInfo,
+              onDeleteConfirmed: () => console.log('Delete confirmed'),
+              availableReplacements: []
+            })
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>

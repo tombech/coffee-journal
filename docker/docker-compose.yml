@@ -1,0 +1,50 @@
+services:
+  # Flask Backend API
+  backend:
+    image: ghcr.io/tombech/coffeejournal/coffeejournal-backend:latest
+    container_name: coffeejournal-backend
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      # Mount data directory to local filesystem for persistence
+      - ./data:/app/data
+    environment:
+      - FLASK_APP=coffeejournal
+      - FLASK_ENV=production
+      - PYTHONPATH=/app/src
+      - DATA_DIR=/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/roasters')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - coffeejournal-network
+
+  # React Frontend
+  frontend:
+    image: ghcr.io/tombech/coffeejournal/coffeejournal-frontend:latest
+    container_name: coffeejournal-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - coffeejournal-network
+
+volumes:
+  # Named volume for database persistence (optional, using bind mount instead)
+  coffee_data:
+    driver: local
+
+networks:
+  coffeejournal-network:
+    driver: bridge

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.3",
+  "created_date": "2025-07-23",
+  "description": "Separated regions into own lookup table with country_id parent reference, fixed lookup update_references bugs",
+  "entities": {
+    "products": {
+      "version": "1.3",
+      "fields": ["id", "roaster_id", "bean_type_id", "country_id", "region_id", "product_name", "roast_type", "description", "url", "decaf", "created_at", "updated_at"],
+      "foreign_keys": ["roaster_id", "bean_type_id", "country_id", "region_id"],
+      "calculated_fields": [],
+      "audit_fields": ["created_at", "updated_at"]
+    },
+    "batches": {
+      "version": "1.3", 
+      "fields": ["id", "product_id", "roast_date", "purchase_date", "amount_grams", "price", "seller", "notes", "rating", "is_active", "created_at", "updated_at"],
+      "foreign_keys": ["product_id"],
+      "calculated_fields": ["price_per_cup"],
+      "audit_fields": ["created_at", "updated_at"],
+      "status_fields": ["is_active"]
+    },
+    "brew_sessions": {
+      "version": "1.3",
+      "fields": ["id", "timestamp", "product_batch_id", "product_id", "brew_method_id", "recipe_id", "grinder_id", "filter_id", "kettle_id", "scale_id", "amount_coffee_grams", "amount_water_grams", "brew_temperature_c", "bloom_time_seconds", "brew_time_seconds", "sweetness", "acidity", "bitterness", "body", "aroma", "flavor_profile_match", "notes", "score", "grinder_setting", "created_at", "updated_at"],
+      "foreign_keys": ["product_batch_id", "product_id", "brew_method_id", "recipe_id", "grinder_id", "filter_id", "kettle_id", "scale_id"],
+      "calculated_fields": ["brew_ratio"],
+      "audit_fields": ["created_at", "updated_at"]
+    },
+    "lookups": {
+      "version": "1.3",
+      "tables": ["roasters", "bean_types", "countries", "regions", "brew_methods", "recipes", "decaf_methods", "grinders", "filters", "kettles", "scales"],
+      "standard_fields": ["id", "name", "short_form", "description", "notes", "url", "image_url", "icon", "is_default", "created_at", "updated_at"],
+      "audit_fields": ["created_at", "updated_at"],
+      "system_fields": ["is_default"],
+      "note": "All fields except id and name are optional. Only one item per table can have is_default=true. Regions table includes additional country_id field as foreign key reference."
+    }
+  },
+  "validation_rules": {
+    "tasting_scores": "Integer range 1-10",
+    "ids": "Auto-incrementing integers starting from 1",
+    "dates": "ISO format strings (YYYY-MM-DD)",
+    "timestamps": "ISO datetime strings (YYYY-MM-DDTHH:mm:ss)",
+    "arrays": "Used for multi-valued foreign keys (bean_type_id, region_id)",
+    "audit_timestamps": "Automatically managed ISO datetime strings in UTC",
+    "boolean_flags": "is_active defaults to true, is_default defaults to false",
+    "default_constraints": "Only one lookup item per table can have is_default=true"
+  },
+  "new_in_v1.2": {
+    "audit_system": "All entities automatically track created_at and updated_at timestamps",
+    "batch_lifecycle": "Added is_active flag to mark depleted or inactive batches",
+    "favorites_system": "Added is_default flag to lookup tables with automatic enforcement",
+    "api_endpoints": "Added /default, /set_default, /clear_default endpoints for all lookup types"
+  },
+  "new_in_v1.3": {
+    "regions_separation": "Regions moved to separate lookup table with country_id parent reference",
+    "lookup_bug_fixes": "Fixed country and decaf_method update_references to use ID fields instead of names",
+    "region_management": "Added inline region management in country edit pages",
+    "api_endpoints": "Added /api/regions/* and /api/countries/{id}/regions endpoints"
+  }
+}
