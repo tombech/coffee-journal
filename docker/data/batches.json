@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "product_id": 1,
+    "roast_date": "2024-12-15",
+    "purchase_date": "2024-12-20",
+    "amount_grams": 340.0,
+    "price": 18.5,
+    "seller": "Blue Bottle Coffee Store",
+    "notes": "Fresh roast, excellent quality"
+  },
+  {
+    "id": 2,
+    "product_id": 2,
+    "roast_date": "2024-12-18",
+    "purchase_date": "2024-12-22",
+    "amount_grams": 454.0,
+    "price": 22.0,
+    "seller": "Intelligentsia Online",
+    "notes": "Holiday special blend"
+  },
+  {
+    "id": 3,
+    "product_id": 3,
+    "roast_date": "2024-12-10",
+    "purchase_date": "2024-12-25",
+    "amount_grams": 340.0,
+    "price": 19.75,
+    "seller": "Local Coffee Shop",
+    "notes": "Christmas gift"
+  },
+  {
+    "id": 4,
+    "product_id": 4,
+    "roast_date": "2024-12-20",
+    "purchase_date": "2024-12-28",
+    "amount_grams": 250.0,
+    "price": 16.0,
+    "seller": "Counter Culture Direct",
+    "notes": "Limited edition batch"
+  },
+  {
+    "id": 5,
+    "product_id": 1,
+    "roast_date": "2025-01-02",
+    "purchase_date": "2025-01-05",
+    "amount_grams": 340.0,
+    "price": 18.5,
+    "seller": "Blue Bottle Coffee Store",
+    "notes": "New year restock"
+  },
+  {
+    "id": 6,
+    "product_id": 5,
+    "roast_date": "2024-12-28",
+    "purchase_date": "2025-01-03",
+    "amount_grams": 454.0,
+    "price": 24.0,
+    "seller": "La Colombe Cafe",
+    "notes": "Dark roast for espresso"
+  }
+]

@@ -66,10 +66,15 @@ function LookupDetail({ type, singularName, pluralName }) {
 
 
   const handleEdit = () => {
-    // Navigate back to the settings page with the item to edit
-    navigate(`/settings/${type.replace('_', '-')}`, { 
-      state: { editItem: item }
-    });
+    // Countries have a dedicated edit page for managing regions
+    if (type === 'countries') {
+      navigate(`/settings/countries/${id}/edit`);
+    } else {
+      // Other lookups go back to the settings page with the item to edit
+      navigate(`/settings/${type.replace('_', '-')}`, { 
+        state: { editItem: item }
+      });
+    }
   };
 
   const handleDelete = async () => {
@@ -269,7 +274,12 @@ function LookupDetail({ type, singularName, pluralName }) {
             <div>
               <div style={{ textAlign: 'center', marginBottom: '15px' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{usageData.usage_count}</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>Times Used in Brew Sessions</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                  Times Used in {usageData.usage_type === 'products' ? 'Products' : 
+                                 usageData.usage_type === 'brew_sessions' ? 'Brew Sessions' : 
+                                 usageData.usage_type ? usageData.usage_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 
+                                 'Records'}
+                </div>
               </div>
               
               {usageData.recent_usage && usageData.recent_usage.length > 0 && (
@@ -287,7 +297,12 @@ function LookupDetail({ type, singularName, pluralName }) {
             </div>
           ) : (
             <p style={{ color: '#666', fontStyle: 'italic' }}>
-              This {singularName.toLowerCase()} has not been used in any brew sessions yet.
+              This {singularName.toLowerCase()} has not been used in any {
+                usageData?.usage_type === 'products' ? 'products' : 
+                usageData?.usage_type === 'brew_sessions' ? 'brew sessions' : 
+                usageData?.usage_type ? usageData.usage_type.replace('_', ' ') : 
+                'records'
+              } yet.
             </p>
           )}
         </div>

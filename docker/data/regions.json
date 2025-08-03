@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Yirgacheffe",
+    "country_id": 1
+  },
+  {
+    "id": 2,
+    "name": "Huila",
+    "country_id": 2
+  },
+  {
+    "id": 3,
+    "name": "Cerrado",
+    "country_id": 3
+  },
+  {
+    "id": 4,
+    "name": "Antigua",
+    "country_id": 4
+  },
+  {
+    "id": 5,
+    "name": "Nyeri",
+    "country_id": 5
+  }
+]

@@ -6,6 +6,7 @@ import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
 import HeadlessAutocomplete from './HeadlessAutocomplete';
 import HeadlessMultiAutocomplete from './HeadlessMultiAutocomplete';
+import RegionMultiAutocomplete from './RegionMultiAutocomplete';
 
 function ProductForm() {
   const { id } = useParams(); // Get ID from URL for edit mode
@@ -206,15 +207,22 @@ function ProductForm() {
             id="country-input"
             lookupType="countries"
             value={formData.country}
-            onChange={(value) => setFormData(prev => ({ ...prev, country: value }))}
+            onChange={(value) => {
+              setFormData(prev => ({ 
+                ...prev, 
+                country: value,
+                // Clear regions when country changes
+                region: prev.country.id !== value.id ? [] : prev.region
+              }));
+            }}
             placeholder="Start typing to search countries..."
             aria-label="Country"
           />
         </label>
         <label>
           Region:
-          <HeadlessMultiAutocomplete
-            lookupType="countries"
+          <RegionMultiAutocomplete
+            countryId={formData.country.id}
             value={formData.region}
             onChange={(value) => setFormData(prev => ({ ...prev, region: value }))}
             placeholder="Start typing to search regions..."

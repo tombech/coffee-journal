@@ -54,7 +54,7 @@ function CountryManager() {
     const counts = {};
     for (const country of countries) {
       try {
-        const regionsResponse = await apiFetch(`/regions?country_id=${country.id}`);
+        const regionsResponse = await apiFetch(`/countries/${country.id}/regions`);
         if (regionsResponse.ok) {
           const regions = await regionsResponse.json();
           counts[country.id] = Array.isArray(regions) ? regions.length : 0;

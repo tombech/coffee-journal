@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "V60"
+  },
+  {
+    "id": 2,
+    "name": "Chemex"
+  },
+  {
+    "id": 3,
+    "name": "French Press"
+  },
+  {
+    "id": 4,
+    "name": "AeroPress"
+  },
+  {
+    "id": 5,
+    "name": "Espresso"
+  },
+  {
+    "id": 6,
+    "name": "Pour Over"
+  },
+  {
+    "id": 7,
+    "name": "Cold Brew"
+  },
+  {
+    "id": 8,
+    "name": "Moka Pot"
+  }
+]
