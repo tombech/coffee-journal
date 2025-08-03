@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import BatchForm from './BatchForm';
 import BrewSessionTable from './BrewSessionTable';
+import BrewRecommendations from './BrewRecommendations';
 import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
@@ -606,6 +607,13 @@ function ProductDetail() {
           />
         )}
       </div>
+
+      {/* Brew Recommendations */}
+      <BrewRecommendations 
+        productId={id} 
+        selectedMethod={null}
+        onApplyRecommendation={() => {}} // No-op for ProductDetail view
+      />
 
       {/* Brew Analytics Section */}
       {brewSessions.length > 0 && (

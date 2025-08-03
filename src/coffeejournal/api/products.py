@@ -13,6 +13,7 @@ This module contains all endpoints related to coffee products:
 
 from flask import Blueprint, jsonify, request
 from ..repositories.factory import get_repository_factory
+from ..services.brew_recommendations import BrewRecommendationService
 from .utils import (
     enrich_product_with_lookups, 
     resolve_lookup_field, 
@@ -300,3 +301,32 @@ def handle_product_batches(product_id):
         batch['price_per_cup'] = calculate_price_per_cup(batch.get('price'), batch.get('amount_grams'))
         
         return jsonify(batch), 201
+
+
+@products_bp.route('/products/<int:product_id>/brew_recommendations', methods=['GET'])
+def get_brew_recommendations(product_id):
+    """Get brew recommendations for a specific product."""
+    # Get and validate user_id
+    user_id = get_user_id_from_request()
+    is_valid, error_msg = validate_user_id(user_id)
+    if not is_valid:
+        return jsonify({'error': error_msg}), 400
+    
+    factory = get_repository_factory()
+    
+    # Check if product exists
+    product_repo = factory.get_product_repository(user_id)
+    product = product_repo.find_by_id(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    
+    # Get optional method filter
+    method = request.args.get('method')
+    
+    # Create recommendation service and get recommendations
+    brew_session_repo = factory.get_brew_session_repository(user_id)
+    brew_method_repo = factory.get_brew_method_repository(user_id)
+    rec_service = BrewRecommendationService(brew_session_repo, brew_method_repo)
+    recommendations = rec_service.get_recommendations(product_id, method)
+    
+    return jsonify(recommendations)

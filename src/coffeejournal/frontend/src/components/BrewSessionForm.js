@@ -5,6 +5,7 @@ import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import DateTimeInput from './DateTimeInput';
 import TimeInput from './TimeInput';
+import BrewRecommendations from './BrewRecommendations';
 
 function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialData = null, onCancel }) {
   const navigate = useNavigate();
@@ -209,6 +210,13 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
     }
   };
 
+  // Handle applying brew recommendations
+  const handleApplyRecommendation = (recommendedData) => {
+    setFormData(prev => ({
+      ...prev,
+      ...recommendedData
+    }));
+  };
 
   // Handle mobile datalist issues
   const handleMobileDatalistFocus = (e) => {
@@ -369,6 +377,13 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           </>
         )}
       </div>
+
+      {/* Brew Recommendations */}
+      <BrewRecommendations 
+        productId={formData.product_id} 
+        selectedMethod={formData.brew_method}
+        onApplyRecommendation={handleApplyRecommendation}
+      />
 
       {/* Equipment Section */}
       <div style={{
