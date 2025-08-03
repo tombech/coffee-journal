@@ -1,17 +1,18 @@
 from typing import Dict, List, Optional, Any
 from collections import Counter
 from statistics import mean
-from ..api.utils import calculate_total_score
+from ..api.utils import calculate_total_score, enrich_brew_session_with_lookups
 
 
 class BrewRecommendationService:
     """Service for generating brew recommendations based on historical session data."""
     
-    def __init__(self, brew_session_repo, brew_method_repo=None):
+    def __init__(self, brew_session_repo, factory, brew_method_repo=None):
         self.brew_session_repo = brew_session_repo
+        self.factory = factory
         self.brew_method_repo = brew_method_repo
         self.score_threshold = 3.5
-        self.template_score_diff = 0.2
+        self.template_score_diff = 0.5
     
     def get_recommendations(self, product_id: int, method: str = None) -> Dict[str, Any]:
         """
@@ -28,15 +29,17 @@ class BrewRecommendationService:
         all_sessions = self.brew_session_repo.find_all()
         product_sessions = [s for s in all_sessions if s.get('product_id') == product_id]
         
-        # Filter by score threshold (use calculated score)
+        # Enrich sessions with lookup data and filter by score threshold
         good_sessions = []
         for session in product_sessions:
-            total_score = calculate_total_score(session)
+            # Enrich session with lookup objects
+            enriched_session = enrich_brew_session_with_lookups(session, self.factory)
+            
+            total_score = calculate_total_score(enriched_session)
             if total_score and total_score > self.score_threshold:
                 # Add the calculated score to the session for later use
-                session_copy = session.copy()
-                session_copy['total_score'] = total_score
-                good_sessions.append(session_copy)
+                enriched_session['total_score'] = total_score
+                good_sessions.append(enriched_session)
         
         if len(good_sessions) < 2:
             return {
@@ -105,18 +108,30 @@ class BrewRecommendationService:
     
     def _create_template_recommendation(self, template_session: Dict, total_sessions: int) -> Dict[str, Any]:
         """Create a template-based recommendation from the best session."""
+        # Calculate brew ratio
+        coffee_grams = template_session.get('amount_coffee_grams')
+        water_grams = template_session.get('amount_water_grams')
+        brew_ratio = None
+        if coffee_grams and water_grams and coffee_grams > 0:
+            brew_ratio = round(water_grams / coffee_grams, 1)
+        
         # Numeric fields to copy exactly
         numeric_fields = [
-            'amount_coffee_grams', 'amount_water_grams', 'water_temp_celsius',
-            'bloom_time_seconds', 'brew_time_seconds', 'grind_setting'
+            'amount_coffee_grams', 'amount_water_grams', 'brew_temperature_c',
+            'bloom_time_seconds', 'brew_time_seconds', 'grinder_setting'
         ]
         
-        # Non-numeric fields to copy
+        # Non-numeric fields to copy (these come from enriched data)
         categorical_fields = [
             'recipe', 'grinder', 'filter', 'kettle', 'scale'
         ]
         
         template = {}
+        
+        # Add brew ratio if available
+        if brew_ratio:
+            template['brew_ratio'] = {'value': brew_ratio, 'type': 'exact'}
+        
         for field in numeric_fields:
             value = template_session.get(field)
             if value is not None:
@@ -124,8 +139,8 @@ class BrewRecommendationService:
         
         for field in categorical_fields:
             value = template_session.get(field)
-            if value:
-                template[field] = {'value': value, 'type': 'exact'}
+            if value and isinstance(value, dict) and value.get('name'):
+                template[field] = {'value': value['name'], 'type': 'exact'}
         
         return {
             'type': 'template',
@@ -137,10 +152,18 @@ class BrewRecommendationService:
     
     def _create_range_recommendation(self, sessions: List[Dict], total_sessions: int) -> Dict[str, Any]:
         """Create a range-based recommendation from multiple sessions."""
+        # Calculate brew ratios for all sessions
+        brew_ratios = []
+        for session in sessions:
+            coffee_grams = session.get('amount_coffee_grams')
+            water_grams = session.get('amount_water_grams')
+            if coffee_grams and water_grams and coffee_grams > 0:
+                brew_ratios.append(round(water_grams / coffee_grams, 1))
+        
         # Numeric fields to calculate ranges for
         numeric_fields = [
-            'amount_coffee_grams', 'amount_water_grams', 'water_temp_celsius',
-            'bloom_time_seconds', 'brew_time_seconds', 'grind_setting'
+            'amount_coffee_grams', 'amount_water_grams', 'brew_temperature_c',
+            'bloom_time_seconds', 'brew_time_seconds', 'grinder_setting'
         ]
         
         # Non-numeric fields to find most frequent
@@ -149,6 +172,15 @@ class BrewRecommendationService:
         ]
         
         ranges = {}
+        
+        # Add brew ratio range if we have data
+        if brew_ratios:
+            ranges['brew_ratio'] = {
+                'min': min(brew_ratios),
+                'max': max(brew_ratios),
+                'avg': round(mean(brew_ratios), 1),
+                'type': 'range'
+            }
         
         # Calculate ranges for numeric fields
         for field in numeric_fields:
@@ -163,14 +195,20 @@ class BrewRecommendationService:
         
         # Find most frequent for categorical fields
         for field in categorical_fields:
-            values = [s.get(field) for s in sessions if s.get(field)]
-            if values:
-                counter = Counter(values)
+            # Extract names from enriched objects
+            names = []
+            for session in sessions:
+                value = session.get(field)
+                if value and isinstance(value, dict) and value.get('name'):
+                    names.append(value['name'])
+            
+            if names:
+                counter = Counter(names)
                 most_common = counter.most_common(1)[0]
                 ranges[field] = {
                     'value': most_common[0],
                     'frequency': most_common[1],
-                    'total': len(values),
+                    'total': len(names),
                     'type': 'frequent'
                 }
         

@@ -326,7 +326,7 @@ def get_brew_recommendations(product_id):
     # Create recommendation service and get recommendations
     brew_session_repo = factory.get_brew_session_repository(user_id)
     brew_method_repo = factory.get_brew_method_repository(user_id)
-    rec_service = BrewRecommendationService(brew_session_repo, brew_method_repo)
+    rec_service = BrewRecommendationService(brew_session_repo, factory, brew_method_repo)
     recommendations = rec_service.get_recommendations(product_id, method)
     
     return jsonify(recommendations)

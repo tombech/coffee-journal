@@ -6,7 +6,7 @@ are generated based on historical brew session data.
 """
 
 import pytest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from coffeejournal.services.brew_recommendations import BrewRecommendationService
 
 
@@ -17,15 +17,17 @@ class TestBrewRecommendationService:
         """Set up test fixtures."""
         self.mock_session_repo = Mock()
         self.mock_method_repo = Mock()
+        self.mock_factory = Mock()
         self.service = BrewRecommendationService(
             self.mock_session_repo, 
+            self.mock_factory,
             self.mock_method_repo
         )
     
     def test_initialization(self):
         """Test service initialization with default parameters."""
         assert self.service.score_threshold == 3.5
-        assert self.service.template_score_diff == 0.2
+        assert self.service.template_score_diff == 0.5  # Updated threshold
     
     def test_insufficient_sessions_returns_no_recommendations(self):
         """Test that insufficient good sessions returns no recommendations."""
@@ -41,7 +43,7 @@ class TestBrewRecommendationService:
         assert 'Need at least 2 sessions with score > 3.5' in result['message']
     
     def test_template_mode_when_best_session_significantly_better(self):
-        """Test template mode when one session is 0.2+ points better."""
+        """Test template mode when one session is 0.5+ points better."""
         # Mock sessions data
         sessions = [
             {
@@ -49,14 +51,34 @@ class TestBrewRecommendationService:
                 'score': 4.5,  # Best session
                 'amount_coffee_grams': 20.0,
                 'amount_water_grams': 320.0,
-                'water_temp_celsius': 93,
-                'grind_setting': 15,
-                'recipe': 'Perfect V60',
+                'brew_temperature_c': 93,  # Updated field name
+                'grinder_setting': 15,     # Updated field name
+                'recipe_id': 1,
                 'timestamp': '2024-01-01T10:00:00'
             },
             {
                 'id': 2, 'product_id': 1, 'brew_method_id': 1,
-                'score': 4.2,  # Second best (diff = 0.3 > 0.2)
+                'score': 3.9,  # Second best (diff = 0.6 > 0.5)
+                'amount_coffee_grams': 18.0,
+                'amount_water_grams': 300.0
+            }
+        ]
+        
+        # Mock enriched sessions (what enrich_brew_session_with_lookups returns)
+        enriched_sessions = [
+            {
+                'id': 1, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.5,
+                'amount_coffee_grams': 20.0,
+                'amount_water_grams': 320.0,
+                'brew_temperature_c': 93,
+                'grinder_setting': 15,
+                'recipe': {'id': 1, 'name': 'Perfect V60'},  # Enriched
+                'timestamp': '2024-01-01T10:00:00'
+            },
+            {
+                'id': 2, 'product_id': 1, 'brew_method_id': 1,
+                'score': 3.9,
                 'amount_coffee_grams': 18.0,
                 'amount_water_grams': 300.0
             }
@@ -65,7 +87,10 @@ class TestBrewRecommendationService:
         self.mock_session_repo.find_all.return_value = sessions
         self.mock_method_repo.find_by_id.return_value = {'id': 1, 'name': 'V60'}
         
-        result = self.service.get_recommendations(1)
+        # Mock the enrichment function
+        with patch('coffeejournal.services.brew_recommendations.enrich_brew_session_with_lookups') as mock_enrich:
+            mock_enrich.side_effect = enriched_sessions
+            result = self.service.get_recommendations(1)
         
         assert result['has_recommendations'] is True
         assert 'V60' in result['recommendations']
@@ -79,7 +104,13 @@ class TestBrewRecommendationService:
         params = v60_rec['parameters']
         assert params['amount_coffee_grams']['value'] == 20.0
         assert params['amount_coffee_grams']['type'] == 'exact'
-        assert params['recipe']['value'] == 'Perfect V60'
+        assert params['brew_temperature_c']['value'] == 93  # Updated field name
+        assert params['brew_temperature_c']['type'] == 'exact'
+        assert params['grinder_setting']['value'] == 15    # Updated field name
+        assert params['grinder_setting']['type'] == 'exact'
+        assert params['brew_ratio']['value'] == 16.0       # NEW: 320/20 = 16.0
+        assert params['brew_ratio']['type'] == 'exact'
+        assert params['recipe']['value'] == 'Perfect V60'  # Enriched from object
         assert params['recipe']['type'] == 'exact'
     
     def test_range_mode_when_scores_are_close(self):
@@ -91,31 +122,62 @@ class TestBrewRecommendationService:
                 'score': 4.2,
                 'amount_coffee_grams': 20.0,
                 'amount_water_grams': 320.0,
-                'water_temp_celsius': 93,
-                'recipe': 'Standard V60'
+                'brew_temperature_c': 93,  # Updated field name
+                'recipe_id': 1
             },
             {
                 'id': 2, 'product_id': 1, 'brew_method_id': 1,
-                'score': 4.1,  # Diff = 0.1 < 0.2, triggers range mode
+                'score': 4.1,  # Diff = 0.1 < 0.5, triggers range mode
                 'amount_coffee_grams': 18.0,
                 'amount_water_grams': 300.0,
-                'water_temp_celsius': 90,
-                'recipe': 'Standard V60'
+                'brew_temperature_c': 90,  # Updated field name
+                'recipe_id': 1
             },
             {
                 'id': 3, 'product_id': 1, 'brew_method_id': 1,
                 'score': 3.9,
                 'amount_coffee_grams': 22.0,
                 'amount_water_grams': 350.0,
-                'water_temp_celsius': 95,
-                'recipe': 'Light V60'
+                'brew_temperature_c': 95,  # Updated field name
+                'recipe_id': 2
+            }
+        ]
+        
+        # Mock enriched sessions
+        enriched_sessions = [
+            {
+                'id': 1, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.2,
+                'amount_coffee_grams': 20.0,
+                'amount_water_grams': 320.0,
+                'brew_temperature_c': 93,
+                'recipe': {'id': 1, 'name': 'Standard V60'}
+            },
+            {
+                'id': 2, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.1,
+                'amount_coffee_grams': 18.0,
+                'amount_water_grams': 300.0,
+                'brew_temperature_c': 90,
+                'recipe': {'id': 1, 'name': 'Standard V60'}
+            },
+            {
+                'id': 3, 'product_id': 1, 'brew_method_id': 1,
+                'score': 3.9,
+                'amount_coffee_grams': 22.0,
+                'amount_water_grams': 350.0,
+                'brew_temperature_c': 95,
+                'recipe': {'id': 2, 'name': 'Light V60'}
             }
         ]
         
         self.mock_session_repo.find_all.return_value = sessions
         self.mock_method_repo.find_by_id.return_value = {'id': 1, 'name': 'V60'}
         
-        result = self.service.get_recommendations(1)
+        # Mock the enrichment function
+        with patch('coffeejournal.services.brew_recommendations.enrich_brew_session_with_lookups') as mock_enrich:
+            mock_enrich.side_effect = enriched_sessions
+            result = self.service.get_recommendations(1)
         
         assert result['has_recommendations'] is True
         v60_rec = result['recommendations']['V60']
@@ -130,8 +192,21 @@ class TestBrewRecommendationService:
         assert params['amount_coffee_grams']['avg'] == 20.0
         assert params['amount_coffee_grams']['type'] == 'range'
         
+        # Check brew temperature (updated field name)
+        assert params['brew_temperature_c']['min'] == 90
+        assert params['brew_temperature_c']['max'] == 95
+        assert params['brew_temperature_c']['avg'] == 92.7  # (93+90+95)/3 = 92.67 rounded to 92.7
+        assert params['brew_temperature_c']['type'] == 'range'
+        
+        # Check brew ratio (NEW)
+        # Ratios: 320/20=16.0, 300/18=16.7, 350/22=15.9
+        assert params['brew_ratio']['min'] == 15.9
+        assert params['brew_ratio']['max'] == 16.7
+        assert params['brew_ratio']['avg'] == 16.2  # (16.0+16.7+15.9)/3 = 16.2
+        assert params['brew_ratio']['type'] == 'range'
+        
         # Check frequent categorical parameters
-        assert params['recipe']['value'] == 'Standard V60'  # Most frequent
+        assert params['recipe']['value'] == 'Standard V60'  # Most frequent (2 out of 3)
         assert params['recipe']['frequency'] == 2
         assert params['recipe']['total'] == 3
         assert params['recipe']['type'] == 'frequent'
@@ -292,3 +367,128 @@ class TestBrewRecommendationService:
         v60_rec = result['recommendations']['V60']
         # Check total_sessions field which exists in both template and range modes
         assert v60_rec['total_sessions'] == 2  # Should be 2, not 3
+    
+    def test_enhanced_features_integration(self):
+        """Test all enhanced features: higher threshold, brew ratio, enriched fields, correct field names."""
+        # Mock sessions data with enhanced features
+        sessions = [
+            {
+                'id': 1, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.8,  # Best session
+                'amount_coffee_grams': 20.0,
+                'amount_water_grams': 300.0,  # Ratio = 15.0
+                'brew_temperature_c': 92,     # Correct field name
+                'grinder_setting': 16,        # Correct field name
+                'recipe_id': 1,
+                'grinder_id': 1,
+                'filter_id': 1,
+                'timestamp': '2024-01-01T10:00:00'
+            },
+            {
+                'id': 2, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.2,  # Diff = 0.6 > 0.5, should trigger template mode
+                'amount_coffee_grams': 18.0,
+                'amount_water_grams': 270.0,  # Ratio = 15.0
+                'brew_temperature_c': 90,
+                'grinder_setting': 15
+            }
+        ]
+        
+        # Mock enriched sessions with all equipment data
+        enriched_sessions = [
+            {
+                'id': 1, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.8,
+                'amount_coffee_grams': 20.0,
+                'amount_water_grams': 300.0,
+                'brew_temperature_c': 92,
+                'grinder_setting': 16,
+                'recipe': {'id': 1, 'name': 'Enhanced V60'},
+                'grinder': {'id': 1, 'name': 'Baratza Encore'},
+                'filter': {'id': 1, 'name': 'Hario V60 Paper'},
+                'kettle': None,
+                'scale': None,
+                'timestamp': '2024-01-01T10:00:00'
+            },
+            {
+                'id': 2, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.2,
+                'amount_coffee_grams': 18.0,
+                'amount_water_grams': 270.0,
+                'brew_temperature_c': 90,
+                'grinder_setting': 15
+            }
+        ]
+        
+        self.mock_session_repo.find_all.return_value = sessions
+        self.mock_method_repo.find_by_id.return_value = {'id': 1, 'name': 'V60'}
+        
+        # Mock the enrichment function
+        with patch('coffeejournal.services.brew_recommendations.enrich_brew_session_with_lookups') as mock_enrich:
+            mock_enrich.side_effect = enriched_sessions
+            result = self.service.get_recommendations(1)
+        
+        assert result['has_recommendations'] is True
+        v60_rec = result['recommendations']['V60']
+        
+        # Should use template mode due to 0.5+ point difference
+        assert v60_rec['type'] == 'template'
+        assert v60_rec['source_score'] == 4.8
+        
+        # Check all enhanced parameters
+        params = v60_rec['parameters']
+        
+        # Numeric fields with correct names
+        assert params['amount_coffee_grams']['value'] == 20.0
+        assert params['amount_water_grams']['value'] == 300.0
+        assert params['brew_temperature_c']['value'] == 92  # Correct field name
+        assert params['grinder_setting']['value'] == 16    # Correct field name
+        
+        # NEW: Brew ratio calculation
+        assert params['brew_ratio']['value'] == 15.0       # 300/20 = 15.0
+        assert params['brew_ratio']['type'] == 'exact'
+        
+        # Enriched categorical fields
+        assert params['recipe']['value'] == 'Enhanced V60'
+        assert params['recipe']['type'] == 'exact'
+        assert params['grinder']['value'] == 'Baratza Encore'
+        assert params['grinder']['type'] == 'exact'
+        assert params['filter']['value'] == 'Hario V60 Paper'
+        assert params['filter']['type'] == 'exact'
+        
+        # Equipment fields that are None should not appear in parameters
+        assert 'kettle' not in params
+        assert 'scale' not in params
+    
+    def test_brew_ratio_range_calculations(self):
+        """Test brew ratio calculations in range mode."""
+        # Mock sessions with different ratios
+        sessions = [
+            {'id': 1, 'product_id': 1, 'brew_method_id': 1, 'score': 4.2,
+             'amount_coffee_grams': 20.0, 'amount_water_grams': 320.0},  # Ratio = 16.0
+            {'id': 2, 'product_id': 1, 'brew_method_id': 1, 'score': 4.1,
+             'amount_coffee_grams': 15.0, 'amount_water_grams': 240.0},  # Ratio = 16.0
+            {'id': 3, 'product_id': 1, 'brew_method_id': 1, 'score': 4.0,
+             'amount_coffee_grams': 25.0, 'amount_water_grams': 375.0}   # Ratio = 15.0
+        ]
+        
+        enriched_sessions = sessions.copy()  # No enrichment needed for this test
+        
+        self.mock_session_repo.find_all.return_value = sessions
+        self.mock_method_repo.find_by_id.return_value = {'id': 1, 'name': 'V60'}
+        
+        with patch('coffeejournal.services.brew_recommendations.enrich_brew_session_with_lookups') as mock_enrich:
+            mock_enrich.side_effect = enriched_sessions
+            result = self.service.get_recommendations(1)
+        
+        assert result['has_recommendations'] is True
+        v60_rec = result['recommendations']['V60']
+        assert v60_rec['type'] == 'range'  # Close scores should trigger range mode
+        
+        # Check brew ratio range calculation
+        params = v60_rec['parameters']
+        assert 'brew_ratio' in params
+        assert params['brew_ratio']['min'] == 15.0
+        assert params['brew_ratio']['max'] == 16.0
+        assert params['brew_ratio']['avg'] == 15.7  # (16.0+16.0+15.0)/3 = 15.67 rounded to 15.7
+        assert params['brew_ratio']['type'] == 'range'
