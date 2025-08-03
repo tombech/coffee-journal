@@ -108,12 +108,22 @@ class BrewRecommendationService:
     
     def _create_template_recommendation(self, template_session: Dict, total_sessions: int) -> Dict[str, Any]:
         """Create a template-based recommendation from the best session."""
-        # Calculate brew ratio
+        # Calculate brew ratio with type safety
         coffee_grams = template_session.get('amount_coffee_grams')
         water_grams = template_session.get('amount_water_grams')
         brew_ratio = None
-        if coffee_grams and water_grams and coffee_grams > 0:
-            brew_ratio = round(water_grams / coffee_grams, 1)
+        
+        try:
+            # Convert to float if they're strings
+            if isinstance(coffee_grams, str):
+                coffee_grams = float(coffee_grams) if coffee_grams.strip() else None
+            if isinstance(water_grams, str):
+                water_grams = float(water_grams) if water_grams.strip() else None
+            
+            if coffee_grams and water_grams and coffee_grams > 0:
+                brew_ratio = round(water_grams / coffee_grams, 1)
+        except (ValueError, TypeError):
+            brew_ratio = None
         
         # Numeric fields to copy exactly
         numeric_fields = [
@@ -133,9 +143,19 @@ class BrewRecommendationService:
             template['brew_ratio'] = {'value': brew_ratio, 'type': 'exact'}
         
         for field in numeric_fields:
-            value = template_session.get(field)
-            if value is not None:
-                template[field] = {'value': value, 'type': 'exact'}
+            raw_value = template_session.get(field)
+            if raw_value is not None:
+                # Convert string values to numbers for consistency
+                try:
+                    if isinstance(raw_value, (int, float)):
+                        value = float(raw_value)
+                    elif isinstance(raw_value, str) and raw_value.strip():
+                        value = float(raw_value)
+                    else:
+                        continue  # Skip non-numeric values
+                    template[field] = {'value': value, 'type': 'exact'}
+                except (ValueError, TypeError):
+                    continue  # Skip values that can't be converted
         
         for field in categorical_fields:
             value = template_session.get(field)
@@ -152,13 +172,23 @@ class BrewRecommendationService:
     
     def _create_range_recommendation(self, sessions: List[Dict], total_sessions: int) -> Dict[str, Any]:
         """Create a range-based recommendation from multiple sessions."""
-        # Calculate brew ratios for all sessions
+        # Calculate brew ratios for all sessions with type safety
         brew_ratios = []
         for session in sessions:
             coffee_grams = session.get('amount_coffee_grams')
             water_grams = session.get('amount_water_grams')
-            if coffee_grams and water_grams and coffee_grams > 0:
-                brew_ratios.append(round(water_grams / coffee_grams, 1))
+            
+            try:
+                # Convert to float if they're strings
+                if isinstance(coffee_grams, str):
+                    coffee_grams = float(coffee_grams) if coffee_grams.strip() else None
+                if isinstance(water_grams, str):
+                    water_grams = float(water_grams) if water_grams.strip() else None
+                
+                if coffee_grams and water_grams and coffee_grams > 0:
+                    brew_ratios.append(round(water_grams / coffee_grams, 1))
+            except (ValueError, TypeError):
+                continue  # Skip sessions with invalid numeric data
         
         # Numeric fields to calculate ranges for
         numeric_fields = [
@@ -184,7 +214,18 @@ class BrewRecommendationService:
         
         # Calculate ranges for numeric fields
         for field in numeric_fields:
-            values = [s.get(field) for s in sessions if s.get(field) is not None]
+            raw_values = [s.get(field) for s in sessions if s.get(field) is not None]
+            # Convert to numbers and filter out non-numeric values
+            values = []
+            for val in raw_values:
+                try:
+                    if isinstance(val, (int, float)):
+                        values.append(float(val))
+                    elif isinstance(val, str) and val.strip():
+                        values.append(float(val))
+                except (ValueError, TypeError):
+                    continue  # Skip non-numeric values
+            
             if values:
                 ranges[field] = {
                     'min': min(values),

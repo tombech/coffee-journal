@@ -492,3 +492,55 @@ class TestBrewRecommendationService:
         assert params['brew_ratio']['max'] == 16.0
         assert params['brew_ratio']['avg'] == 15.7  # (16.0+16.0+15.0)/3 = 15.67 rounded to 15.7
         assert params['brew_ratio']['type'] == 'range'
+    
+    def test_handles_string_numeric_values_gracefully(self):
+        """Test handling of string numeric values in production data."""
+        # Mock sessions with string values (like production data)
+        sessions = [
+            {
+                'id': 1, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.2,
+                'amount_coffee_grams': '20.0',  # String value
+                'amount_water_grams': '320.0',  # String value
+                'brew_temperature_c': '93',     # String value
+                'grinder_setting': '15'         # String value
+            },
+            {
+                'id': 2, 'product_id': 1, 'brew_method_id': 1,
+                'score': 4.0,
+                'amount_coffee_grams': '18.5',  # String value
+                'amount_water_grams': '295.0'   # String value
+            },
+            {
+                'id': 3, 'product_id': 1, 'brew_method_id': 1,
+                'score': 3.8,
+                'amount_coffee_grams': 'invalid',  # Invalid string
+                'amount_water_grams': '280.0'
+            }
+        ]
+        
+        enriched_sessions = sessions.copy()  # No enrichment needed for this test
+        
+        self.mock_session_repo.find_all.return_value = sessions
+        self.mock_method_repo.find_by_id.return_value = {'id': 1, 'name': 'V60'}
+        
+        with patch('coffeejournal.services.brew_recommendations.enrich_brew_session_with_lookups') as mock_enrich:
+            mock_enrich.side_effect = enriched_sessions
+            result = self.service.get_recommendations(1)
+        
+        assert result['has_recommendations'] is True
+        v60_rec = result['recommendations']['V60']
+        
+        # Should work despite string values and invalid data
+        params = v60_rec['parameters']
+        assert 'amount_coffee_grams' in params
+        assert 'brew_ratio' in params
+        
+        # Should handle type conversion correctly
+        if v60_rec['type'] == 'range':
+            # Should use only valid numeric sessions (1 and 2)
+            assert params['amount_coffee_grams']['min'] == 18.5
+            assert params['amount_coffee_grams']['max'] == 20.0
+        elif v60_rec['type'] == 'template':
+            # Should use the best session's converted values
+            assert params['amount_coffee_grams']['value'] == 20.0
