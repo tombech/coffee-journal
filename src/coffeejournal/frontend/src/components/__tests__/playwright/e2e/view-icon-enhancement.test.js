@@ -113,16 +113,21 @@ test.describe('View Icon Enhancement', () => {
       return Array.from(batchElements).some(h => h.textContent.includes('Batch #'));
     }, { timeout: 10000 });
     
-    // Now check for batch headings with view icons
-    const batchHeadingsWithViewIcon = await page.locator('h4').filter({ hasText: /👁️.*Batch #/ }).count();
+    // Check for batch headings that have view icon buttons nearby
+    // Look for h4 elements with "Batch #" that have a view icon button in the same container
+    const batchContainersWithViewIcon = await page.locator('div').filter({ 
+      has: page.locator('h4').filter({ hasText: /Batch #/ })
+    }).filter({
+      has: page.locator('button').filter({ hasText: '👁️' })
+    }).count();
     
-    // Should have at least 1 batch heading with view icon
-    expect(batchHeadingsWithViewIcon).toBeGreaterThanOrEqual(1);
+    // Should have at least 1 batch container with view icon
+    expect(batchContainersWithViewIcon).toBeGreaterThanOrEqual(1);
     
-    // Test that clicking a batch heading with view icon works
-    const batchLink = page.locator('a').filter({ has: page.locator('h4').filter({ hasText: /👁️.*Batch #/ }) }).first();
-    if (await batchLink.count() > 0) {
-      await batchLink.click();
+    // Test that clicking a view icon button works
+    const viewButton = page.locator('button').filter({ hasText: '👁️' }).first();
+    if (await viewButton.count() > 0) {
+      await viewButton.click();
       
       // Should navigate to batch detail page
       await expect(page.getByRole('heading', { name: /Batch #\d+/ })).toBeVisible();

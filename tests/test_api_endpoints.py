@@ -307,7 +307,8 @@ class TestBrewSessionEndpoints:
         response = client.get('/api/brew_sessions')
         assert response.status_code == 200
         
-        sessions = response.get_json()
+        result = response.get_json()
+        sessions = result['data']  # Handle pagination response
         assert len(sessions) >= 1
     
     def test_update_brew_session(self, client):
@@ -395,7 +396,8 @@ class TestBrewSessionEndpoints:
         all_sessions_response = client.get('/api/brew_sessions')
         assert all_sessions_response.status_code == 200
         
-        all_sessions = all_sessions_response.get_json()
+        all_sessions_result = all_sessions_response.get_json()
+        all_sessions = all_sessions_result['data']  # Handle pagination response
         our_session = next((s for s in all_sessions if s['id'] == session_id), None)
         assert our_session is not None
         assert our_session['brew_method']['name'] == 'Aeropress'
@@ -488,3 +490,223 @@ class TestErrorHandling:
         })
         assert response.status_code == 404
         assert 'error' in response.get_json()
+
+
+class TestBrewSessionFilterOptionsEndpoint:
+    """Test the new filter options endpoint for brew sessions."""
+    
+    def test_filter_options_endpoint_exists(self, client):
+        """Test that the filter options endpoint exists and returns 200."""
+        response = client.get('/api/brew_sessions/filter_options')
+        assert response.status_code == 200
+        
+        options = response.get_json()
+        assert isinstance(options, dict)
+    
+    def test_filter_options_structure(self, client):
+        """Test that filter options have the correct structure."""
+        response = client.get('/api/brew_sessions/filter_options')
+        assert response.status_code == 200
+        
+        options = response.get_json()
+        
+        # Check all expected filter categories are present
+        expected_categories = [
+            'roasters', 'bean_types', 'countries', 'brew_methods', 
+            'recipes', 'grinders', 'filters', 'kettles', 'scales', 'decaf_options'
+        ]
+        
+        for category in expected_categories:
+            assert category in options, f"Missing filter category: {category}"
+            assert isinstance(options[category], list), f"Category {category} should be a list"
+    
+    def test_filter_options_id_name_pairs(self, client):
+        """Test that filter options return proper ID-name pairs."""
+        # Create some test data first
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Filter Roaster',
+            'bean_type_name': ['Test Bean Type'],
+            'country_name': 'Test Country'
+        })
+        product_id = product_response.get_json()['id']
+        
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={
+            'roast_date': '2025-01-01'
+        })
+        batch_id = batch_response.get_json()['id']
+        
+        # Create brew session
+        client.post(f'/api/batches/{batch_id}/brew_sessions', json={
+            'brew_method': 'V60',
+            'grinder': 'Test Grinder'
+        })
+        
+        response = client.get('/api/brew_sessions/filter_options')
+        assert response.status_code == 200
+        
+        options = response.get_json()
+        
+        # Check that ID-name pairs are returned for main categories
+        for category in ['roasters', 'bean_types', 'countries', 'brew_methods', 'grinders']:
+            if options[category]:  # Only check if category has items
+                item = options[category][0]
+                assert isinstance(item, dict), f"Items in {category} should be objects"
+                assert 'id' in item, f"Items in {category} should have 'id' field"
+                assert 'name' in item, f"Items in {category} should have 'name' field"
+                assert isinstance(item['id'], int), f"ID in {category} should be integer"
+                assert isinstance(item['name'], str), f"Name in {category} should be string"
+    
+    def test_filter_options_no_regions(self, client):
+        """Test that region filter is not included in filter options."""
+        response = client.get('/api/brew_sessions/filter_options')
+        assert response.status_code == 200
+        
+        options = response.get_json()
+        assert 'regions' not in options, "Region filter should be removed"
+    
+    def test_filter_options_decaf_format(self, client):
+        """Test that decaf options have the correct static format."""
+        response = client.get('/api/brew_sessions/filter_options')
+        assert response.status_code == 200
+        
+        options = response.get_json()
+        decaf_options = options['decaf_options']
+        
+        assert len(decaf_options) == 2, "Should have exactly 2 decaf options"
+        
+        # Check the format of decaf options
+        expected_options = [
+            {'id': 'true', 'name': 'Yes'},
+            {'id': 'false', 'name': 'No'}
+        ]
+        
+        assert decaf_options == expected_options, "Decaf options should match expected format"
+    
+    def test_filter_options_consistency_with_filtering(self, client):
+        """Test that filter options remain consistent regardless of current filtering."""
+        # Create test data
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Consistent Test Roaster',
+            'bean_type_name': ['Arabica']
+        })
+        product_id = product_response.get_json()['id']
+        
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={
+            'roast_date': '2025-01-01'
+        })
+        batch_id = batch_response.get_json()['id']
+        
+        client.post(f'/api/batches/{batch_id}/brew_sessions', json={
+            'brew_method': 'V60'
+        })
+        
+        # Get filter options before any filtering
+        response_before = client.get('/api/brew_sessions/filter_options')
+        options_before = response_before.get_json()
+        
+        # Apply some filtering to brew sessions
+        filtered_response = client.get('/api/brew_sessions?roaster=1&page_size=1')
+        assert filtered_response.status_code == 200  # Ensure filtering works
+        
+        # Get filter options after filtering
+        response_after = client.get('/api/brew_sessions/filter_options')
+        options_after = response_after.get_json()
+        
+        # Options should be identical (bug fix verification)
+        assert options_before == options_after, "Filter options should remain consistent"
+
+
+class TestIDBasedFilteringAPI:
+    """Test ID-based filtering functionality in brew sessions API."""
+    
+    def test_filter_by_roaster_id(self, client):
+        """Test filtering brew sessions by roaster ID."""
+        # Create products with different roasters
+        product1_response = client.post('/api/products', json={
+            'roaster_name': 'Filter Roaster 1',
+            'product_name': 'Product 1'
+        })
+        product1_id = product1_response.get_json()['id']
+        roaster1_id = product1_response.get_json()['roaster']['id']
+        
+        product2_response = client.post('/api/products', json={
+            'roaster_name': 'Filter Roaster 2',
+            'product_name': 'Product 2'
+        })
+        product2_id = product2_response.get_json()['id']
+        
+        # Create batches and sessions
+        batch1_response = client.post(f'/api/products/{product1_id}/batches', json={'roast_date': '2025-01-01'})
+        batch1_id = batch1_response.get_json()['id']
+        
+        batch2_response = client.post(f'/api/products/{product2_id}/batches', json={'roast_date': '2025-01-01'})
+        batch2_id = batch2_response.get_json()['id']
+        
+        client.post(f'/api/batches/{batch1_id}/brew_sessions', json={'brew_method': 'V60'})
+        client.post(f'/api/batches/{batch2_id}/brew_sessions', json={'brew_method': 'Chemex'})
+        
+        # Filter by roaster ID
+        response = client.get(f'/api/brew_sessions?roaster={roaster1_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Should only return sessions from roaster 1
+        assert len(sessions) >= 1
+        for session in sessions:
+            assert session['product_details']['roaster']['id'] == roaster1_id
+    
+    def test_filter_by_country_id(self, client):
+        """Test filtering brew sessions by country ID."""
+        # Create product with specific country
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster',
+            'country_name': 'Ethiopia'
+        })
+        product_id = product_response.get_json()['id']
+        country_id = product_response.get_json()['country']['id']
+        
+        # Create batch and session
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={'roast_date': '2025-01-01'})
+        batch_id = batch_response.get_json()['id']
+        
+        client.post(f'/api/batches/{batch_id}/brew_sessions', json={'brew_method': 'V60'})
+        
+        # Filter by country ID
+        response = client.get(f'/api/brew_sessions?country={country_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Should return sessions from Ethiopia
+        assert len(sessions) >= 1
+        for session in sessions:
+            assert session['product_details']['country']['id'] == country_id
+    
+    def test_filter_by_brew_method_id(self, client):
+        """Test filtering brew sessions by brew method ID."""
+        # Create product and batch
+        product_response = client.post('/api/products', json={'roaster_name': 'Test Roaster'})
+        product_id = product_response.get_json()['id']
+        
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={'roast_date': '2025-01-01'})
+        batch_id = batch_response.get_json()['id']
+        
+        # Create session with specific brew method
+        session_response = client.post(f'/api/batches/{batch_id}/brew_sessions', json={'brew_method': 'Aeropress'})
+        session = session_response.get_json()
+        brew_method_id = session['brew_method']['id']
+        
+        # Filter by brew method ID
+        response = client.get(f'/api/brew_sessions?brew_method={brew_method_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Should return sessions with Aeropress method
+        assert len(sessions) >= 1
+        for session in sessions:
+            assert session['brew_method']['id'] == brew_method_id

@@ -106,7 +106,8 @@ class TestBrewSessionLookups:
         response = client.get('/api/brew_sessions')
         assert response.status_code == 200
         
-        sessions = response.get_json()
+        result = response.get_json()
+        sessions = result['data']  # Handle pagination response
         created_session = next(s for s in sessions if s['id'] == session_id)
         
         # Verify enriched fields
@@ -185,8 +186,9 @@ class TestBrewSessionLookups:
         
         # Get the session back enriched
         sessions_response = client.get('/api/brew_sessions')
-        sessions = sessions_response.get_json()
-        created_session = sessions[-1]  # Most recent
+        result = sessions_response.get_json()
+        sessions = result['data']  # Handle pagination response
+        created_session = sessions[0]  # Most recent (pagination sorts newest first)
         
         # Enriched names should be None for non-existent IDs
         assert created_session['brew_method'] is None
@@ -225,7 +227,8 @@ class TestBrewSessionLookups:
         
         # Get the brew session again
         sessions_response = client.get('/api/brew_sessions')
-        sessions = sessions_response.get_json()
+        result = sessions_response.get_json()
+        sessions = result['data']  # Handle pagination response
         updated_session = next(s for s in sessions if s['id'] == session_id)
         
         # The enriched name should reflect the updated name

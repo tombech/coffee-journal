@@ -17,6 +17,7 @@ def create_api_blueprint():
     from ..lookups import lookups  # lookups.py is in the main package
     from .products import products_bp
     from .batches import batches_bp
+    from .stats import create_stats_blueprint
     
     # Create main API blueprint
     api = Blueprint('api', __name__, url_prefix='/api')
@@ -25,5 +26,6 @@ def create_api_blueprint():
     api.register_blueprint(lookups)
     api.register_blueprint(products_bp)
     api.register_blueprint(batches_bp)
+    api.register_blueprint(create_stats_blueprint(), url_prefix='/stats')
     
     return api

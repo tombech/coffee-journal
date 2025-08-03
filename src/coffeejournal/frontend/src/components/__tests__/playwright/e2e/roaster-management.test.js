@@ -56,9 +56,9 @@ test.describe('Roaster Management', () => {
     // Fill out form using semantic selectors - getByLabel is correct here because LookupManager uses proper <label htmlFor=""> elements
     const roasterName = `Test Roaster ${testData.testId}`;
     
-    await page.getByLabel('Name *:').fill(roasterName);
-    await page.getByLabel('Short Form:').fill('AT');
-    await page.getByLabel('Description:').fill('Test roaster created by Playwright');
+    await page.getByLabel('Name *').fill(roasterName);
+    await page.getByLabel('Short Form').fill('AT');
+    await page.getByLabel('Description').fill('Test roaster created by Playwright');
     
     // Submit form using semantic button selector
     await page.getByTestId('create-item-btn').click();
@@ -115,7 +115,7 @@ test.describe('Roaster Management', () => {
     // Wait for form to appear
     await expect(page.getByRole('heading', { name: 'Add New Roaster' })).toBeVisible();
     
-    await page.getByLabel('Name *:').fill(roasterName);
+    await page.getByLabel('Name *').fill(roasterName);
     
     await page.getByTestId('create-item-btn').click();
     
@@ -164,7 +164,7 @@ test.describe('Roaster Management', () => {
     
     // Add description to the roaster
     const updatedDescription = `Updated description ${testData.testId}`;
-    await page.getByLabel('Description:').fill(updatedDescription);
+    await page.getByLabel('Description').fill(updatedDescription);
     
     // Submit update using semantic selector
     await page.getByRole('button', { name: 'Update' }).click();

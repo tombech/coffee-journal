@@ -81,14 +81,16 @@ class TestBrewSessionsIsolation:
         # User1 should see their brew session in global list
         response = client.get('/api/brew_sessions?user_id=user1')
         assert response.status_code == 200
-        user1_sessions = response.get_json()
+        result = response.get_json()
+        user1_sessions = result['data']  # Handle pagination response
         assert len(user1_sessions) == 1
         assert user1_sessions[0]['id'] == session_id
         
         # User2 should NOT see User1's brew session (isolation test)
         response = client.get('/api/brew_sessions?user_id=user2')
         assert response.status_code == 200
-        user2_sessions = response.get_json()
+        result = response.get_json()
+        user2_sessions = result['data']  # Handle pagination response
         assert len(user2_sessions) == 0  # Should be empty if properly isolated
         
         # User2 should NOT be able to access the individual brew session

@@ -18,6 +18,8 @@ function ProductDetail() {
   const [showBatchForm, setShowBatchForm] = useState(false);
   const [editingBatch, setEditingBatch] = useState(null);
   const [brewSessions, setBrewSessions] = useState([]);
+  const [topBrewSessions, setTopBrewSessions] = useState([]);
+  const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
 
   useEffect(() => {
     fetchProductDetails();
@@ -68,14 +70,26 @@ function ProductDetail() {
 
   const fetchBrewSessions = async () => {
     try {
-      const response = await apiFetch('/brew_sessions');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Fetch recent sessions, top sessions, and bottom sessions efficiently
+      const [recentResponse, topResponse, bottomResponse] = await Promise.all([
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=20&sort=timestamp&sort_direction=desc`), // Recent sessions
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=score&sort_direction=desc`), // Top 5 by score
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=score&sort_direction=asc`) // Bottom 5 by score
+      ]);
+      
+      if (!recentResponse.ok || !topResponse.ok || !bottomResponse.ok) {
+        throw new Error('Failed to fetch brew sessions');
       }
-      const data = await response.json();
-      // Filter sessions for this product
-      const productSessions = data.filter(session => session.product_id === parseInt(id));
-      setBrewSessions(productSessions);
+      
+      const [recentResult, topResult, bottomResult] = await Promise.all([
+        recentResponse.json(),
+        topResponse.json(),
+        bottomResponse.json()
+      ]);
+      
+      setBrewSessions(recentResult.data || []);
+      setTopBrewSessions(topResult.data || []);
+      setBottomBrewSessions(bottomResult.data || []);
     } catch (err) {
       console.error("Error fetching brew sessions:", err);
     }
@@ -170,52 +184,6 @@ function ProductDetail() {
     return visualization;
   };
 
-  // Calculate comprehensive score for brew sessions
-  const calculateBrewScore = (session) => {
-    // Use overall score if available
-    if (session.score && session.score > 0) {
-      return session.score;
-    }
-    
-    // Otherwise calculate from tasting notes (bitterness is negative, others positive)
-    const tastingNotes = [
-      session.sweetness,
-      session.acidity,
-      session.body,
-      session.aroma,
-      session.flavor_profile_match
-    ].filter(score => score && score > 0);
-    
-    // Bitterness is subtracted (inverted)
-    const bitternessScore = session.bitterness ? (10 - session.bitterness) : 0;
-    if (bitternessScore > 0) tastingNotes.push(bitternessScore);
-    
-    return tastingNotes.length > 0 ? tastingNotes.reduce((sum, score) => sum + score, 0) / tastingNotes.length : 0;
-  };
-
-  // Get top 5 brew sessions
-  const getTopBrewSessions = () => {
-    return brewSessions
-      .map(session => ({
-        ...session,
-        calculatedScore: calculateBrewScore(session)
-      }))
-      .filter(session => session.calculatedScore > 0)
-      .sort((a, b) => b.calculatedScore - a.calculatedScore)
-      .slice(0, 5);
-  };
-
-  // Get bottom 5 brew sessions
-  const getBottomBrewSessions = () => {
-    return brewSessions
-      .map(session => ({
-        ...session,
-        calculatedScore: calculateBrewScore(session)
-      }))
-      .filter(session => session.calculatedScore > 0)
-      .sort((a, b) => a.calculatedScore - b.calculatedScore)
-      .slice(0, 5);
-  };
 
   // Format seconds to minutes:seconds
   const formatSecondsToMinSec = (seconds) => {
@@ -644,7 +612,7 @@ function ProductDetail() {
         <div style={{ marginTop: '40px' }}>
           {/* Top 5 Brews */}
           <BrewSessionTable 
-            sessions={getTopBrewSessions()} 
+            sessions={topBrewSessions} 
             title="🏆 Top 5 Brews"
             showProduct={false}
             showActions={false}
@@ -658,7 +626,7 @@ function ProductDetail() {
 
           {/* Bottom 5 Brews */}
           <BrewSessionTable 
-            sessions={getBottomBrewSessions()} 
+            sessions={bottomBrewSessions} 
             title="💩 Bottom 5 Brews"
             showProduct={false}
             showActions={false}

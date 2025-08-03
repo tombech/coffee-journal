@@ -202,7 +202,8 @@ class TestAPIShortFormFunctionality:
         # Get all brew sessions
         response = client.get('/api/brew_sessions')
         assert response.status_code == 200
-        sessions = response.get_json()
+        result = response.get_json()
+        sessions = result['data']  # Handle pagination response
         
         # Find our session
         test_session = None

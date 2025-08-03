@@ -497,17 +497,59 @@ def handle_batch_brew_sessions(batch_id):
 
 @batches_bp.route('/brew_sessions', methods=['GET'])
 def get_all_brew_sessions():
-    """Get all brew sessions from all batches."""
+    """Get all brew sessions from all batches with pagination support."""
     # Get and validate user_id
     user_id = get_user_id_from_request()
     is_valid, error_msg = validate_user_id(user_id)
     if not is_valid:
         return jsonify({'error': error_msg}), 400
     
-    factory = get_repository_factory()
-    sessions = factory.get_brew_session_repository(user_id).find_all()
+    # Get pagination parameters
+    page = request.args.get('page', 1, type=int)
+    page_size = request.args.get('page_size', 30, type=int)
     
-    # Enrich with product information and calculate brew ratio
+    # Get sorting parameters
+    sort = request.args.get('sort', 'timestamp')  # Default: newest first
+    sort_direction = request.args.get('sort_direction', 'desc')
+    
+    # Get filtering parameters (now using IDs instead of names)
+    product_id = request.args.get('product_id', type=int)
+    batch_id = request.args.get('batch_id', type=int)
+    brew_method_id = request.args.get('brew_method', type=int)
+    recipe_id = request.args.get('recipe', type=int)
+    roaster_id = request.args.get('roaster', type=int)
+    bean_type_id = request.args.get('bean_type', type=int)
+    country_id = request.args.get('country', type=int)
+    grinder_id = request.args.get('grinder', type=int)
+    filter_id = request.args.get('filter', type=int)
+    kettle_id = request.args.get('kettle', type=int)
+    scale_id = request.args.get('scale', type=int)
+    min_score = request.args.get('min_score', type=float)
+    max_score = request.args.get('max_score', type=float)
+    
+    # Validate pagination parameters
+    if page < 1:
+        page = 1
+    if page_size < 1 or page_size > 100:  # Limit max page size to prevent performance issues
+        page_size = 30
+    
+    # Validate sorting parameters
+    valid_sort_fields = [
+        'timestamp', 'amount_coffee_grams', 'amount_water_grams', 'brew_temperature_c',
+        'bloom_time_seconds', 'brew_time_seconds', 'score', 'sweetness', 'acidity', 
+        'bitterness', 'body', 'aroma', 'flavor_profile_match', 'product_name', 
+        'brew_method', 'recipe', 'grinder', 'filter', 'brew_ratio'
+    ]
+    if sort not in valid_sort_fields:
+        sort = 'timestamp'
+    
+    if sort_direction not in ['asc', 'desc']:
+        sort_direction = 'desc'
+    
+    factory = get_repository_factory()
+    all_sessions = factory.get_brew_session_repository(user_id).find_all()
+    
+    # Enrich all sessions with product information and calculate brew ratio
     product_repo = factory.get_product_repository(user_id)
     batch_repo = factory.get_batch_repository(user_id)
     brew_method_repo = factory.get_brew_method_repository(user_id)
@@ -517,7 +559,7 @@ def get_all_brew_sessions():
     kettle_repo = factory.get_kettle_repository(user_id)
     scale_repo = factory.get_scale_repository(user_id)
     
-    for session in sessions:
+    for session in all_sessions:
         # Get product and batch info for enrichment
         product = product_repo.find_by_id(session.get('product_id'))
         batch = batch_repo.find_by_id(session.get('product_batch_id'))
@@ -542,9 +584,12 @@ def get_all_brew_sessions():
                 'product_name': enriched_product.get('product_name'),
                 'roast_date': batch.get('roast_date') if batch else None,
                 'roast_type': enriched_product.get('roast_type'),
-                'decaf': enriched_product.get('decaf', False)
+                'decaf': enriched_product.get('decaf', False),
+                'country': enriched_product.get('country'),
+                'region': enriched_product.get('region')
             }
         else:
+            session['product_name'] = 'N/A'
             session['product_details'] = {}
         
         # Add brew method, recipe, grinder, filter, kettle, and scale objects
@@ -587,7 +632,169 @@ def get_all_brew_sessions():
         # Calculate brew ratio using consistent field names
         session['brew_ratio'] = calculate_brew_ratio(session.get('amount_coffee_grams'), session.get('amount_water_grams'))
     
-    return jsonify(sessions)
+    # Apply filters to enriched sessions
+    filtered_sessions = []
+    for session in all_sessions:
+        # Direct field filters
+        if product_id and session.get('product_id') != product_id:
+            continue
+        if batch_id and session.get('product_batch_id') != batch_id:
+            continue
+        
+        # Score range filters
+        if min_score is not None:
+            score = session.get('score') or 0
+            if score < min_score:
+                continue
+        if max_score is not None:
+            score = session.get('score') or 0
+            if score > max_score:
+                continue
+        
+        # Brew method filter (by ID)
+        if brew_method_id:
+            if session.get('brew_method_id') != brew_method_id:
+                continue
+        
+        # Recipe filter (by ID)
+        if recipe_id:
+            if session.get('recipe_id') != recipe_id:
+                continue
+        
+        # Equipment filters (by ID)
+        if grinder_id and session.get('grinder_id') != grinder_id:
+            continue
+        if filter_id and session.get('filter_id') != filter_id:
+            continue
+        if kettle_id and session.get('kettle_id') != kettle_id:
+            continue
+        if scale_id and session.get('scale_id') != scale_id:
+            continue
+        
+        # Product detail filters (by ID)
+        if roaster_id or bean_type_id or country_id:
+            product_details = session.get('product_details', {})
+            
+            # Roaster filter (by ID)
+            if roaster_id:
+                roaster = product_details.get('roaster')
+                if not roaster or roaster.get('id') != roaster_id:
+                    continue
+            
+            # Bean type filter (by ID) - check if any bean type matches
+            if bean_type_id:
+                bean_types = product_details.get('bean_type', [])
+                found = False
+                for bt in bean_types:
+                    if bt.get('id') == bean_type_id:
+                        found = True
+                        break
+                if not found:
+                    continue
+            
+            # Country filter (by ID)
+            if country_id:
+                country = product_details.get('country')
+                if not country or country.get('id') != country_id:
+                    continue
+        
+        # Decaf filter (still using request parameter directly)
+        decaf_filter = request.args.get('decaf')
+        if decaf_filter is not None:
+            is_decaf = session.get('product_details', {}).get('decaf', False)
+            filter_decaf = decaf_filter.lower() in ['true', '1', 'yes']
+            if is_decaf != filter_decaf:
+                continue
+        
+        # Date range filters
+        date_from = request.args.get('date_from')
+        date_to = request.args.get('date_to')
+        
+        if date_from or date_to:
+            session_date = session.get('timestamp', '')[:10]  # Get date part only
+            if date_from and session_date < date_from:
+                continue
+            if date_to and session_date > date_to:
+                continue
+        
+        # If we got here, the session passes all filters
+        filtered_sessions.append(session)
+    
+    # Use filtered sessions for sorting and pagination
+    all_sessions = filtered_sessions
+    
+    # Server-side sorting on enriched data
+    def get_sort_value(session, sort_field):
+        """Get the value to sort by from enriched session data."""
+        if sort_field == 'timestamp':
+            return session.get('timestamp', '')
+        elif sort_field == 'product_name':
+            return session.get('product_name', '').lower()
+        elif sort_field == 'brew_method':
+            method = session.get('brew_method')
+            return method.get('name', '').lower() if method else ''
+        elif sort_field == 'recipe':
+            recipe = session.get('recipe')
+            return recipe.get('name', '').lower() if recipe else ''
+        elif sort_field == 'grinder':
+            grinder = session.get('grinder')
+            return grinder.get('name', '').lower() if grinder else ''
+        elif sort_field == 'filter':
+            filter_obj = session.get('filter')
+            return filter_obj.get('name', '').lower() if filter_obj else ''
+        elif sort_field == 'brew_ratio':
+            return session.get('brew_ratio', 0)
+        elif sort_field == 'score':
+            # For score, use the overall score or calculated score from ratings
+            score = session.get('score')
+            if score:
+                return score
+            # Calculate from tasting notes if no overall score
+            tasting_scores = []
+            for field in ['sweetness', 'acidity', 'body', 'aroma', 'flavor_profile_match']:
+                value = session.get(field)
+                if value and isinstance(value, (int, float)):
+                    tasting_scores.append(value)
+            # Use bitterness as negative contribution
+            bitterness = session.get('bitterness')
+            if bitterness and isinstance(bitterness, (int, float)):
+                tasting_scores.append(10 - bitterness)  # Invert bitterness
+            
+            return sum(tasting_scores) / len(tasting_scores) if tasting_scores else 0
+        else:
+            # For all other numeric fields
+            value = session.get(sort_field)
+            return value if value is not None else 0
+    
+    # Sort enriched sessions
+    reverse_sort = sort_direction == 'desc'
+    sorted_sessions = sorted(all_sessions, key=lambda x: get_sort_value(x, sort), reverse=reverse_sort)
+    
+    # Calculate pagination
+    total_count = len(sorted_sessions)
+    total_pages = (total_count + page_size - 1) // page_size if total_count > 0 else 1
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    sessions = sorted_sessions[start_index:end_index]
+    
+    # Build pagination metadata
+    pagination = {
+        'page': page,
+        'page_size': page_size,
+        'total_count': total_count,
+        'total_pages': total_pages,
+        'has_next': page < total_pages,
+        'has_previous': page > 1,
+        'next_page': page + 1 if page < total_pages else None,
+        'previous_page': page - 1 if page > 1 else None
+    }
+    
+    # Sessions are already enriched and sorted, just return the paginated results
+    
+    return jsonify({
+        'data': sessions,
+        'pagination': pagination
+    })
 
 
 @batches_bp.route('/brew_sessions/<int:session_id>', methods=['GET'])
@@ -627,9 +834,12 @@ def get_brew_session(session_id):
         session['product_details'] = {
             'roaster': enriched_product.get('roaster'),
             'bean_type': enriched_product.get('bean_type'),
+            'product_name': enriched_product.get('product_name'),
             'roast_date': batch.get('roast_date') if batch else None,
             'roast_type': enriched_product.get('roast_type'),
-            'decaf': enriched_product.get('decaf', False)
+            'decaf': enriched_product.get('decaf', False),
+            'country': enriched_product.get('country'),
+            'region': enriched_product.get('region')
         }
     else:
         session['product_details'] = {}
@@ -1117,3 +1327,134 @@ def cleanup_all_test_users():
         }), 200
     except Exception as e:
         return jsonify({'error': f'Failed to cleanup test users: {str(e)}'}), 500
+
+
+@batches_bp.route('/brew_sessions/filter_options', methods=['GET'])
+def get_brew_session_filter_options():
+    """
+    Get all available filter options for brew sessions based on the complete dataset.
+    
+    This endpoint returns all possible values for filter dropdowns, not limited by current
+    pagination or filtering, to prevent the feedback loop where filtering reduces available options.
+    """
+    # Get and validate user_id
+    user_id = get_user_id_from_request()
+    is_valid, error_msg = validate_user_id(user_id)
+    if not is_valid:
+        return jsonify({'error': error_msg}), 400
+    
+    factory = get_repository_factory()
+    
+    # Get ALL brew sessions (no filtering, pagination, or limits)
+    all_sessions = factory.get_brew_session_repository(user_id).find_all()
+    
+    # Initialize sets to collect unique values (store objects with id and name)
+    roasters = set()
+    bean_types = set()
+    countries = set()
+    brew_methods = set()
+    recipes = set()
+    grinders = set()
+    filters_equipment = set()
+    kettles = set()
+    scales = set()
+    
+    # Get repository instances for enrichment
+    product_repo = factory.get_product_repository(user_id)
+    brew_method_repo = factory.get_brew_method_repository(user_id)
+    recipe_repo = factory.get_recipe_repository(user_id)
+    grinder_repo = factory.get_grinder_repository(user_id)
+    filter_repo = factory.get_filter_repository(user_id)
+    kettle_repo = factory.get_kettle_repository(user_id)
+    scale_repo = factory.get_scale_repository(user_id)
+    
+    # Process each session to extract filter options
+    for session in all_sessions:
+        # Get product for roaster, bean type, country, region info
+        product = product_repo.find_by_id(session.get('product_id'))
+        if product:
+            # Enrich product with lookup data
+            enriched_product = enrich_product_with_lookups(product.copy(), factory, user_id)
+            
+            # Extract roaster (store as JSON string for set uniqueness)
+            roaster = enriched_product.get('roaster')
+            if roaster and roaster.get('id') and roaster.get('name'):
+                roasters.add(f"{roaster['id']}|{roaster['name']}")
+            
+            # Extract bean types (store as JSON string for set uniqueness)
+            bean_type_list = enriched_product.get('bean_type', [])
+            if isinstance(bean_type_list, list):
+                for bt in bean_type_list:
+                    if bt and bt.get('id') and bt.get('name'):
+                        bean_types.add(f"{bt['id']}|{bt['name']}")
+            
+            # Extract country (store as JSON string for set uniqueness)
+            country = enriched_product.get('country')
+            if country and country.get('id') and country.get('name'):
+                countries.add(f"{country['id']}|{country['name']}")
+        
+        # Extract brew method (store as JSON string for set uniqueness)
+        if session.get('brew_method_id'):
+            method = brew_method_repo.find_by_id(session['brew_method_id'])
+            if method and method.get('id') and method.get('name'):
+                brew_methods.add(f"{method['id']}|{method['name']}")
+        
+        # Extract recipe (store as JSON string for set uniqueness)
+        if session.get('recipe_id'):
+            recipe = recipe_repo.find_by_id(session['recipe_id'])
+            if recipe and recipe.get('id') and recipe.get('name'):
+                recipes.add(f"{recipe['id']}|{recipe['name']}")
+        
+        # Extract grinder (store as JSON string for set uniqueness)
+        if session.get('grinder_id'):
+            grinder = grinder_repo.find_by_id(session['grinder_id'])
+            if grinder and grinder.get('id') and grinder.get('name'):
+                grinders.add(f"{grinder['id']}|{grinder['name']}")
+        
+        # Extract filter (store as JSON string for set uniqueness)
+        if session.get('filter_id'):
+            filter_item = filter_repo.find_by_id(session['filter_id'])
+            if filter_item and filter_item.get('id') and filter_item.get('name'):
+                filters_equipment.add(f"{filter_item['id']}|{filter_item['name']}")
+        
+        # Extract kettle (store as JSON string for set uniqueness)
+        if session.get('kettle_id'):
+            kettle = kettle_repo.find_by_id(session['kettle_id'])
+            if kettle and kettle.get('id') and kettle.get('name'):
+                kettles.add(f"{kettle['id']}|{kettle['name']}")
+        
+        # Extract scale (store as JSON string for set uniqueness)
+        if session.get('scale_id'):
+            scale = scale_repo.find_by_id(session['scale_id'])
+            if scale and scale.get('id') and scale.get('name'):
+                scales.add(f"{scale['id']}|{scale['name']}")
+    
+    # Helper function to convert "id|name" strings to objects
+    def parse_id_name_pairs(pairs_set):
+        result = []
+        for pair in sorted(pairs_set):
+            if '|' in pair:
+                id_str, name = pair.split('|', 1)
+                try:
+                    result.append({'id': int(id_str), 'name': name})
+                except ValueError:
+                    # Skip invalid entries
+                    continue
+        return result
+    
+    # Convert sets to sorted lists of objects with id and name
+    return jsonify({
+        'roasters': parse_id_name_pairs(roasters),
+        'bean_types': parse_id_name_pairs(bean_types),
+        'countries': parse_id_name_pairs(countries),
+        'brew_methods': parse_id_name_pairs(brew_methods),
+        'recipes': parse_id_name_pairs(recipes),
+        'grinders': parse_id_name_pairs(grinders),
+        'filters': parse_id_name_pairs(filters_equipment),
+        'kettles': parse_id_name_pairs(kettles),
+        'scales': parse_id_name_pairs(scales),
+        'decaf_options': [
+            {'id': 'true', 'name': 'Yes'}, 
+            {'id': 'false', 'name': 'No'}
+        ]  # Static options with consistent format
+    })

@@ -211,7 +211,8 @@ class TestTestDataAPI:
         response = test_data_client.get('/api/brew_sessions')
         assert response.status_code == 200
         
-        sessions = response.get_json()
+        result = response.get_json()
+        sessions = result['data']  # Handle pagination response
         assert len(sessions) >= 6
         
         # Check that brew_ratio is calculated and product_details are included

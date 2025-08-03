@@ -9,8 +9,10 @@ import { useToast } from './Toast';
 function Home() {
   const { addToast } = useToast();
   const [sessions, setSessions] = useState([]);
-  const [allSessions, setAllSessions] = useState([]);
   const [products, setProducts] = useState([]);
+  const [topBrewSessions, setTopBrewSessions] = useState([]);
+  const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showNewForm, setShowNewForm] = useState(false);
@@ -19,23 +21,48 @@ function Home() {
   const fetchBrewSessions = async () => {
     try {
       setLoading(true);
-      const [sessionsResponse, productsResponse] = await Promise.all([
-        apiFetch('/brew_sessions'),
-        apiFetch('/products')
+      
+      // Fetch all data efficiently using dedicated APIs
+      const [
+        sessionsResponse, 
+        productsResponse,
+        topBrewsResponse,
+        bottomBrewsResponse,
+        topProductsResponse
+      ] = await Promise.all([
+        apiFetch('/brew_sessions?page_size=15'), // Recent 15 sessions
+        apiFetch('/products'),
+        apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=desc'), // Top 5 brews
+        apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=asc'), // Bottom 5 brews  
+        apiFetch('/stats/top-products?limit=5') // Top 5 products
       ]);
       
-      if (!sessionsResponse.ok || !productsResponse.ok) {
-        throw new Error(`HTTP error! status: ${sessionsResponse.status} or ${productsResponse.status}`);
+      if (!sessionsResponse.ok || !productsResponse.ok || !topBrewsResponse.ok || 
+          !bottomBrewsResponse.ok || !topProductsResponse.ok) {
+        throw new Error('Failed to fetch data from one or more endpoints');
       }
       
-      const sessionsData = await sessionsResponse.json();
-      const productsData = await productsResponse.json();
+      const [
+        sessionsResult,
+        productsData,
+        topBrewsResult,
+        bottomBrewsResult,
+        topProductsData
+      ] = await Promise.all([
+        sessionsResponse.json(),
+        productsResponse.json(),
+        topBrewsResponse.json(),
+        bottomBrewsResponse.json(),
+        topProductsResponse.json()
+      ]);
       
-      // Sort by timestamp descending
-      const sortedSessions = sessionsData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      setAllSessions(sortedSessions);
-      setSessions(sortedSessions.slice(0, 15));
+      // Set all the state
+      setSessions(sessionsResult.data || []);
       setProducts(productsData);
+      setTopBrewSessions(topBrewsResult.data || []);
+      setBottomBrewSessions(bottomBrewsResult.data || []);
+      setTopProducts(topProductsData || []);
+      
     } catch (err) {
       setError('Failed to fetch data: ' + err.message);
       console.error('Error fetching data:', err);
@@ -102,7 +129,7 @@ function Home() {
   if (loading) return <p>Loading recent brew sessions...</p>;
   if (error) return <p className="error-message">{error}</p>;
 
-  // Calculate comprehensive score for brew sessions (duplicated for product analytics)
+  // Calculate comprehensive score for brew sessions (for recent sessions display)
   const calculateBrewScore = (session) => {
     // Use overall score if available
     if (session.score && session.score > 0) {
@@ -125,92 +152,6 @@ function Home() {
     return tastingNotes.length > 0 ? tastingNotes.reduce((sum, score) => sum + score, 0) / tastingNotes.length : 0;
   };
 
-  // Get top 5 brew sessions globally
-  const getTopBrewSessions = () => {
-    return allSessions
-      .map(session => ({
-        ...session,
-        calculatedScore: calculateBrewScore(session)
-      }))
-      .filter(session => session.calculatedScore > 0)
-      .sort((a, b) => b.calculatedScore - a.calculatedScore)
-      .slice(0, 5);
-  };
-
-  // Get bottom 5 brew sessions globally
-  const getBottomBrewSessions = () => {
-    return allSessions
-      .map(session => ({
-        ...session,
-        calculatedScore: calculateBrewScore(session)
-      }))
-      .filter(session => session.calculatedScore > 0)
-      .sort((a, b) => a.calculatedScore - b.calculatedScore)
-      .slice(0, 5);
-  };
-
-  // Get top 5 products based on average brew scores
-  const getTopProducts = () => {
-    const productScores = {};
-    
-    allSessions.forEach(session => {
-      const score = calculateBrewScore(session);
-      if (score > 0 && session.product_id) {
-        if (!productScores[session.product_id]) {
-          productScores[session.product_id] = {
-            scores: [],
-            sessions: [],
-            product: products.find(p => p.id === session.product_id)
-          };
-        }
-        productScores[session.product_id].scores.push(score);
-        productScores[session.product_id].sessions.push(session);
-      }
-    });
-
-    const result = Object.entries(productScores)
-      .map(([productId, data]) => {
-        // Calculate tasting averages for mini radar chart
-        const validSessions = data.sessions.filter(session => 
-          session.sweetness || session.acidity || session.bitterness || session.body || session.aroma
-        );
-        
-        let averages = null;
-        if (validSessions.length > 0) {
-          const totals = { sweetness: 0, acidity: 0, bitterness: 0, body: 0, aroma: 0 };
-          const counts = { sweetness: 0, acidity: 0, bitterness: 0, body: 0, aroma: 0 };
-          
-          validSessions.forEach(session => {
-            ['sweetness', 'acidity', 'bitterness', 'body', 'aroma'].forEach(attribute => {
-              if (session[attribute] && session[attribute] > 0) {
-                totals[attribute] += session[attribute];
-                counts[attribute]++;
-              }
-            });
-          });
-          
-          averages = {
-            sweetness: counts.sweetness > 0 ? totals.sweetness / counts.sweetness : 0,
-            acidity: counts.acidity > 0 ? totals.acidity / counts.acidity : 0,
-            bitterness: counts.bitterness > 0 ? totals.bitterness / counts.bitterness : 0,
-            body: counts.body > 0 ? totals.body / counts.body : 0,
-            aroma: counts.aroma > 0 ? totals.aroma / counts.aroma : 0
-          };
-        }
-
-        return {
-          product: data.product,
-          averageScore: data.scores.reduce((sum, score) => sum + score, 0) / data.scores.length,
-          sessionCount: data.scores.length,
-          averages
-        };
-      })
-      .filter(item => item.product && item.sessionCount >= 1); // At least 1 session
-    
-    return result
-      .sort((a, b) => b.averageScore - a.averageScore)
-      .slice(0, 5);
-  };
 
   // Norwegian date formatting
   const formatDateNorwegian = (dateString) => {
@@ -351,11 +292,11 @@ function Home() {
       />
 
       {/* Analytics Section */}
-      {allSessions.length > 0 && (
+      {(topBrewSessions.length > 0 || bottomBrewSessions.length > 0 || topProducts.length > 0) && (
         <div style={{ marginTop: '40px' }}>
           {/* Top 5 Brews */}
           <BrewSessionTable 
-            sessions={getTopBrewSessions()} 
+            sessions={topBrewSessions} 
             title="🏆 Top 5 Brews (Global)"
             showProduct={true}
             showActions={false}
@@ -371,7 +312,7 @@ function Home() {
 
           {/* Bottom 5 Brews */}
           <BrewSessionTable 
-            sessions={getBottomBrewSessions()} 
+            sessions={bottomBrewSessions} 
             title="💩 Bottom 5 Brews (Global)"
             showProduct={true}
             showActions={false}
@@ -388,14 +329,14 @@ function Home() {
           {/* Top 5 Products */}
           <div style={{ marginBottom: '30px' }}>
             <h3>🥇 Top 5 Products</h3>
-            {getTopProducts().length > 0 ? (
+            {topProducts.length > 0 ? (
               <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: 'repeat(auto-fill, 600px)', 
                 gap: '20px',
                 justifyContent: 'start'
               }}>
-                {getTopProducts().map((item, index) => (
+                {topProducts.map((item, index) => (
                   <Link 
                     key={item.product.id} 
                     to={`/products/${item.product.id}`}
@@ -451,7 +392,7 @@ function Home() {
                       fontWeight: 'bold',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                     }}>
-                      {typeof item.averageScore === 'number' ? item.averageScore.toFixed(1) : '0.0'}
+                      {typeof item.avg_score === 'number' ? item.avg_score : '0.0'}
                     </div>
 
                     {/* Left side - Product Info */}
@@ -468,7 +409,7 @@ function Home() {
                               : 'Unknown'
                           }</div>
                           <div><strong>Country:</strong> {item.product.country?.name || 'Unknown'}</div>
-                          <div><strong>Sessions:</strong> {item.sessionCount} brews</div>
+                          <div><strong>Sessions:</strong> {item.brew_count} brews</div>
                         </div>
                       </div>
                     </div>
@@ -480,7 +421,7 @@ function Home() {
                       justifyContent: 'center',
                       padding: '0'
                     }}>
-                      <MiniRadarChart data={item.averages} />
+                      <MiniRadarChart data={item.tasting_averages} />
                     </div>
                     </div>
                   </Link>

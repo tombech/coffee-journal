@@ -179,14 +179,19 @@ function ProductForm() {
       </h2>
       
       {error && (
-        <div style={{
-          padding: '12px',
-          backgroundColor: '#f8d7da',
-          border: '1px solid #f5c6cb',
-          borderRadius: '4px',
-          color: '#721c24',
-          marginBottom: '20px'
-        }}>
+        <div 
+          className="error-message"
+          style={{
+            padding: '12px',
+            backgroundColor: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: '4px',
+            color: '#721c24',
+            marginBottom: '20px'
+          }}
+          role="alert"
+          aria-live="polite"
+        >
           {error}
         </div>
       )}

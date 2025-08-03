@@ -36,7 +36,7 @@ test.describe('Roaster Management - Simple Test', () => {
     
     // Fill out form - just name is required
     const roasterName = `Simple Test Roaster ${testData.testId}`;
-    await page.getByLabel('Name *:').fill(roasterName);
+    await page.getByLabel('Name *').fill(roasterName);
     
     // Add a small delay before clicking submit to ensure form is ready
     await page.waitForTimeout(100);

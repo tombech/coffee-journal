@@ -3,7 +3,36 @@ import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import { ICONS } from '../config/icons';
 
-function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, showNewForm, setShowNewForm, setEditingSession, showActions = true, showFilters = true, showAddButton = true, showProduct = true, title = null, preserveOrder = false, initialSort = 'timestamp', initialSortDirection = 'desc' }) {
+function BrewSessionTable({ 
+  sessions, 
+  onDelete, 
+  onDuplicate, 
+  onEdit, 
+  onRefresh, 
+  showNewForm, 
+  setShowNewForm, 
+  setEditingSession, 
+  showActions = true, 
+  showFilters = true, 
+  showAddButton = true, 
+  showProduct = true, 
+  title = null, 
+  preserveOrder = false, 
+  initialSort = 'timestamp', 
+  initialSortDirection = 'desc', 
+  pagination = null, 
+  pageSize = 30, 
+  setPageSize = null, 
+  currentPage = 1, 
+  setCurrentPage = null, 
+  sortColumn: externalSortColumn = null, 
+  setSortColumn: externalSetSortColumn = null, 
+  sortDirection: externalSortDirection = null, 
+  setSortDirection: externalSetSortDirection = null,
+  onFiltersChange = null,  // Callback to pass filter changes to parent
+  filterOptions = null,    // Pre-computed filter options from API
+  filters: externalFilters = null  // Filters from parent component
+}) {
   
   // Calculate comprehensive score for brew sessions
   const calculateBrewScore = (session) => {
@@ -79,20 +108,32 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
       return words.map(w => w.charAt(0)).join('').substring(0, 4);
     }
   };
-  const [sortColumn, setSortColumn] = useState(initialSort);
-  const [sortDirection, setSortDirection] = useState(initialSortDirection);
-  const [filters, setFilters] = useState({
+  // Use external sorting state if provided, otherwise use internal state
+  const [internalSortColumn, setInternalSortColumn] = useState(initialSort);
+  const [internalSortDirection, setInternalSortDirection] = useState(initialSortDirection);
+  
+  const sortColumn = externalSortColumn || internalSortColumn;
+  const setSortColumn = externalSetSortColumn || setInternalSortColumn;
+  const sortDirection = externalSortDirection || internalSortDirection;
+  const setSortDirection = externalSetSortDirection || setInternalSortDirection;
+  // Filter state for UI - actual filtering handled server-side
+  // Use external filters if provided, otherwise use local state
+  const [localFilters, setLocalFilters] = useState({
     roaster: '',
     bean_type: '',
     brew_method: '',
     recipe: '',
     filter: '',
-    sweetness: '',
-    acidity: '',
-    bitterness: '',
-    body: '',
-    aroma: ''
+    country: '',
+    grinder: '',
+    kettle: '',
+    scale: '',
+    min_score: '',
+    max_score: ''
   });
+  
+  const filters = externalFilters || localFilters;
+  const setFilters = externalFilters ? () => {} : setLocalFilters;
   
   // Function to check if a product is decaf
   const isDecafProduct = (session) => {
@@ -110,48 +151,48 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
     </span>
   );
 
-  // Get unique values for filter dropdowns
+  // Use API filter options if available, otherwise generate from current sessions
   const uniqueValues = useMemo(() => {
-    const values = {
-      roasters: [...new Set(sessionsWithScore.map(s => s.product_details?.roaster?.name).filter(Boolean))],
-      bean_types: [...new Set(sessionsWithScore.map(s => {
-        const beanType = s.product_details?.bean_type;
-        return Array.isArray(beanType) ? beanType.map(bt => bt.name) : [];
-      }).flat().filter(Boolean))],
-      brew_methods: [...new Set(sessionsWithScore.map(s => s.brew_method?.name).filter(Boolean))],
-      recipes: [...new Set(sessionsWithScore.map(s => s.recipe?.name).filter(Boolean))],
-      filters: [...new Set(sessionsWithScore.map(s => s.filter?.name).filter(Boolean))]
-    };
-    return values;
-  }, [sessionsWithScore]);
-
-  // Filter and sort sessions
-  const filteredAndSortedSessions = useMemo(() => {
-    let filtered = sessionsWithScore.filter(session => {
-      return (
-        (!filters.roaster || session.product_details?.roaster?.name?.toLowerCase().includes(filters.roaster.toLowerCase())) &&
-        (!filters.bean_type || (
-          Array.isArray(session.product_details?.bean_type) 
-            ? session.product_details?.bean_type.some(bt => bt.name?.toLowerCase().includes(filters.bean_type.toLowerCase()))
-            : false
-        )) &&
-        (!filters.brew_method || session.brew_method?.name?.toLowerCase().includes(filters.brew_method.toLowerCase())) &&
-        (!filters.recipe || session.recipe?.name?.toLowerCase().includes(filters.recipe.toLowerCase())) &&
-        (!filters.filter || session.filter?.name?.toLowerCase().includes(filters.filter.toLowerCase())) &&
-        (!filters.sweetness || (session.sweetness && session.sweetness.toString() === filters.sweetness)) &&
-        (!filters.acidity || (session.acidity && session.acidity.toString() === filters.acidity)) &&
-        (!filters.bitterness || (session.bitterness && session.bitterness.toString() === filters.bitterness)) &&
-        (!filters.body || (session.body && session.body.toString() === filters.body)) &&
-        (!filters.aroma || (session.aroma && session.aroma.toString() === filters.aroma))
-      );
-    });
-
-    // Sort the filtered results (unless preserveOrder is true)
-    if (preserveOrder) {
-      return filtered;
+    if (filterOptions) {
+      // Use pre-computed filter options from API (now with ID-name pairs)
+      return {
+        roasters: filterOptions.roasters || [],
+        bean_types: filterOptions.bean_types || [],
+        brew_methods: filterOptions.brew_methods || [],
+        recipes: filterOptions.recipes || [],
+        filters: filterOptions.filters || [],
+        countries: filterOptions.countries || [],
+        grinders: filterOptions.grinders || [],
+        kettles: filterOptions.kettles || [],
+        scales: filterOptions.scales || [],
+        decaf_options: filterOptions.decaf_options || []
+      };
     }
     
-    return filtered.sort((a, b) => {
+    // Fallback: return empty arrays (API options should always be available)
+    return {
+      roasters: [],
+      bean_types: [],
+      brew_methods: [],
+      recipes: [],
+      filters: [],
+      countries: [],
+      grinders: [],
+      kettles: [],
+      scales: [],
+      decaf_options: []
+    };
+  }, [filterOptions, sessionsWithScore]);
+
+  // Sort sessions (server-side filtering means no client-side filtering needed)
+  const sortedSessions = useMemo(() => {
+    // If preserveOrder is true, return sessions as-is (server controls order)
+    if (preserveOrder) {
+      return sessionsWithScore;
+    }
+    
+    // Otherwise apply client-side sorting
+    return [...sessionsWithScore].sort((a, b) => {
       let aVal = a[sortColumn];
       let bVal = b[sortColumn];
 
@@ -184,33 +225,75 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
       if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [sessionsWithScore, filters, sortColumn, sortDirection, preserveOrder]);
+  }, [sessionsWithScore, sortColumn, sortDirection, preserveOrder]);
 
   const handleSort = (column) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    // Map frontend column names to backend field names
+    const columnMapping = {
+      'calculatedScore': 'score'  // Only mapping needed now
+    };
+    
+    // If we have server-side sorting handlers, use them
+    if (setSortColumn && setSortDirection) {
+      const serverColumn = columnMapping[column] || column;
+      if (sortColumn === serverColumn) {
+        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortColumn(serverColumn);
+        setSortDirection('desc'); // Default to desc for most fields
+      }
     } else {
-      setSortColumn(column);
-      setSortDirection('asc');
+      // Fallback to client-side sorting for backwards compatibility
+      if (sortColumn === column) {
+        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortColumn(column);
+        setSortDirection('asc');
+      }
     }
   };
 
+  // Old filter handlers removed - using updated server-side ones below
+
+  // Filter change handlers - pass changes to parent for server-side filtering
   const handleFilterChange = (column, value) => {
-    setFilters(prev => ({ ...prev, [column]: value }));
+    const newFilters = { ...filters, [column]: value };
+    if (externalFilters && onFiltersChange) {
+      // When filters are managed externally, just notify parent
+      onFiltersChange(newFilters);
+    } else {
+      // When using local filters, update local state
+      setFilters(newFilters);
+      if (onFiltersChange) {
+        onFiltersChange(newFilters);
+      }
+    }
   };
 
   const clearFilters = () => {
-    setFilters({
+    const emptyFilters = {
       roaster: '',
       bean_type: '',
       brew_method: '',
       recipe: '',
-      sweetness: '',
-      acidity: '',
-      bitterness: '',
-      body: '',
-      aroma: ''
-    });
+      filter: '',
+      country: '',
+      grinder: '',
+      kettle: '',
+      scale: '',
+      min_score: '',
+      max_score: ''
+    };
+    if (externalFilters && onFiltersChange) {
+      // When filters are managed externally, just notify parent
+      onFiltersChange(emptyFilters);
+    } else {
+      // When using local filters, update local state
+      setFilters(emptyFilters);
+      if (onFiltersChange) {
+        onFiltersChange(emptyFilters);
+      }
+    }
   };
 
   const getSortIcon = (column) => {
@@ -258,14 +341,14 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
           <select value={filters.roaster} onChange={(e) => handleFilterChange('roaster', e.target.value)}>
             <option value="">All Roasters</option>
             {uniqueValues.roasters.map(roaster => (
-              <option key={roaster} value={roaster}>{roaster}</option>
+              <option key={roaster.id} value={roaster.id}>{roaster.name}</option>
             ))}
           </select>
           
           <select value={filters.bean_type} onChange={(e) => handleFilterChange('bean_type', e.target.value)}>
             <option value="">All Bean Types</option>
             {uniqueValues.bean_types.map(type => (
-              <option key={type} value={type}>{type}</option>
+              <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </select>
           
@@ -276,23 +359,59 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
           >
             <option value="">All Brew Methods</option>
             {uniqueValues.brew_methods.map(method => (
-              <option key={method} value={method}>{method}</option>
+              <option key={method.id} value={method.id}>{method.name}</option>
             ))}
           </select>
           
           <select value={filters.recipe} onChange={(e) => handleFilterChange('recipe', e.target.value)}>
             <option value="">All Recipes</option>
             {uniqueValues.recipes.map(recipe => (
-              <option key={recipe} value={recipe}>{recipe}</option>
+              <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
             ))}
           </select>
           
           <select value={filters.filter} onChange={(e) => handleFilterChange('filter', e.target.value)}>
             <option value="">All Filters</option>
             {uniqueValues.filters.map(filter => (
-              <option key={filter} value={filter}>{filter}</option>
+              <option key={filter.id} value={filter.id}>{filter.name}</option>
             ))}
           </select>
+
+          <select value={filters.country} onChange={(e) => handleFilterChange('country', e.target.value)}>
+            <option value="">All Countries</option>
+            {uniqueValues.countries.map(country => (
+              <option key={country.id} value={country.id}>{country.name}</option>
+            ))}
+          </select>
+
+          <select value={filters.grinder} onChange={(e) => handleFilterChange('grinder', e.target.value)}>
+            <option value="">All Grinders</option>
+            {uniqueValues.grinders.map(grinder => (
+              <option key={grinder.id} value={grinder.id}>{grinder.name}</option>
+            ))}
+          </select>
+
+          <input
+            type="number"
+            placeholder="Min Score"
+            value={filters.min_score}
+            onChange={(e) => handleFilterChange('min_score', e.target.value)}
+            style={{ width: '80px', padding: '4px' }}
+            min="0"
+            max="10"
+            step="0.1"
+          />
+
+          <input
+            type="number"
+            placeholder="Max Score"
+            value={filters.max_score}
+            onChange={(e) => handleFilterChange('max_score', e.target.value)}
+            style={{ width: '80px', padding: '4px' }}
+            min="0"
+            max="10"
+            step="0.1"
+          />
           
           <button 
             onClick={clearFilters} 
@@ -393,7 +512,7 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedSessions.map(session => (
+            {sortedSessions.map(session => (
               <tr key={session.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
                 {showActions && (
                 <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '110px', whiteSpace: 'nowrap' }}>
@@ -545,15 +664,113 @@ function BrewSessionTable({ sessions, onDelete, onDuplicate, onEdit, onRefresh, 
         </table>
       </div>
       
-      {filteredAndSortedSessions.length === 0 && (
+      {sortedSessions.length === 0 && (
         <p style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
           No brew sessions match your current filters.
         </p>
       )}
       
-      <p style={{ marginTop: '10px', color: '#666', fontSize: '12px' }}>
-        Showing {filteredAndSortedSessions.length} of {sessions.length} sessions
-      </p>
+      {/* Bottom Controls - Info on left, Page Size + Navigation on right */}
+      {pagination && pagination.total_count > 0 && (
+        <div style={{ 
+          marginTop: '15px',
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '13px',
+          color: '#6c757d',
+          borderTop: '1px solid #eee',
+          paddingTop: '12px'
+        }}>
+          {/* Left side: Showing info */}
+          <span>
+            Showing {((pagination.page - 1) * pagination.page_size) + 1}-{Math.min(pagination.page * pagination.page_size, pagination.total_count)} of {pagination.total_count} sessions
+          </span>
+
+          {/* Right side: Page size selector + pagination controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Page size selector */}
+            {setPageSize && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <label htmlFor="page-size-select">Show:</label>
+                <select
+                  id="page-size-select"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    if (setCurrentPage) setCurrentPage(1); // Reset to first page when changing page size
+                  }}
+                  style={{
+                    padding: '3px 6px',
+                    border: '1px solid #ddd',
+                    borderRadius: '3px',
+                    fontSize: '13px',
+                    background: 'white'
+                  }}
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <span>per page</span>
+              </div>
+            )}
+            
+            {/* Pagination controls - only show if more than one page */}
+            {pagination.total_pages > 1 && setCurrentPage && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>
+                  Page {pagination.page} of {pagination.total_pages}
+                </span>
+                
+                <button
+                  onClick={() => setCurrentPage(pagination.previous_page)}
+                  disabled={!pagination.has_previous}
+                  style={{
+                    border: 'none',
+                    background: 'none',
+                    cursor: pagination.has_previous ? 'pointer' : 'not-allowed',
+                    color: pagination.has_previous ? '#495057' : '#ccc',
+                    fontSize: '16px',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    opacity: pagination.has_previous ? 1 : 0.5
+                  }}
+                  title="Previous page"
+                  aria-label="Previous page"
+                >
+                  ◀
+                </button>
+                
+                <button
+                  onClick={() => setCurrentPage(pagination.next_page)}
+                  disabled={!pagination.has_next}
+                  style={{
+                    border: 'none',
+                    background: 'none',
+                    cursor: pagination.has_next ? 'pointer' : 'not-allowed',
+                    color: pagination.has_next ? '#495057' : '#ccc',
+                    fontSize: '16px',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    opacity: pagination.has_next ? 1 : 0.5
+                  }}
+                  title="Next page"
+                  aria-label="Next page"
+                >
+                  ▶
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 }

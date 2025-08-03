@@ -44,7 +44,8 @@ test.describe('Home Page', () => {
     await expect(page.locator('body')).toContainText(/recent.*brew.*sessions/i, { timeout: 5000 });
     
     // Should show our test data somewhere on the page using semantic approach
-    await expect(page.locator('body')).toContainText(scenario.brewMethod.name);
+    // Home page shows roaster and country in the "Top 5 Products" section, but not brew method
+    await expect(page.locator('body')).toContainText(scenario.product.product_name);
     await expect(page.locator('body')).toContainText(scenario.roaster.name);
   });
 

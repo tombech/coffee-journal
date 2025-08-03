@@ -61,8 +61,6 @@ test.describe('Product Management', () => {
   test('can create a new product', async ({ page }) => {
     // Create supporting data first
     const roaster = await testData.createTestItem('roasters', { name: `Test Roaster ${testData.testId}` });
-    const country = await testData.createTestItem('countries', { name: `Test Country ${testData.testId}` });
-    const beanType = await testData.createTestItem('bean_types', { name: `Test Bean ${testData.testId}` });
     
     await page.goto('/products');
     
@@ -75,34 +73,24 @@ test.describe('Product Management', () => {
     // Should navigate to form
     await expect(page.getByRole('heading', { name: /Add.*Product/i })).toBeVisible();
     
-    // Fill out form using semantic selectors
+    // Wait for form sections to be ready
+    await expect(page.getByText('☕ Coffee Details')).toBeVisible();
+    
+    // Fill only REQUIRED fields - Roaster is marked as required
     const productName = `Test Product ${testData.testId}`;
     
-    await page.getByLabel(/product.*name/i).fill(productName);
-    
-    // Fill roaster autocomplete
+    // Fill roaster autocomplete (this is required)
+    await expect(page.getByLabel('Roaster')).toBeVisible();
     await page.getByLabel('Roaster').fill(roaster.name);
     // Wait for dropdown and click the option
     await page.getByRole('option', { name: roaster.name }).click();
     
-    // Fill bean type autocomplete
-    await page.getByLabel('Bean Type').fill(beanType.name);
-    await page.getByRole('option', { name: beanType.name }).click();
+    // Add product name for identification
+    await page.getByLabel(/product.*name/i).fill(productName);
     
-    // Fill country autocomplete
-    await page.getByLabel('Country').fill(country.name);
-    await page.getByRole('option', { name: country.name }).click();
-    
-    if (await page.getByLabel(/roast.*type/i).isVisible()) {
-      await page.getByLabel(/roast.*type/i).fill('3');
-    }
-    
-    if (await page.getByLabel(/description/i).isVisible()) {
-      await page.getByLabel(/description/i).fill('Test product created by automation');
-    }
-    
-    // Submit form using semantic selector
-    await page.getByRole('button', { name: /create.*product/i }).click();
+    // Now look for submit button - it should be visible after required field is filled
+    await expect(page.getByTestId('add-product-btn')).toBeVisible({ timeout: 5000 });
+    await page.getByTestId('add-product-btn').click();
     
     // Wait for navigation away from new product form
     await page.waitForURL(url => !url.toString().includes('/products/new'));
@@ -134,19 +122,27 @@ test.describe('Product Management', () => {
     
     // Update description
     const updatedDescription = `Updated description ${testData.testId}`;
-    if (await page.getByLabel(/description/i).isVisible()) {
-      await page.getByLabel(/description/i).fill(updatedDescription);
-    }
-    
-    // Save changes using semantic selector
-    await page.getByRole('button', { name: /update.*product/i }).click();
-    
-    // Wait for navigation back to product detail page
-    await page.waitForURL(`**/products/${scenario.product.id}`);
-    
-    // Should show updated content if description was updated
-    if (updatedDescription) {
+    const descriptionField = page.getByLabel(/description/i);
+    if (await descriptionField.isVisible()) {
+      await descriptionField.clear();
+      await descriptionField.fill(updatedDescription);
+      
+      // Save changes using semantic selector
+      await page.getByRole('button', { name: /update.*product/i }).click();
+      
+      // Wait for navigation back to product detail page
+      await page.waitForURL(`**/products/${scenario.product.id}`);
+      
+      // Wait for page to fully load
+      await expect(page.getByRole('heading', { name: scenario.product.product_name })).toBeVisible();
+      
+      // Should show updated description
       await expect(page.locator('body')).toContainText(updatedDescription);
+    } else {
+      // If description field isn't visible, just save without changes
+      await page.getByRole('button', { name: /update.*product/i }).click();
+      await page.waitForURL(`**/products/${scenario.product.id}`);
+      await expect(page.getByRole('heading', { name: scenario.product.product_name })).toBeVisible();
     }
   });
 

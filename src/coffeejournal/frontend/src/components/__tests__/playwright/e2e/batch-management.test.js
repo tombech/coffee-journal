@@ -171,8 +171,8 @@ test.describe('Batch Management', () => {
     
     await page.goto(`/batches/${scenario.batch.id}`);
     
-    // Click link to product using semantic selector - use exact aria-label
-    await page.getByRole('link', { name: 'View Product' }).click();
+    // Click link to product - look for link containing the product information  
+    await page.getByRole('link').filter({ hasText: scenario.product.product_name }).click();
     
     // Wait for navigation to product page
     await page.waitForURL(`**/products/${scenario.product.id}`);
