@@ -230,9 +230,16 @@ function LookupManager({
             value={value}
             onChange={handleChange}
             required={required}
-            rows="3"
+            rows="2"
             data-testid={`${apiEndpoint}-${name}-input`}
-            style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{ 
+              width: '100%', 
+              padding: '8px 12px', 
+              border: '1px solid #ced4da', 
+              borderRadius: '4px', 
+              fontSize: '14px', 
+              resize: 'vertical' 
+            }}
           />
         );
       case 'file':
@@ -244,7 +251,13 @@ function LookupManager({
             onChange={handleChange}
             accept="image/*"
             data-testid={`${apiEndpoint}-${name}-input`}
-            style={{ width: '100%', padding: '8px' }}
+            style={{ 
+              width: '100%', 
+              padding: '8px 12px', 
+              border: '1px solid #ced4da', 
+              borderRadius: '4px', 
+              fontSize: '14px' 
+            }}
           />
         );
       case 'checkbox':
@@ -274,7 +287,15 @@ function LookupManager({
             onChange={handleChange}
             required={required}
             data-testid={`${apiEndpoint}-${name}-input`}
-            style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{ 
+              width: '100%', 
+              padding: '8px 12px', 
+              border: '1px solid #ced4da', 
+              borderRadius: '4px', 
+              fontSize: '14px',
+              height: '32px',
+              boxSizing: 'border-box'
+            }}
           />
         );
     }
@@ -330,20 +351,175 @@ function LookupManager({
           borderRadius: '8px',
           backgroundColor: '#f9f9f9'
         }}>
-          <h3>{editingItem ? `Edit ${singularName}` : `Add New ${singularName}`}</h3>
+          <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '600', color: '#495057' }}>
+            {editingItem ? `Edit ${singularName}` : `Add New ${singularName}`}
+          </h3>
           <form onSubmit={handleSubmit}>
-            {allFields.map(field => (
-              <div key={field.name} style={{ marginBottom: '15px' }}>
-                <label 
-                  htmlFor={`${apiEndpoint}-${field.name}`}
-                  style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}
-                >
-                  {field.label}{field.required && ' *'}:
-                </label>
-                {renderField(field)}
+            {/* Basic Information Section */}
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              border: '1px solid #e9ecef'
+            }}>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                📝 Basic Information
+              </h4>
+              
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '12px'
+              }}>
+                {allFields.filter(field => ['name', 'short_form'].includes(field.name)).map(field => (
+                  <div key={field.name}>
+                    <label 
+                      htmlFor={`${apiEndpoint}-${field.name}`}
+                      style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                    >
+                      {field.label}{field.required && ' *'}
+                    </label>
+                    {renderField(field)}
+                  </div>
+                ))}
               </div>
-            ))}
-            <div style={{ marginTop: '20px' }}>
+            </div>
+
+            {/* Settings Section */}
+            {allFields.some(field => ['is_default'].includes(field.name)) && (
+              <div style={{
+                backgroundColor: '#e8f4f8',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                border: '1px solid #bee5eb'
+              }}>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  ⚙️ Settings
+                </h4>
+                
+                {allFields.filter(field => ['is_default'].includes(field.name)).map(field => (
+                  <div key={field.name}>
+                    <label 
+                      htmlFor={`${apiEndpoint}-${field.name}`}
+                      style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                    >
+                      {field.label}{field.required && ' *'}
+                    </label>
+                    {renderField(field)}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Additional Information Section */}
+            {allFields.some(field => ['description', 'notes', 'url', 'image_url', 'icon'].includes(field.name)) && (
+              <div style={{
+                backgroundColor: '#fff3cd',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                border: '1px solid #ffeaa7'
+              }}>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🔗 Additional Information
+                </h4>
+                
+                {/* Description and Notes - Side by Side */}
+                {allFields.some(field => ['description', 'notes'].includes(field.name)) && (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '12px',
+                    marginBottom: '12px'
+                  }}>
+                    {allFields.filter(field => ['description', 'notes'].includes(field.name)).map(field => (
+                      <div key={field.name}>
+                        <label 
+                          htmlFor={`${apiEndpoint}-${field.name}`}
+                          style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                        >
+                          {field.label}{field.required && ' *'}
+                        </label>
+                        {renderField(field)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* URLs - Grid Layout */}
+                {allFields.some(field => ['url', 'image_url'].includes(field.name)) && (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '12px',
+                    marginBottom: '12px'
+                  }}>
+                    {allFields.filter(field => ['url', 'image_url'].includes(field.name)).map(field => (
+                      <div key={field.name}>
+                        <label 
+                          htmlFor={`${apiEndpoint}-${field.name}`}
+                          style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                        >
+                          {field.label}{field.required && ' *'}
+                        </label>
+                        {renderField(field)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Icon File - Full Width Row */}
+                {allFields.filter(field => ['icon'].includes(field.name)).map(field => (
+                  <div key={field.name} style={{ marginBottom: '12px' }}>
+                    <label 
+                      htmlFor={`${apiEndpoint}-${field.name}`}
+                      style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                    >
+                      {field.label}{field.required && ' *'}
+                    </label>
+                    {renderField(field)}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Custom Fields Section - Any fields not covered above */}
+            {allFields.filter(field => !['name', 'short_form', 'description', 'notes', 'url', 'image_url', 'icon', 'is_default'].includes(field.name)).length > 0 && (
+              <div style={{
+                backgroundColor: '#e8f5e8',
+                padding: '16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                border: '1px solid #c3e6c3'
+              }}>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🎯 Specific Information
+                </h4>
+                
+                {allFields.filter(field => !['name', 'short_form', 'description', 'notes', 'url', 'image_url', 'icon', 'is_default'].includes(field.name)).map(field => (
+                  <div key={field.name} style={{ marginBottom: '12px' }}>
+                    <label 
+                      htmlFor={`${apiEndpoint}-${field.name}`}
+                      style={{ fontSize: '12px', fontWeight: '600', display: 'block', marginBottom: '4px', color: '#495057' }}
+                    >
+                      {field.label}{field.required && ' *'}
+                    </label>
+                    {renderField(field)}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '10px', 
+              justifyContent: 'flex-end',
+              paddingTop: '16px',
+              borderTop: '1px solid #e9ecef'
+            }}>
               <button 
                 type="button"
                 onClick={handleSubmit}

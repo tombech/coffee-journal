@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from './Toast';
 import { apiFetch } from '../config';
+import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
 import DateInput from './DateInput';
 
@@ -137,7 +138,7 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
             }}
             title="Cancel"
           >
-            ❌
+            {ICONS.CANCEL}
           </button>
         )}
       </div>
@@ -274,18 +275,16 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
             data-testid={isEditMode ? 'update-batch-btn' : 'create-batch-btn'}
             aria-label={loading ? 'Saving...' : (isEditMode ? 'Update Batch' : 'Create Batch')}
             style={{ 
-              padding: '8px 16px',
-              backgroundColor: loading ? '#6c757d' : '#28a745',
-              color: 'white',
+              padding: '10px 15px', 
               border: 'none', 
-              borderRadius: '4px',
+              background: 'none', 
               cursor: loading ? 'default' : 'pointer', 
-              fontSize: '14px',
+              fontSize: '20px',
               opacity: loading ? 0.5 : 1
             }}
             title={loading ? 'Saving...' : (isEditMode ? 'Update Batch' : 'Create Batch')}
           >
-            {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
+            {loading ? ICONS.LOADING : (isEditMode ? ICONS.SAVE : ICONS.CREATE)}
           </button>
           
           {onCancel && (
@@ -303,7 +302,7 @@ function BatchForm({ productId, initialData, onBatchSubmitted, onCancel }) {
               }}
               title="Cancel"
             >
-              ❌
+              {ICONS.CANCEL}
             </button>
           )}
         </div>

@@ -1,42 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../config';
 
-function RegionMultiAutocomplete({ 
-  countryId,
+function BeanTypeMultiAutocomplete({ 
   value = [], 
   onChange, 
-  placeholder = "Start typing to search regions...", 
+  placeholder = "Start typing to search bean types...", 
   disabled = false,
   id,
   'aria-label': ariaLabel,
   ...rest
 }) {
   const [query, setQuery] = useState('');
-  const [allRegions, setAllRegions] = useState([]);
+  const [allBeanTypes, setAllBeanTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch all regions for the selected country when countryId changes
+  // Fetch all bean types when component mounts
   useEffect(() => {
-    if (countryId) {
-      fetchRegionsForCountry();
-    } else {
-      setAllRegions([]);
-    }
-  }, [countryId]); // fetchRegionsForCountry is stable and doesn't need to be in deps
+    fetchAllBeanTypes();
+  }, []); // No dependencies needed, only fetch once
 
-  const fetchRegionsForCountry = async () => {
+  const fetchAllBeanTypes = async () => {
     setIsLoading(true);
     try {
-      const response = await apiFetch(`/countries/${countryId}/regions`);
+      const response = await apiFetch('/bean_types');
       if (response.ok) {
         const results = await response.json();
-        setAllRegions(results);
+        setAllBeanTypes(results);
       } else {
-        setAllRegions([]);
+        setAllBeanTypes([]);
       }
     } catch (error) {
-      console.error('Error fetching regions:', error);
-      setAllRegions([]);
+      console.error('Error fetching bean types:', error);
+      setAllBeanTypes([]);
     } finally {
       setIsLoading(false);
     }
@@ -47,10 +42,10 @@ function RegionMultiAutocomplete({
     setQuery(inputValue);
     
     // Check if the user selected from datalist (input value matches an option exactly)
-    const matchingRegion = allRegions.find(r => r.name === inputValue);
-    if (matchingRegion && !value.some(item => item.id === matchingRegion.id)) {
+    const matchingBeanType = allBeanTypes.find(bt => bt.name === inputValue);
+    if (matchingBeanType && !value.some(item => item.id === matchingBeanType.id)) {
       // User clicked on a datalist option, select it immediately
-      onChange([...value, matchingRegion]);
+      onChange([...value, matchingBeanType]);
       setQuery('');
     }
   };
@@ -73,14 +68,13 @@ function RegionMultiAutocomplete({
       return;
     }
     
-    // Find existing region or create new one
-    const existingRegion = allRegions.find(r => r.name.toLowerCase() === trimmedName.toLowerCase());
+    // Find existing bean type or create new one
+    const existingBeanType = allBeanTypes.find(bt => bt.name.toLowerCase() === trimmedName.toLowerCase());
     
-    const newItem = existingRegion || { 
+    const newItem = existingBeanType || { 
       id: null, 
       name: trimmedName, 
-      isNew: true,
-      country_id: countryId
+      isNew: true
     };
     
     onChange([...value, newItem]);
@@ -89,7 +83,7 @@ function RegionMultiAutocomplete({
 
   const handleInputBlur = () => {
     // Auto-select on blur if there's a value (for manual typing)
-    if (query.trim() && !allRegions.find(r => r.name === query.trim())) {
+    if (query.trim() && !allBeanTypes.find(bt => bt.name === query.trim())) {
       handleSelection(query.trim());
     } else {
       setQuery(''); // Clear if it was just partial typing
@@ -117,12 +111,12 @@ function RegionMultiAutocomplete({
     }
   };
 
-  // Filter available regions to exclude already selected ones
-  const availableRegions = allRegions.filter(region => 
-    !value.some(selected => selected.id === region.id)
+  // Filter available bean types to exclude already selected ones
+  const availableBeanTypes = allBeanTypes.filter(beanType => 
+    !value.some(selected => selected.id === beanType.id)
   );
 
-  const datalistId = `regions-options-${id || 'default'}`;
+  const datalistId = `bean-types-options-${id || 'default'}`;
 
   return (
     <div>
@@ -183,8 +177,8 @@ function RegionMultiAutocomplete({
           onFocus={handleMobileDatalistFocus}
           list={datalistId}
           data-list={datalistId}
-          placeholder={countryId ? (availableRegions.length > 0 ? "Start typing or select from dropdown..." : "Type a region name...") : "Please select a country first"}
-          disabled={disabled || !countryId}
+          placeholder={availableBeanTypes.length > 0 ? "Start typing or select from dropdown..." : "Type a bean type name..."}
+          disabled={disabled}
           style={{
             width: '100%',
             fontSize: '14px',
@@ -198,7 +192,7 @@ function RegionMultiAutocomplete({
         />
         
         {/* Dropdown arrow indicator */}
-        {countryId && availableRegions.length > 0 && (
+        {availableBeanTypes.length > 0 && (
           <div
             style={{
               position: 'absolute',
@@ -244,7 +238,7 @@ function RegionMultiAutocomplete({
         {isLoading && (
           <div style={{
             position: 'absolute',
-            right: query ? '28px' : (countryId && availableRegions.length > 0 ? '28px' : '8px'),
+            right: query ? '28px' : (availableBeanTypes.length > 0 ? '28px' : '8px'),
             top: '50%',
             transform: 'translateY(-50%)',
             fontSize: '12px',
@@ -255,14 +249,14 @@ function RegionMultiAutocomplete({
         )}
       </div>
 
-      {/* Datalist with available regions */}
+      {/* Datalist with available bean types */}
       <datalist id={datalistId}>
-        {availableRegions.map((region) => (
-          <option key={region.id} value={region.name} />
+        {availableBeanTypes.map((beanType) => (
+          <option key={beanType.id} value={beanType.name} />
         ))}
       </datalist>
     </div>
   );
 }
 
-export default RegionMultiAutocomplete;
+export default BeanTypeMultiAutocomplete;

@@ -5,7 +5,7 @@ import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
 import HeadlessAutocomplete from './HeadlessAutocomplete';
-import HeadlessMultiAutocomplete from './HeadlessMultiAutocomplete';
+import BeanTypeMultiAutocomplete from './BeanTypeMultiAutocomplete';
 import RegionMultiAutocomplete from './RegionMultiAutocomplete';
 
 function ProductForm() {
@@ -173,161 +173,341 @@ function ProductForm() {
   if (loading) return <p className="loading-message">Loading form...</p>;
 
   return (
-    <div data-testid="product-form-container">
-      <h2 data-testid="form-title">{isEditMode ? 'Edit Coffee Product' : 'Add New Coffee Product'}</h2>
-      {error && <p className="error-message">{error}</p>}
+    <div data-testid="product-form-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+      <h2 data-testid="form-title" style={{ marginBottom: '24px', color: '#333' }}>
+        {isEditMode ? 'Edit Coffee Product' : 'Add New Coffee Product'}
+      </h2>
+      
+      {error && (
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#f8d7da',
+          border: '1px solid #f5c6cb',
+          borderRadius: '4px',
+          color: '#721c24',
+          marginBottom: '20px'
+        }}>
+          {error}
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} data-testid="product-form">
-        <label htmlFor="roaster-input">
-          Roaster *:
-          <HeadlessAutocomplete
-            id="roaster-input"
-            lookupType="roasters"
-            value={formData.roaster}
-            onChange={(value) => setFormData(prev => ({ ...prev, roaster: value }))}
-            placeholder="Start typing to search roasters..."
-            data-testid="roaster-autocomplete"
-            aria-label="Roaster"
-          />
-        </label>
-        <label htmlFor="bean-type-input">
-          Bean Type:
-          <HeadlessMultiAutocomplete
-            id="bean-type-input"
-            lookupType="bean_types"
-            value={formData.bean_type}
-            onChange={(value) => setFormData(prev => ({ ...prev, bean_type: value }))}
-            placeholder="Start typing to search bean types..."
-            data-testid="bean-type-multiautocomplete"
-            aria-label="Bean Type"
-          />
-        </label>
-        <label htmlFor="country-input">
-          Country:
-          <HeadlessAutocomplete
-            id="country-input"
-            lookupType="countries"
-            value={formData.country}
-            onChange={(value) => {
-              setFormData(prev => ({ 
-                ...prev, 
-                country: value,
-                // Clear regions when country changes
-                region: prev.country.id !== value.id ? [] : prev.region
-              }));
-            }}
-            placeholder="Start typing to search countries..."
-            aria-label="Country"
-          />
-        </label>
-        <label>
-          Region:
-          <RegionMultiAutocomplete
-            countryId={formData.country.id}
-            value={formData.region}
-            onChange={(value) => setFormData(prev => ({ ...prev, region: value }))}
-            placeholder="Start typing to search regions..."
-          />
-        </label>
-        <label htmlFor="bean-process-input">
-          Bean Process:
-          <input
-            type="text"
-            id="bean-process-input"
-            name="bean_process"
-            value={formData.bean_process}
-            onChange={handleChange}
-            placeholder="e.g., Washed, Natural, Honey"
-            data-testid="bean-process-input"
-          />
-        </label>
-        <label htmlFor="product-name-input">
-          Product Name: (optional custom name)
-          <input
-            type="text"
-            id="product-name-input"
-            name="product_name"
-            value={formData.product_name}
-            onChange={handleChange}
-            placeholder="e.g., My favorite morning blend"
-            data-testid="product-name-input"
-          />
-        </label>
-        <label htmlFor="roast-type-input">
-          Roast Type: (1-10 scale, 1=light, 10=dark)
-          <input
-            id="roast-type-input"
-            type="number"
-            name="roast_type"
-            value={formData.roast_type}
-            onChange={handleChange}
-            min="1"
-            max="10"
-            placeholder="1-10"
-            aria-label="Roast Type"
-          />
-        </label>
-        <label>
-          Description:
-          <textarea name="description" value={formData.description} onChange={handleChange} rows="4"></textarea>
-        </label>
-        <label>
-          Product URL:
-          <input type="url" name="url" value={formData.url} onChange={handleChange} />
-        </label>
-        <label>
-          Image URL:
-          <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} />
-        </label>
-        
-        <label htmlFor="decaf-checkbox">
-          <input
-            type="checkbox"
-            id="decaf-checkbox"
-            name="decaf"
-            checked={formData.decaf}
-            onChange={handleChange}
-            data-testid="decaf-checkbox"
-          />
-          Decaffeinated
-        </label>
-        
-        {formData.decaf && (
-          <label>
-            Decaf Method:
+        {/* Basic Info Section */}
+        <div style={{
+          backgroundColor: '#f8f9fa',
+          padding: '20px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          border: '1px solid #e9ecef'
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            ☕ Coffee Details
+          </h3>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '16px',
+            alignItems: 'end'
+          }}>
+            <div>
+              <label htmlFor="roaster-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Roaster *
+              </label>
+              <HeadlessAutocomplete
+                id="roaster-input"
+                lookupType="roasters"
+                value={formData.roaster}
+                onChange={(value) => setFormData(prev => ({ ...prev, roaster: value }))}
+                placeholder="Start typing to search roasters..."
+                data-testid="roaster-autocomplete"
+                aria-label="Roaster"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="product-name-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Product Name <span style={{ fontWeight: '400', color: '#6c757d' }}>(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="product-name-input"
+                name="product_name"
+                value={formData.product_name}
+                onChange={handleChange}
+                placeholder="e.g., My favorite morning blend"
+                data-testid="product-name-input"
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px', height: '32px', boxSizing: 'border-box' }}
+              />
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'flex-end', height: '54px', paddingLeft: '20px', paddingBottom: '-10px', position: 'relative' }}>
+              <div style={{ transform: 'translateY(12px)' }}>
+                <StarRating
+                  rating={formData.rating}
+                  onRatingChange={handleRatingChange}
+                  maxRating={5}
+                  size="xlarge"
+                  data-testid="product-rating-stars"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Origin Section */}
+        <div style={{
+          backgroundColor: '#e8f5e8',
+          padding: '20px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          border: '1px solid #c3e6c3'
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            🌍 Origin
+          </h3>
+          
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="country-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+              Country
+            </label>
             <HeadlessAutocomplete
-              lookupType="decaf_methods"
-              value={formData.decaf_method}
-              onChange={(value) => setFormData(prev => ({ ...prev, decaf_method: value }))}
-              placeholder="Start typing to search decaf methods..."
-            />
-          </label>
-        )}
-        
-        <label htmlFor="rating-stars">
-          Rating:
-          <div style={{ marginTop: '8px' }}>
-            <StarRating
-              rating={formData.rating}
-              onRatingChange={handleRatingChange}
-              maxRating={5}
-              size="xlarge"
-              data-testid="product-rating-stars"
+              id="country-input"
+              lookupType="countries"
+              value={formData.country}
+              onChange={(value) => {
+                setFormData(prev => ({ 
+                  ...prev, 
+                  country: value,
+                  // Clear regions when country changes
+                  region: prev.country.id !== value.id ? [] : prev.region
+                }));
+              }}
+              placeholder="Start typing to search countries..."
+              aria-label="Country"
             />
           </div>
-        </label>
-        <label htmlFor="notes-textarea">
-          Notes:
-          <textarea
-            id="notes-textarea"
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            rows="3"
-            placeholder="Any additional notes about this product..."
-            data-testid="notes-textarea"
-          />
-        </label>
-        <div style={{ display: 'flex', gap: '10px' }}>
+          
+          <div>
+            <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+              Region
+            </label>
+            <RegionMultiAutocomplete
+              countryId={formData.country.id}
+              value={formData.region}
+              onChange={(value) => setFormData(prev => ({ ...prev, region: value }))}
+              placeholder="Start typing to search regions..."
+            />
+          </div>
+        </div>
+
+        {/* Bean & Processing Section */}
+        <div style={{
+          backgroundColor: '#e8f4f8',
+          padding: '20px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          border: '1px solid #bee5eb'
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            🫘 Bean & Processing
+          </h3>
+          
+          {/* Bean Type - Full Width to Accommodate Chips */}
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="bean-type-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+              Bean Type
+            </label>
+            <BeanTypeMultiAutocomplete
+              id="bean-type-input"
+              value={formData.bean_type}
+              onChange={(value) => setFormData(prev => ({ ...prev, bean_type: value }))}
+              placeholder="Start typing to search bean types..."
+              data-testid="bean-type-multiautocomplete"
+              aria-label="Bean Type"
+            />
+          </div>
+          
+          {/* Processing Details - Grid Layout */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '16px',
+            marginBottom: '16px'
+          }}>
+            <div>
+              <label htmlFor="bean-process-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Bean Process
+              </label>
+              <input
+                type="text"
+                id="bean-process-input"
+                name="bean_process"
+                value={formData.bean_process}
+                onChange={handleChange}
+                placeholder="e.g., Washed, Natural, Honey"
+                data-testid="bean-process-input"
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="roast-type-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Roast Level <span style={{ fontWeight: '400', color: '#6c757d' }}>(1=light, 10=dark)</span>
+              </label>
+              <input
+                id="roast-type-input"
+                type="number"
+                name="roast_type"
+                value={formData.roast_type}
+                onChange={handleChange}
+                min="1"
+                max="10"
+                placeholder="1-10"
+                aria-label="Roast Type"
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
+              />
+            </div>
+          </div>
+
+          {/* Decaf Options */}
+          <div>
+            <div style={{ marginBottom: '12px' }}>
+              <label htmlFor="decaf-checkbox" style={{ fontSize: '14px', fontWeight: '500', display: 'flex', alignItems: 'center', color: '#495057' }}>
+                <input
+                  type="checkbox"
+                  id="decaf-checkbox"
+                  name="decaf"
+                  checked={formData.decaf}
+                  onChange={handleChange}
+                  data-testid="decaf-checkbox"
+                  style={{ marginRight: '8px' }}
+                />
+                Decaffeinated
+              </label>
+            </div>
+            
+            {formData.decaf && (
+              <div style={{ maxWidth: '300px' }}>
+                <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                  Decaf Method
+                </label>
+                <HeadlessAutocomplete
+                  lookupType="decaf_methods"
+                  value={formData.decaf_method}
+                  onChange={(value) => setFormData(prev => ({ ...prev, decaf_method: value }))}
+                  placeholder="Start typing to search decaf methods..."
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Additional Info Section */}
+        <div style={{
+          backgroundColor: '#fff3cd',
+          padding: '20px',
+          borderRadius: '8px',
+          marginBottom: '24px',
+          border: '1px solid #ffeaa7'
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#495057', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            📝 Additional Information
+          </h3>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gap: '16px'
+          }}>
+            <div>
+              <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Description
+              </label>
+              <textarea 
+                name="description" 
+                value={formData.description} 
+                onChange={handleChange} 
+                rows="3"
+                placeholder="Describe the coffee's flavor profile, origin story, or other details..."
+                style={{ 
+                  width: '100%', 
+                  padding: '8px 12px', 
+                  border: '1px solid #ced4da', 
+                  borderRadius: '4px', 
+                  fontSize: '14px',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+            
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '16px'
+            }}>
+              <div>
+                <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                  Product URL
+                </label>
+                <input 
+                  type="url" 
+                  name="url" 
+                  value={formData.url} 
+                  onChange={handleChange}
+                  placeholder="https://example.com/product"
+                  style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
+                />
+              </div>
+              
+              <div>
+                <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                  Image URL
+                </label>
+                <input 
+                  type="url" 
+                  name="image_url" 
+                  value={formData.image_url} 
+                  onChange={handleChange}
+                  placeholder="https://example.com/image.jpg"
+                  style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="notes-textarea" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+                Personal Notes
+              </label>
+              <textarea
+                id="notes-textarea"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                rows="2"
+                placeholder="Your personal notes about this coffee..."
+                data-testid="notes-textarea"
+                style={{ 
+                  width: '100%', 
+                  padding: '8px 12px', 
+                  border: '1px solid #ced4da', 
+                  borderRadius: '4px', 
+                  fontSize: '14px',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '10px', 
+          justifyContent: 'flex-end',
+          paddingTop: '20px',
+          borderTop: '1px solid #e9ecef'
+        }}>
           <button 
             type="submit" 
             disabled={loading}
@@ -345,15 +525,18 @@ function ProductForm() {
           >
             {loading ? ICONS.LOADING : (isEditMode ? ICONS.SAVE : ICONS.CREATE)}
           </button>
+          
           <button 
             type="button"
             onClick={() => navigate('/products')}
+            disabled={loading}
             style={{ 
               padding: '10px 15px', 
               border: 'none', 
               background: 'none', 
-              cursor: 'pointer', 
-              fontSize: '20px'
+              cursor: loading ? 'default' : 'pointer', 
+              fontSize: '20px',
+              opacity: loading ? 0.5 : 1
             }}
             title="Cancel"
             aria-label="Cancel"
