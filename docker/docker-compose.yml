@@ -4,6 +4,8 @@ services:
     image: ghcr.io/tombech/coffee-journal/coffeejournal-backend:latest
     container_name: coffeejournal-backend
     user: "${UID:-1000}:${GID:-1000}"
+    ports:
+      - "3001:5000"
     volumes:
       # Mount data directory to local filesystem for persistence
       - ./data:/app/data
