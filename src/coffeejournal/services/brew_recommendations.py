@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional, Any
 from collections import Counter
 from statistics import mean
+from ..api.utils import calculate_total_score
 
 
 class BrewRecommendationService:
@@ -27,8 +28,15 @@ class BrewRecommendationService:
         all_sessions = self.brew_session_repo.find_all()
         product_sessions = [s for s in all_sessions if s.get('product_id') == product_id]
         
-        # Filter by score threshold
-        good_sessions = [s for s in product_sessions if (s.get('score') or 0) > self.score_threshold]
+        # Filter by score threshold (use calculated score)
+        good_sessions = []
+        for session in product_sessions:
+            total_score = calculate_total_score(session)
+            if total_score and total_score > self.score_threshold:
+                # Add the calculated score to the session for later use
+                session_copy = session.copy()
+                session_copy['total_score'] = total_score
+                good_sessions.append(session_copy)
         
         if len(good_sessions) < 2:
             return {
@@ -80,14 +88,14 @@ class BrewRecommendationService:
         if not sessions:
             return None
         
-        # Sort by score descending
-        sorted_sessions = sorted(sessions, key=lambda x: x.get('score', 0), reverse=True)
+        # Sort by calculated score descending
+        sorted_sessions = sorted(sessions, key=lambda x: x.get('total_score', 0), reverse=True)
         top_sessions = sorted_sessions[:5]  # Top 5 sessions
         
         # Check if we should use template mode
         if len(top_sessions) > 1:
-            best_score = top_sessions[0].get('score', 0)
-            second_best = top_sessions[1].get('score', 0)
+            best_score = top_sessions[0].get('total_score', 0)
+            second_best = top_sessions[1].get('total_score', 0)
             
             if best_score - second_best >= self.template_score_diff:
                 return self._create_template_recommendation(top_sessions[0], len(sessions))
@@ -121,7 +129,7 @@ class BrewRecommendationService:
         
         return {
             'type': 'template',
-            'source_score': template_session.get('score'),
+            'source_score': template_session.get('total_score'),
             'source_date': template_session.get('timestamp', '').split('T')[0] if template_session.get('timestamp') else None,
             'total_sessions': total_sessions,
             'parameters': template
@@ -166,7 +174,7 @@ class BrewRecommendationService:
                     'type': 'frequent'
                 }
         
-        avg_score = round(mean([s.get('score', 0) for s in sessions]), 1)
+        avg_score = round(mean([s.get('total_score', 0) for s in sessions]), 1)
         
         return {
             'type': 'range',

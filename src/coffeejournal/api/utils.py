@@ -50,6 +50,60 @@ def calculate_brew_ratio(coffee_grams, water_grams):
     return None
 
 
+def calculate_total_score(session):
+    """
+    Calculate total score from individual taste components.
+    
+    Uses manual score if provided, otherwise calculates from taste components.
+    This matches the frontend calculation in BrewSessionTable.js.
+    
+    Args:
+        session: Dictionary containing brew session data
+        
+    Returns:
+        Float score or None if insufficient data
+    """
+    # Use manual score if available and greater than 0
+    manual_score = session.get('score')
+    if manual_score is not None and manual_score > 0:
+        try:
+            return float(manual_score)
+        except (ValueError, TypeError):
+            pass
+    
+    # Calculate from taste components (matching frontend logic)
+    # Positive components: sweetness, acidity, body, aroma, flavor_profile_match
+    positive_components = ['sweetness', 'acidity', 'body', 'aroma', 'flavor_profile_match']
+    
+    values = []
+    for component in positive_components:
+        value = session.get(component)
+        if value is not None:
+            try:
+                float_value = float(value)
+                if float_value > 0:
+                    values.append(float_value)
+            except (ValueError, TypeError):
+                continue
+    
+    # Bitterness is inverted (10 - bitterness) like in frontend
+    bitterness = session.get('bitterness')
+    if bitterness is not None:
+        try:
+            bitterness_float = float(bitterness)
+            bitterness_score = 10 - bitterness_float
+            if bitterness_score > 0:
+                values.append(bitterness_score)
+        except (ValueError, TypeError):
+            pass
+    
+    # Return average if we have any values
+    if len(values) > 0:
+        return round(sum(values) / len(values), 1)
+    
+    return None
+
+
 def calculate_price_per_cup(price, amount_grams):
     """Calculate price per cup based on batch price and amount."""
     if price and amount_grams:
@@ -314,5 +368,8 @@ def enrich_brew_session_with_lookups(session, factory, user_id=None):
         session['scale'] = scale if scale else None
     else:
         session['scale'] = None
+    
+    # Add calculated score as a computed property
+    session['calculated_score'] = calculate_total_score(session)
     
     return session

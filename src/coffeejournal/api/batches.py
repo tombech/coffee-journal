@@ -592,42 +592,8 @@ def get_all_brew_sessions():
             session['product_name'] = 'N/A'
             session['product_details'] = {}
         
-        # Add brew method, recipe, grinder, filter, kettle, and scale objects
-        if session.get('brew_method_id'):
-            method = brew_method_repo.find_by_id(session['brew_method_id'])
-            session['brew_method'] = method if method else None
-        else:
-            session['brew_method'] = None
-        
-        if session.get('recipe_id'):
-            recipe = recipe_repo.find_by_id(session['recipe_id'])
-            session['recipe'] = recipe if recipe else None
-        else:
-            session['recipe'] = None
-        
-        if session.get('grinder_id'):
-            grinder = grinder_repo.find_by_id(session['grinder_id'])
-            session['grinder'] = grinder if grinder else None
-        else:
-            session['grinder'] = None
-        
-        if session.get('filter_id'):
-            filter_lookup = filter_repo.find_by_id(session['filter_id'])
-            session['filter'] = filter_lookup if filter_lookup else None
-        else:
-            session['filter'] = None
-        
-        if session.get('kettle_id'):
-            kettle_lookup = kettle_repo.find_by_id(session['kettle_id'])
-            session['kettle'] = kettle_lookup if kettle_lookup else None
-        else:
-            session['kettle'] = None
-        
-        if session.get('scale_id'):
-            scale_lookup = scale_repo.find_by_id(session['scale_id'])
-            session['scale'] = scale_lookup if scale_lookup else None
-        else:
-            session['scale'] = None
+        # Use centralized enrichment function to add lookup objects and calculated score
+        enrich_brew_session_with_lookups(session, factory, user_id)
         
         # Calculate brew ratio using consistent field names
         session['brew_ratio'] = calculate_brew_ratio(session.get('amount_coffee_grams'), session.get('amount_water_grams'))
@@ -641,13 +607,13 @@ def get_all_brew_sessions():
         if batch_id and session.get('product_batch_id') != batch_id:
             continue
         
-        # Score range filters
+        # Score range filters (use calculated score from enrichment)
         if min_score is not None:
-            score = session.get('score') or 0
+            score = session.get('calculated_score') or 0
             if score < min_score:
                 continue
         if max_score is not None:
-            score = session.get('score') or 0
+            score = session.get('calculated_score') or 0
             if score > max_score:
                 continue
         
@@ -745,22 +711,8 @@ def get_all_brew_sessions():
         elif sort_field == 'brew_ratio':
             return session.get('brew_ratio', 0)
         elif sort_field == 'score':
-            # For score, use the overall score or calculated score from ratings
-            score = session.get('score')
-            if score:
-                return score
-            # Calculate from tasting notes if no overall score
-            tasting_scores = []
-            for field in ['sweetness', 'acidity', 'body', 'aroma', 'flavor_profile_match']:
-                value = session.get(field)
-                if value and isinstance(value, (int, float)):
-                    tasting_scores.append(value)
-            # Use bitterness as negative contribution
-            bitterness = session.get('bitterness')
-            if bitterness and isinstance(bitterness, (int, float)):
-                tasting_scores.append(10 - bitterness)  # Invert bitterness
-            
-            return sum(tasting_scores) / len(tasting_scores) if tasting_scores else 0
+            # Use the calculated score from centralized enrichment
+            return session.get('calculated_score') or 0
         else:
             # For all other numeric fields
             value = session.get(sort_field)

@@ -34,33 +34,10 @@ function BrewSessionTable({
   filters: externalFilters = null  // Filters from parent component
 }) {
   
-  // Calculate comprehensive score for brew sessions
-  const calculateBrewScore = (session) => {
-    // Use overall score if available
-    if (session.score && session.score > 0) {
-      return session.score;
-    }
-    
-    // Otherwise calculate from tasting notes (bitterness is negative, others positive)
-    const tastingNotes = [
-      session.sweetness,
-      session.acidity,
-      session.body,
-      session.aroma,
-      session.flavor_profile_match
-    ].filter(score => score && score > 0);
-    
-    // Bitterness is subtracted (inverted)
-    const bitternessScore = session.bitterness ? (10 - session.bitterness) : 0;
-    if (bitternessScore > 0) tastingNotes.push(bitternessScore);
-    
-    return tastingNotes.length > 0 ? tastingNotes.reduce((sum, score) => sum + score, 0) / tastingNotes.length : 0;
-  };
-
-  // Add calculated score to sessions
+  // Use backend calculated score instead of computing locally
   const sessionsWithScore = sessions.map(session => ({
     ...session,
-    calculatedScore: calculateBrewScore(session)
+    calculatedScore: session.calculated_score || 0
   }));
 
   // Function to get short name for lookup items
