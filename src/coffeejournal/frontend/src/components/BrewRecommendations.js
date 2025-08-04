@@ -268,47 +268,48 @@ function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation 
             </button>
           </div>
           
-          {/* Conversational introduction */}
+          {/* Prose recommendation */}
           <div style={{ 
             fontSize: '12px', 
             color: '#2e7d32', 
-            lineHeight: '1.4', 
+            lineHeight: '1.5', 
             marginBottom: '8px',
-            fontStyle: 'italic',
             backgroundColor: '#f1f8e9',
-            padding: '6px 8px',
+            padding: '8px 10px',
             borderRadius: '3px',
             borderLeft: '3px solid #66bb6a'
           }}>
-            {getConversationalText(method, rec)}
+            {rec.prose || getConversationalText(method, rec)}
           </div>
           
-          {/* Parameter recommendations */}
-          <div style={{ fontSize: '12px', color: '#2e7d32', lineHeight: '1.4' }}>
-            {Object.entries(rec.parameters).map(([param, data]) => {
-              const description = getParameterDescription(param, data);
-              if (!description) return null;
-              
-              return (
-                <div key={param} style={{ 
-                  marginBottom: '4px',
-                  padding: '2px 0',
-                  display: 'flex',
-                  alignItems: 'flex-start'
-                }}>
-                  <span style={{ 
-                    color: '#558b2f', 
-                    marginRight: '6px',
-                    fontSize: '11px',
-                    marginTop: '1px'
+          {/* Show detailed parameters only if no prose (fallback) */}
+          {!rec.prose && (
+            <div style={{ fontSize: '12px', color: '#2e7d32', lineHeight: '1.4' }}>
+              {Object.entries(rec.parameters).map(([param, data]) => {
+                const description = getParameterDescription(param, data);
+                if (!description) return null;
+                
+                return (
+                  <div key={param} style={{ 
+                    marginBottom: '4px',
+                    padding: '2px 0',
+                    display: 'flex',
+                    alignItems: 'flex-start'
                   }}>
-                    •
-                  </span>
-                  <span>{description}</span>
-                </div>
-              );
-            })}
-          </div>
+                    <span style={{ 
+                      color: '#558b2f', 
+                      marginRight: '6px',
+                      fontSize: '11px',
+                      marginTop: '1px'
+                    }}>
+                      •
+                    </span>
+                    <span>{description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       ))}
       

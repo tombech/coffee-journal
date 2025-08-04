@@ -2,26 +2,50 @@
   {
     "id": 1,
     "name": "Yirgacheffe",
-    "country_id": 1
+    "short_form": "Yirgacheffe",
+    "country_id": 1,
+    "description": "Floral, tea-like Ethiopian coffees"
   },
   {
     "id": 2,
     "name": "Huila",
-    "country_id": 2
+    "short_form": "Huila",
+    "country_id": 2,
+    "description": "High-altitude Colombian region"
   },
   {
     "id": 3,
     "name": "Cerrado",
-    "country_id": 3
+    "short_form": "Cerrado",
+    "country_id": 3,
+    "description": "Brazilian savanna region"
   },
   {
     "id": 4,
     "name": "Antigua",
-    "country_id": 4
+    "short_form": "Antigua",
+    "country_id": 4,
+    "description": "Historic Guatemalan volcanic valley"
   },
   {
     "id": 5,
     "name": "Nyeri",
-    "country_id": 5
+    "short_form": "Nyeri",
+    "country_id": 5,
+    "description": "Kenyan region known for bright acidity"
+  },
+  {
+    "id": 6,
+    "name": "Sidama",
+    "short_form": "Sidama",
+    "country_id": 1,
+    "description": "Ethiopian region with complex fruit notes"
+  },
+  {
+    "id": 7,
+    "name": "Nari\u00f1o",
+    "short_form": "Nari\u00f1o",
+    "country_id": 2,
+    "description": "Colombian region near Ecuador border"
   }
 ]

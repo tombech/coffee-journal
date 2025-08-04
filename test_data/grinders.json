@@ -1,14 +1,44 @@
 [
   {
     "id": 1,
-    "name": "Hario Mini Mill"
+    "name": "Hario Mini Mill",
+    "short_form": "Mini Mill",
+    "description": "Compact ceramic burr hand grinder"
   },
   {
     "id": 2,
-    "name": "Baratza Encore"
+    "name": "Baratza Encore",
+    "short_form": "Encore",
+    "description": "Entry-level electric burr grinder"
   },
   {
     "id": 3,
-    "name": "Fellow Ode"
+    "name": "Fellow Ode",
+    "short_form": "Ode",
+    "description": "Flat burr grinder optimized for filter coffee"
+  },
+  {
+    "id": 4,
+    "name": "Comandante C40",
+    "short_form": "C40",
+    "description": "Premium conical burr hand grinder"
+  },
+  {
+    "id": 5,
+    "name": "Wilfa Uniform",
+    "short_form": "Uniform",
+    "description": "Nordic-designed electric grinder"
+  },
+  {
+    "id": 6,
+    "name": "Timemore Chestnut C2",
+    "short_form": "C2",
+    "description": "Portable hand grinder with steel burrs"
+  },
+  {
+    "id": 7,
+    "name": "Baratza Virtuoso+",
+    "short_form": "Virtuoso+",
+    "description": "Mid-range conical burr grinder"
   }
 ]

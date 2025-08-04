@@ -1,42 +1,62 @@
 [
   {
     "id": 1,
-    "name": "Ethiopia"
+    "name": "Ethiopia",
+    "short_form": "Ethiopia",
+    "description": "Birthplace of coffee with diverse flavor profiles"
   },
   {
     "id": 2,
-    "name": "Colombia"
+    "name": "Colombia",
+    "short_form": "Colombia",
+    "description": "High altitude growing regions producing balanced coffees"
   },
   {
     "id": 3,
-    "name": "Brazil"
+    "name": "Brazil",
+    "short_form": "Brazil",
+    "description": "World's largest coffee producer with nutty, chocolatey flavors"
   },
   {
     "id": 4,
-    "name": "Guatemala"
+    "name": "Guatemala",
+    "short_form": "Guatemala",
+    "description": "Volcanic soil producing full-bodied coffees"
   },
   {
     "id": 5,
-    "name": "Kenya"
+    "name": "Kenya",
+    "short_form": "Kenya",
+    "description": "High-grown coffees known for wine-like acidity"
   },
   {
     "id": 6,
-    "name": "Jamaica"
+    "name": "Jamaica",
+    "short_form": "Jamaica",
+    "description": "Blue Mountain region famous for smooth, mild coffee"
   },
   {
     "id": 7,
-    "name": "Hawaii"
+    "name": "Hawaii",
+    "short_form": "Hawaii",
+    "description": "Only US state growing commercial coffee"
   },
   {
     "id": 8,
-    "name": "Costa Rica"
+    "name": "Costa Rica",
+    "short_form": "Costa Rica",
+    "description": "Bright, clean coffees from volcanic regions"
   },
   {
     "id": 9,
-    "name": "Peru"
+    "name": "Peru",
+    "short_form": "Peru",
+    "description": "Organic-focused production with balanced flavors"
   },
   {
     "id": 10,
-    "name": "Indonesia"
+    "name": "Indonesia",
+    "short_form": "Indonesia",
+    "description": "Earthy, full-bodied coffees from island archipelago"
   }
 ]

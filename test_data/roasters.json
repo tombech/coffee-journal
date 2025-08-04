@@ -1,22 +1,58 @@
 [
   {
     "id": 1,
-    "name": "Blue Bottle Coffee"
+    "name": "Blue Bottle Coffee",
+    "short_form": "Blue Bottle",
+    "description": "Oakland-based specialty coffee roaster",
+    "url": "https://bluebottlecoffee.com"
   },
   {
     "id": 2,
-    "name": "Intelligentsia Coffee"
+    "name": "Intelligentsia Coffee",
+    "short_form": "Intelligentsia",
+    "description": "Chicago-based third wave coffee pioneer",
+    "url": "https://www.intelligentsia.com"
   },
   {
     "id": 3,
-    "name": "Stumptown Coffee Roasters"
+    "name": "Stumptown Coffee Roasters",
+    "short_form": "Stumptown",
+    "description": "Portland-based artisan coffee roaster",
+    "url": "https://www.stumptowncoffee.com"
   },
   {
     "id": 4,
-    "name": "Counter Culture Coffee"
+    "name": "Counter Culture Coffee",
+    "short_form": "Counter Culture",
+    "description": "Durham-based sustainable coffee roaster",
+    "url": "https://counterculturecoffee.com"
   },
   {
     "id": 5,
-    "name": "La Colombe Coffee"
+    "name": "La Colombe Coffee",
+    "short_form": "La Colombe",
+    "description": "Philadelphia-based coffee roaster and cafe",
+    "url": "https://www.lacolombe.com"
+  },
+  {
+    "id": 6,
+    "name": "Ritual Coffee Roasters",
+    "short_form": "Ritual",
+    "description": "San Francisco-based specialty coffee",
+    "url": "https://www.ritualcoffee.com"
+  },
+  {
+    "id": 7,
+    "name": "Verve Coffee Roasters",
+    "short_form": "Verve",
+    "description": "Santa Cruz-based coffee roaster",
+    "url": "https://www.vervecoffee.com"
+  },
+  {
+    "id": 8,
+    "name": "George Howell Coffee",
+    "short_form": "George Howell",
+    "description": "Boston-based coffee pioneer",
+    "url": "https://www.georgehowellcoffee.com"
   }
 ]

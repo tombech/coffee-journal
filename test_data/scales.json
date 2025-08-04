@@ -1,14 +1,32 @@
 [
   {
     "id": 1,
-    "name": "Hario V60 Scale"
+    "name": "Hario V60 Scale",
+    "short_form": "V60 Scale",
+    "description": "Basic brewing scale with timer"
   },
   {
     "id": 2,
-    "name": "Acaia Pearl"
+    "name": "Acaia Pearl",
+    "short_form": "Pearl",
+    "description": "Professional coffee scale with app connectivity"
   },
   {
     "id": 3,
-    "name": "Brewista Smart Scale"
+    "name": "Brewista Smart Scale",
+    "short_form": "Smart Scale",
+    "description": "Fast-response brewing scale"
+  },
+  {
+    "id": 4,
+    "name": "Timemore Black Mirror",
+    "short_form": "Black Mirror",
+    "description": "Precise scale with flow rate indicator"
+  },
+  {
+    "id": 5,
+    "name": "Fellow Atmos",
+    "short_form": "Atmos",
+    "description": "Vacuum-sealed scale for freshness"
   }
 ]

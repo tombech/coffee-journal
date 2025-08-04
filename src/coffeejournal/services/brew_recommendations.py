@@ -2,6 +2,7 @@ from typing import Dict, List, Optional, Any
 from collections import Counter
 from statistics import mean
 from ..api.utils import calculate_total_score, enrich_brew_session_with_lookups
+from .brew_prose_generator import BrewProseGenerator
 
 
 class BrewRecommendationService:
@@ -13,6 +14,7 @@ class BrewRecommendationService:
         self.brew_method_repo = brew_method_repo
         self.score_threshold = 3.5
         self.template_score_diff = 0.5
+        self.prose_generator = BrewProseGenerator()
     
     def get_recommendations(self, product_id: int, method: str = None) -> Dict[str, Any]:
         """
@@ -73,6 +75,8 @@ class BrewRecommendationService:
             if len(sessions) >= 2:  # Need at least 2 sessions per method
                 method_rec = self._generate_method_recommendation(sessions)
                 if method_rec:
+                    # Add prose description
+                    method_rec['prose'] = self.prose_generator.generate_prose(brew_method, method_rec, sessions)
                     recommendations[brew_method] = method_rec
         
         if not recommendations:
@@ -160,7 +164,7 @@ class BrewRecommendationService:
         for field in categorical_fields:
             value = template_session.get(field)
             if value and isinstance(value, dict) and value.get('name'):
-                template[field] = {'value': value['name'], 'type': 'exact'}
+                template[field] = {'value': value, 'type': 'exact'}
         
         return {
             'type': 'template',
@@ -236,20 +240,24 @@ class BrewRecommendationService:
         
         # Find most frequent for categorical fields
         for field in categorical_fields:
-            # Extract names from enriched objects
-            names = []
+            # Extract equipment objects from enriched data
+            equipment_objects = []
+            equipment_names = []
             for session in sessions:
                 value = session.get(field)
                 if value and isinstance(value, dict) and value.get('name'):
-                    names.append(value['name'])
+                    equipment_objects.append(value)
+                    equipment_names.append(value['name'])
             
-            if names:
-                counter = Counter(names)
-                most_common = counter.most_common(1)[0]
+            if equipment_names:
+                counter = Counter(equipment_names)
+                most_common_name = counter.most_common(1)[0]
+                # Find the equipment object for the most common name
+                most_common_object = next((obj for obj in equipment_objects if obj['name'] == most_common_name[0]), equipment_names[0])
                 ranges[field] = {
-                    'value': most_common[0],
-                    'frequency': most_common[1],
-                    'total': len(names),
+                    'value': most_common_object,
+                    'frequency': most_common_name[1],
+                    'total': len(equipment_names),
                     'type': 'frequent'
                 }
         

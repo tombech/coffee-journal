@@ -58,5 +58,25 @@
     "price": 24.0,
     "seller": "La Colombe Cafe",
     "notes": "Dark roast for espresso"
+  },
+  {
+    "id": 7,
+    "product_id": 6,
+    "roast_date": "2025-01-10",
+    "purchase_date": "2025-01-15",
+    "amount_grams": 250.0,
+    "price": 20.0,
+    "seller": "Ritual Coffee",
+    "notes": "Light roast, very fruity"
+  },
+  {
+    "id": 8,
+    "product_id": 7,
+    "roast_date": "2025-01-08",
+    "purchase_date": "2025-01-12",
+    "amount_grams": 340.0,
+    "price": 19.5,
+    "seller": "Verve Coffee",
+    "notes": "Decaf for evening brews"
   }
 ]

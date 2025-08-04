@@ -17,6 +17,7 @@ function Home() {
   const [error, setError] = useState(null);
   const [showNewForm, setShowNewForm] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
+  const [filterOptions, setFilterOptions] = useState(null);
 
   const fetchBrewSessions = async () => {
     try {
@@ -28,17 +29,19 @@ function Home() {
         productsResponse,
         topBrewsResponse,
         bottomBrewsResponse,
-        topProductsResponse
+        topProductsResponse,
+        filterOptionsResponse
       ] = await Promise.all([
         apiFetch('/brew_sessions?page_size=15'), // Recent 15 sessions
         apiFetch('/products'),
         apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=desc'), // Top 5 brews
         apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=asc'), // Bottom 5 brews  
-        apiFetch('/stats/top-products?limit=5') // Top 5 products
+        apiFetch('/stats/top-products?limit=5'), // Top 5 products
+        apiFetch('/brew_sessions/filter_options') // Filter options for dropdowns
       ]);
       
       if (!sessionsResponse.ok || !productsResponse.ok || !topBrewsResponse.ok || 
-          !bottomBrewsResponse.ok || !topProductsResponse.ok) {
+          !bottomBrewsResponse.ok || !topProductsResponse.ok || !filterOptionsResponse.ok) {
         throw new Error('Failed to fetch data from one or more endpoints');
       }
       
@@ -47,13 +50,15 @@ function Home() {
         productsData,
         topBrewsResult,
         bottomBrewsResult,
-        topProductsData
+        topProductsData,
+        filterOptionsData
       ] = await Promise.all([
         sessionsResponse.json(),
         productsResponse.json(),
         topBrewsResponse.json(),
         bottomBrewsResponse.json(),
-        topProductsResponse.json()
+        topProductsResponse.json(),
+        filterOptionsResponse.json()
       ]);
       
       // Set all the state
@@ -62,6 +67,7 @@ function Home() {
       setTopBrewSessions(topBrewsResult.data || []);
       setBottomBrewSessions(bottomBrewsResult.data || []);
       setTopProducts(topProductsData || []);
+      setFilterOptions(filterOptionsData);
       
     } catch (err) {
       setError('Failed to fetch data: ' + err.message);
@@ -289,6 +295,7 @@ function Home() {
         showNewForm={showNewForm}
         setShowNewForm={setShowNewForm}
         setEditingSession={setEditingSession}
+        filterOptions={filterOptions}
       />
 
       {/* Analytics Section */}

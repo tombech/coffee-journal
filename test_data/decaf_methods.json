@@ -1,14 +1,20 @@
 [
   {
     "id": 1,
-    "name": "Swiss Water Process"
+    "name": "Swiss Water Process",
+    "short_form": "Swiss Water",
+    "description": "Chemical-free decaffeination using water"
   },
   {
     "id": 2,
-    "name": "CO2 Process"
+    "name": "CO2 Process",
+    "short_form": "CO2",
+    "description": "Supercritical carbon dioxide decaffeination"
   },
   {
     "id": 3,
-    "name": "Ethyl Acetate Process"
+    "name": "Ethyl Acetate Process",
+    "short_form": "EA",
+    "description": "Natural decaffeination using fruit-derived EA"
   }
 ]

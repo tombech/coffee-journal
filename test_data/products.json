@@ -13,9 +13,7 @@
     "roast_type": 3,
     "description": "Bright, floral coffee with citrus notes",
     "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
-    "image_url": null,
-    "decaf": false,
-    "decaf_method_id": null
+    "decaf": false
   },
   {
     "id": 2,
@@ -31,9 +29,7 @@
     "roast_type": 5,
     "description": "Rich Colombian coffee with chocolate and caramel notes",
     "url": "https://www.intelligentsia.com/coffee/el-diablo",
-    "image_url": null,
-    "decaf": false,
-    "decaf_method_id": null
+    "decaf": false
   },
   {
     "id": 3,
@@ -49,9 +45,7 @@
     "roast_type": 4,
     "description": "Full-bodied Guatemalan coffee with spicy undertones",
     "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
-    "image_url": null,
-    "decaf": false,
-    "decaf_method_id": null
+    "decaf": false
   },
   {
     "id": 4,
@@ -67,9 +61,7 @@
     "roast_type": 3,
     "description": "Kenyan coffee with bright acidity and wine-like characteristics",
     "url": "https://counterculturecoffee.com/coffee/hologram",
-    "image_url": null,
-    "decaf": false,
-    "decaf_method_id": null
+    "decaf": false
   },
   {
     "id": 5,
@@ -85,8 +77,37 @@
     "roast_type": 6,
     "description": "Dark roasted Brazilian blend with nutty and chocolate notes",
     "url": "https://www.lacolombe.com/products/corsica",
-    "image_url": null,
-    "decaf": false,
-    "decaf_method_id": null
+    "decaf": false
+  },
+  {
+    "id": 6,
+    "roaster_id": 6,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": 1,
+    "region_id": [
+      6
+    ],
+    "product_name": "Ethiopia Sidama",
+    "roast_type": 2,
+    "description": "Light roasted Ethiopian with complex fruit notes",
+    "url": "https://www.ritualcoffee.com/products/ethiopia-sidama",
+    "decaf": false
+  },
+  {
+    "id": 7,
+    "roaster_id": 7,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": 8,
+    "region_id": [],
+    "product_name": "Costa Rica Decaf",
+    "roast_type": 3,
+    "description": "Swiss water processed Costa Rican coffee",
+    "url": "https://www.vervecoffee.com/products/decaf",
+    "decaf": true,
+    "decaf_method_id": 1
   }
 ]
