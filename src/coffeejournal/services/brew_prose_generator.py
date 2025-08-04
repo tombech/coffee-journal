@@ -30,11 +30,32 @@ class BrewProseGenerator:
             ],
             
             'multiple_variable': [
-                "Your successful brews with this coffee have been quite flexible - anywhere from {coffee_range} coffee to {water_range} water ({ratio_range} ratio) has worked well. The {grinder} grinder at {grind_range} paired with the {filter} filter does the job. Water at {temp} seems to be your sweet spot. Bloom for {bloom_range}, then follow the \"{recipe}\" recipe for a total time between {brew_time_range}.",
+                "Your successful brews with this coffee have been quite flexible - anywhere from {coffee_range} coffee to {water_range} water ({ratio_range}) has worked well. The {grinder} grinder at {grind_range} paired with the {filter} filter does the job. Water at {temp} seems to be your sweet spot. Bloom for {bloom_range}, then follow the \"{recipe}\" recipe for a total time between {brew_time_range}.",
                 
-                "Looking at your {count} best {method} brews (averaging {avg_score}/10), there's some room to experiment. Use {coffee_range} coffee with {water_range} water for a {ratio_range} ratio. Set your {grinder} between {grind_range} and heat water to {temp}. The {filter} filter with the \"{recipe}\" recipe has been reliable. After a {bloom_range} bloom, aim for {brew_time_range} total.",
+                "Looking at your {count} best {method} brews (averaging {avg_score}/10), there's some room to experiment. Use {coffee_range} coffee with {water_range} water for a {ratio_range}. Set your {grinder} between {grind_range} and heat water to {temp}. The {filter} filter with the \"{recipe}\" recipe has been reliable. After a {bloom_range} bloom, aim for {brew_time_range} total.",
                 
-                "From your successful sessions, I'd start with {coffee}g coffee to {water}g water ({ratio} ratio), though {coffee_range} to {water_range} has all worked. The {grinder} at {grind_setting} (or anywhere from {grind_range}) with {temp} water gives good results. Use the {filter} filter, bloom for {bloom}, and follow the \"{recipe}\" recipe for about {brew_time}."
+                "From your successful sessions, I'd start with {coffee}g coffee to {water}g water ({ratio}), though {coffee_range} to {water_range} has all worked. The {grinder} at {grind_setting} (or anywhere from {grind_range}) with {temp} water gives good results. Use the {filter} filter, bloom for {bloom}, and follow the \"{recipe}\" recipe for about {brew_time}.",
+                
+                # New template variations with moderate tone
+                "Based on your {count} sessions, try {coffee_range} coffee with {water_range} water ({ratio_range}). The {grinder} at {grind_range} with {filter} filters works well. Heat water to {temp}, bloom for {bloom_range}, then follow the \"{recipe}\" method for {brew_time_range}.",
+                
+                "Your {count} brews suggest {coffee_range} coffee to {water_range} water ({ratio_range}) as a solid starting point. Use the {grinder} at {grind_range}, {temp} water, and {filter} filters. Bloom for {bloom_range}, then complete the \"{recipe}\" sequence in {brew_time_range}.",
+                
+                "Looking at your data, {coffee_range} coffee with {water_range} water ({ratio_range}) has been working. Set the {grinder} to {grind_range}, heat water to {temp}, and use {filter} filters. After a {bloom_range} bloom, follow the \"{recipe}\" approach for {brew_time_range} total.",
+                
+                "Your sessions show {coffee_range} coffee and {water_range} water ({ratio_range}) as a reliable combination. The {grinder} at {grind_range} paired with {filter} filters gives consistent results. Use {temp} water, bloom for {bloom_range}, then apply the \"{recipe}\" technique for {brew_time_range}.",
+                
+                "From your {count} brews: start with {coffee_range} coffee to {water_range} water ({ratio_range}). Set your {grinder} at {grind_range}, use {filter} filters, and heat water to {temp}. Begin with a {bloom_range} bloom, then execute the \"{recipe}\" method over {brew_time_range}.",
+                
+                "The pattern from your sessions points to {coffee_range} coffee with {water_range} water ({ratio_range}). Your {grinder} at {grind_range} and {filter} filters have been effective. Water at {temp}, {bloom_range} bloom, then the \"{recipe}\" approach for {brew_time_range} should work.",
+                
+                "Try {coffee_range} coffee with {water_range} water ({ratio_range}) - this range has served you well. Use the {grinder} at {grind_range}, {filter} filters, and {temp} water. Start with {bloom_range} bloom time, then follow \"{recipe}\" for {brew_time_range}.",
+                
+                "Your {count} sessions suggest this approach: {coffee_range} coffee, {water_range} water ({ratio_range}), {grinder} at {grind_range}. Use {filter} filters with {temp} water. After {bloom_range} bloom, apply the \"{recipe}\" method for {brew_time_range}.",
+                
+                "With the {grinder} at {grind_range} and {filter} filters, try {coffee_range} coffee to {water_range} water ({ratio_range}). Heat water to {temp}, bloom for {bloom_range}, then use the \"{recipe}\" technique for {brew_time_range}. This combination has been productive.",
+                
+                "Here's what's been working: {coffee_range} coffee, {water_range} water ({ratio_range}), {grinder} at {grind_range}. Use {filter} filters, {temp} water, {bloom_range} bloom, then the \"{recipe}\" method for {brew_time_range}."
             ]
         }
     
@@ -153,9 +174,15 @@ class BrewProseGenerator:
             return "N/A"
         min_val = data.get('min')
         max_val = data.get('max')
-        if min_val == max_val:
-            return f"1:{int(round(min_val))}"
-        return f"1:{int(round(min_val))} to 1:{int(round(max_val))}"
+        if min_val is None or max_val is None:
+            return "N/A"
+        
+        min_rounded = int(round(min_val))
+        max_rounded = int(round(max_val))
+        
+        if min_rounded == max_rounded:
+            return f"1:{min_rounded} ratio"
+        return f"1:{min_rounded} to 1:{max_rounded} ratio"
     
     def _format_temperature_single(self, value: Optional[float]) -> str:
         """Format a single temperature value."""
@@ -173,9 +200,9 @@ class BrewProseGenerator:
         if temp_data.get('type') == 'range':
             min_temp = int(round(temp_data.get('min', best_temp)))
             max_temp = int(round(temp_data.get('max', best_temp)))
-            if min_temp == max_temp:
+            if min_temp == max_temp or min_temp == best_rounded == max_temp:
                 return f"{best_rounded}°C"
-            return f"{best_rounded}°C ({min_temp}-{max_temp}°C)"
+            return f"{best_rounded}°C ({min_temp}-{max_temp}°C range works)"
         
         return f"{best_rounded}°C"
     
@@ -242,7 +269,7 @@ class BrewProseGenerator:
         
         if min_val == max_val:
             return str(int(min_val))
-        return f"{int(min_val)} to {int(max_val)}"
+        return f"{int(min_val)}-{int(max_val)}"
     
     def _get_value_or_avg(self, data: Dict[str, Any]) -> Optional[float]:
         """Get exact value or average from recommendation data."""
