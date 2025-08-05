@@ -165,28 +165,8 @@ function BrewSessionList() {
 
   return (
     <div>
-      <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <h2 style={{ margin: 0, marginRight: 'auto' }}>All Brew Sessions</h2>
-        
-        <button 
-          onClick={() => setShowNewForm(!showNewForm)}
-          style={{ padding: '6px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px' }}
-          title={showNewForm ? 'Cancel' : 'Add New Brew Session'}
-          aria-label={showNewForm ? 'Cancel' : 'Add New Brew Session'}
-        >
-          {showNewForm ? ICONS.CANCEL : ICONS.CREATE}
-        </button>
-        
-        {editingSession && (
-          <button 
-            onClick={handleCancelEdit}
-            style={{ padding: '6px 12px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px' }}
-            title="Cancel Edit"
-            aria-label="Cancel Edit"
-          >
-            {ICONS.CANCEL} Edit
-          </button>
-        )}
+      <div style={{ marginBottom: '15px' }}>
+        <h2 style={{ margin: 0 }}>All Brew Sessions</h2>
       </div>
       
       {showNewForm && (

@@ -887,8 +887,27 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
         </div>
         
         <div>
-          <label htmlFor="score" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+          <label htmlFor="score" style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', marginBottom: '4px', gap: '4px' }}>
             Overall Score
+            <span 
+              style={{ 
+                fontSize: '10px', 
+                color: '#666', 
+                cursor: 'help',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '50%',
+                width: '14px',
+                height: '14px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold'
+              }}
+              title="Optional: Leave empty to use auto-calculated score from tasting notes. Enter a value to override the automatic calculation."
+              aria-label="Optional field with automatic calculation"
+            >
+              ?
+            </span>
           </label>
           <input 
             type="number" 
@@ -899,7 +918,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
             min="0" 
             max="10" 
             step="0.5"
-            placeholder="0-10"
+            placeholder="0-10, optional"
             style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
           />
         </div>
@@ -944,10 +963,10 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           {loading ? ICONS.LOADING : ICONS.SAVE}
         </button>
         
-        {onCancel && (
+        {(onCancel || isEditMode) && (
           <button 
             type="button" 
-            onClick={onCancel} 
+            onClick={onCancel || (() => navigate(`/brew-sessions/${id}`))} 
             disabled={loading}
             style={{ 
               padding: '10px 15px', 

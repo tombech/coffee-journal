@@ -83,6 +83,46 @@ function ProductForm() {
     }));
   };
 
+  const convertRoastType = (input) => {
+    if (!input) return '';
+    
+    const str = input.toString().trim();
+    
+    // Check if it's a fraction (contains /)
+    if (str.includes('/')) {
+      const parts = str.split('/');
+      if (parts.length === 2) {
+        const numerator = parseFloat(parts[0]);
+        const denominator = parseFloat(parts[1]);
+        
+        if (!isNaN(numerator) && !isNaN(denominator) && denominator > 0) {
+          // Convert fraction to 1-10 scale
+          const ratio = numerator / denominator;
+          const scaledValue = Math.round(ratio * 10);
+          return Math.max(1, Math.min(10, scaledValue)); // Clamp between 1-10
+        }
+      }
+    }
+    
+    // Check if it's already a number between 1-10
+    const num = parseFloat(str);
+    if (!isNaN(num)) {
+      return Math.max(1, Math.min(10, Math.round(num)));
+    }
+    
+    return str; // Return as-is if not convertible
+  };
+
+  const handleRoastTypeChange = (e) => {
+    const inputValue = e.target.value;
+    const convertedValue = convertRoastType(inputValue);
+    
+    setFormData((prev) => ({ 
+      ...prev, 
+      roast_type: convertedValue
+    }));
+  };
+
   const handleRatingChange = (rating) => {
     setFormData((prev) => ({ ...prev, rating: rating }));
   };
@@ -358,17 +398,15 @@ function ProductForm() {
             
             <div>
               <label htmlFor="roast-type-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
-                Roast Level <span style={{ fontWeight: '400', color: '#6c757d' }}>(1=light, 10=dark)</span>
+                Roast Level <span style={{ fontWeight: '400', color: '#6c757d' }}>(1-10 or fraction like 3/7)</span>
               </label>
               <input
                 id="roast-type-input"
-                type="number"
+                type="text"
                 name="roast_type"
                 value={formData.roast_type}
-                onChange={handleChange}
-                min="1"
-                max="10"
-                placeholder="1-10"
+                onChange={handleRoastTypeChange}
+                placeholder="e.g., 5, 3/7, 2/5"
                 aria-label="Roast Type"
                 style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
               />
