@@ -4,10 +4,10 @@ import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
-import HeadlessAutocomplete from './HeadlessAutocomplete';
 import BeanTypeMultiAutocomplete from './BeanTypeMultiAutocomplete';
 import CountryAutocomplete from './CountryAutocomplete';
 import RegionAutocomplete from './RegionAutocomplete';
+import InlineChipAutocomplete from './InlineChipAutocomplete';
 
 function ProductForm() {
   const { id } = useParams(); // Get ID from URL for edit mode
@@ -32,19 +32,36 @@ function ProductForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [roasters, setRoasters] = useState([]);
 
   useEffect(() => {
-    // If ID exists, fetch product data for editing
-    if (id) {
-      setIsEditMode(true);
-      fetchProduct();
-    } else {
-      setLoading(false); // No product to load, so stop loading
-    }
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch roasters for the dropdown
+        const roastersResponse = await apiFetch('/roasters');
+        if (roastersResponse.ok) {
+          const roastersData = await roastersResponse.json();
+          setRoasters(roastersData);
+        }
+
+        // If ID exists, fetch product data for editing
+        if (id) {
+          setIsEditMode(true);
+          await fetchProduct();
+        }
+      } catch (err) {
+        setError("Failed to load data: " + err.message);
+        console.error("Error loading data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   const fetchProduct = async () => {
-    setLoading(true);
     try {
       const response = await apiFetch(`/products/${id}`);
       if (!response.ok) {
@@ -71,8 +88,6 @@ function ProductForm() {
     } catch (err) {
       setError("Failed to fetch product for editing: " + err.message);
       console.error("Error fetching product:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -257,18 +272,36 @@ function ProductForm() {
             alignItems: 'end'
           }}>
             <div>
-              <label htmlFor="roaster-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
+              <label htmlFor="roaster-select" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
                 Roaster *
               </label>
-              <HeadlessAutocomplete
-                id="roaster-input"
-                lookupType="roasters"
-                value={formData.roaster}
-                onChange={(value) => setFormData(prev => ({ ...prev, roaster: value }))}
-                placeholder="Start typing to search roasters..."
-                data-testid="roaster-autocomplete"
-                aria-label="Roaster"
-              />
+              <select
+                id="roaster-select"
+                name="roaster"
+                value={formData.roaster?.name || ''}
+                onChange={(e) => {
+                  const selectedName = e.target.value;
+                  if (selectedName) {
+                    // Find the roaster object or create a new one
+                    const existingRoaster = roasters.find(r => r.name === selectedName);
+                    if (existingRoaster) {
+                      setFormData(prev => ({ ...prev, roaster: { id: existingRoaster.id, name: existingRoaster.name, isNew: false } }));
+                    } else {
+                      setFormData(prev => ({ ...prev, roaster: { id: null, name: selectedName, isNew: true } }));
+                    }
+                  } else {
+                    setFormData(prev => ({ ...prev, roaster: { id: null, name: '', isNew: false } }));
+                  }
+                }}
+                required
+                data-testid="roaster-select"
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px', height: '32px', boxSizing: 'border-box' }}
+              >
+                <option value="">Select a roaster</option>
+                {roasters.map((roaster) => (
+                  <option key={roaster.id} value={roaster.name}>{roaster.name}</option>
+                ))}
+              </select>
             </div>
             
             <div>
@@ -431,15 +464,20 @@ function ProductForm() {
             </div>
             
             {formData.decaf && (
-              <div style={{ maxWidth: '300px' }}>
+              <div>
                 <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
                   Decaf Method
                 </label>
-                <HeadlessAutocomplete
+                <InlineChipAutocomplete
                   lookupType="decaf_methods"
                   value={formData.decaf_method}
                   onChange={(value) => setFormData(prev => ({ ...prev, decaf_method: value }))}
-                  placeholder="Start typing to search decaf methods..."
+                  placeholder="Select one decaf method..."
+                  multiSelect={false}
+                  singleSelectStyle={true}
+                  maxHeight="200px"
+                  data-testid="decaf-method-autocomplete"
+                  aria-label="Decaf Method"
                 />
               </div>
             )}

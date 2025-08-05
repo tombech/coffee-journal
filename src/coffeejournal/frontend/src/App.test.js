@@ -14,16 +14,13 @@ describe('App Component', () => {
     fetch.mockClear();
     console.log.mockClear();
     
-    // Mock API responses for Home component
-    fetch
-      .mockResolvedValueOnce({
+    // Mock all API responses for Home component
+    fetch.mockImplementation(() =>
+      Promise.resolve({
         ok: true,
-        json: async () => []
+        json: () => Promise.resolve([])
       })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => []
-      });
+    );
   });
 
   afterAll(() => {

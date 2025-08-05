@@ -110,7 +110,7 @@ class TestBrewRecommendationService:
         assert params['grinder_setting']['type'] == 'exact'
         assert params['brew_ratio']['value'] == 16.0       # NEW: 320/20 = 16.0
         assert params['brew_ratio']['type'] == 'exact'
-        assert params['recipe']['value'] == 'Perfect V60'  # Enriched from object
+        assert params['recipe']['value'] == {'id': 1, 'name': 'Perfect V60'}  # Enriched object
         assert params['recipe']['type'] == 'exact'
     
     def test_range_mode_when_scores_are_close(self):
@@ -206,7 +206,7 @@ class TestBrewRecommendationService:
         assert params['brew_ratio']['type'] == 'range'
         
         # Check frequent categorical parameters
-        assert params['recipe']['value'] == 'Standard V60'  # Most frequent (2 out of 3)
+        assert params['recipe']['value'] == {'id': 1, 'name': 'Standard V60'}  # Most frequent (2 out of 3)
         assert params['recipe']['frequency'] == 2
         assert params['recipe']['total'] == 3
         assert params['recipe']['type'] == 'frequent'
@@ -449,11 +449,11 @@ class TestBrewRecommendationService:
         assert params['brew_ratio']['type'] == 'exact'
         
         # Enriched categorical fields
-        assert params['recipe']['value'] == 'Enhanced V60'
+        assert params['recipe']['value'] == {'id': 1, 'name': 'Enhanced V60'}
         assert params['recipe']['type'] == 'exact'
-        assert params['grinder']['value'] == 'Baratza Encore'
+        assert params['grinder']['value'] == {'id': 1, 'name': 'Baratza Encore'}
         assert params['grinder']['type'] == 'exact'
-        assert params['filter']['value'] == 'Hario V60 Paper'
+        assert params['filter']['value'] == {'id': 1, 'name': 'Hario V60 Paper'}
         assert params['filter']['type'] == 'exact'
         
         # Equipment fields that are None should not appear in parameters

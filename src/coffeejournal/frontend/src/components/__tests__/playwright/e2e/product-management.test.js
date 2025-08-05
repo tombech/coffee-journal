@@ -47,7 +47,7 @@ test.describe('Product Management', () => {
     
     // Find our specific test product row and click its details link  
     const productRow = page.locator('div, tr').filter({ hasText: scenario.roaster.name });
-    await page.getByTestId(`product-details-link-${scenario.product.id}`).click();
+    await page.getByTestId(`product-card-link-${scenario.product.id}`).click();
     
     // Wait for navigation to product detail page
     await page.waitForURL(`**/products/${scenario.product.id}`);
@@ -79,11 +79,9 @@ test.describe('Product Management', () => {
     // Fill only REQUIRED fields - Roaster is marked as required
     const productName = `Test Product ${testData.testId}`;
     
-    // Fill roaster autocomplete (this is required)
+    // Select roaster from dropdown (this is required)
     await expect(page.getByLabel('Roaster')).toBeVisible();
-    await page.getByLabel('Roaster').fill(roaster.name);
-    // Wait for dropdown and click the option
-    await page.getByRole('option', { name: roaster.name }).click();
+    await page.getByLabel('Roaster').selectOption({ label: roaster.name });
     
     // Add product name for identification
     await page.getByLabel(/product.*name/i).fill(productName);
@@ -173,10 +171,21 @@ test.describe('Product Management', () => {
   test('shows validation errors', async ({ page }) => {
     await page.goto('/products/new');
     
-    // Try to submit empty form using semantic selector
-    await page.getByRole('button', { name: /create.*product/i }).click();
+    // Wait for form to be ready
+    await expect(page.getByLabel('Roaster')).toBeVisible();
     
-    // Should show validation errors - look for error message element
+    // Disable HTML5 validation to test our custom validation
+    await page.evaluate(() => {
+      const form = document.querySelector('form[data-testid="product-form"]');
+      if (form) {
+        form.setAttribute('novalidate', 'true');
+      }
+    });
+    
+    // Try to submit empty form using deterministic selector (icon button)
+    await page.getByTestId('add-product-btn').click();
+    
+    // Should show custom validation error message
     await expect(page.locator('.error-message')).toBeVisible({ timeout: 5000 });
   });
 

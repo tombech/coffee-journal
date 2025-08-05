@@ -53,13 +53,13 @@ test.describe('Button Harmonization', () => {
     // Create test scenario first
     const scenario = await testData.createTestScenario();
     
-    // Check products page
+    // Check products page - uses testId for icon link
     await page.goto('/products');
-    await expect(page.getByRole('link', { name: /create.*product|add.*product/i })).toBeVisible();
+    await expect(page.getByTestId('add-new-product-btn')).toBeVisible();
     
-    // Check brew sessions page
+    // Check brew sessions page - button has aria-label "New Brew Session"
     await page.goto('/brew-sessions');
-    await expect(page.getByRole('button', { name: 'Add New Brew Session' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'New Brew Session' })).toBeVisible();
     
     // Check product detail page for batch creation
     await page.goto(`/products/${scenario.product.id}`);
@@ -102,7 +102,7 @@ test.describe('Button Harmonization', () => {
     
     // Go to brew session form
     await page.goto('/brew-sessions');
-    await page.getByRole('button', { name: 'Add New Brew Session' }).click();
+    await page.getByRole('button', { name: 'New Brew Session' }).click();
     
     // Cancel button should have semantic label in brew session form too - use first one
     await expect(page.getByRole('button', { name: /cancel/i }).first()).toBeVisible();
@@ -116,14 +116,14 @@ test.describe('Button Harmonization', () => {
     await page.goto('/products/new');
     await expect(page.getByRole('heading', { name: /add.*coffee.*product/i })).toBeVisible();
     
-    // Create button should have semantic label
-    await expect(page.getByRole('button', { name: /create.*product|add.*product/i })).toBeVisible();
+    // Create button should have semantic aria-label - now using icon buttons
+    await expect(page.getByRole('button', { name: /create.*product/i })).toBeVisible();
     
     // Go to product edit form
     await page.goto(`/products/edit/${scenario.product.id}`);
     await expect(page.getByRole('heading', { name: /edit.*coffee.*product/i })).toBeVisible();
     
-    // Update button should have semantic label
-    await expect(page.getByRole('button', { name: /update.*product|save/i })).toBeVisible();
+    // Update button should have semantic aria-label - now using icon buttons
+    await expect(page.getByRole('button', { name: /update.*product/i })).toBeVisible();
   });
 });

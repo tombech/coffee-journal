@@ -315,14 +315,22 @@ function BrewSessionTable({
       {showFilters && (
       <div className="filter-controls" style={{ marginBottom: '15px', padding: '8px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-          <select value={filters.roaster} onChange={(e) => handleFilterChange('roaster', e.target.value)}>
+          <select 
+            value={filters.roaster} 
+            onChange={(e) => handleFilterChange('roaster', e.target.value)}
+            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Roasters</option>
             {uniqueValues.roasters.map(roaster => (
               <option key={roaster.id} value={roaster.id}>{roaster.name}</option>
             ))}
           </select>
           
-          <select value={filters.bean_type} onChange={(e) => handleFilterChange('bean_type', e.target.value)}>
+          <select 
+            value={filters.bean_type} 
+            onChange={(e) => handleFilterChange('bean_type', e.target.value)}
+            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Bean Types</option>
             {uniqueValues.bean_types.map(type => (
               <option key={type.id} value={type.id}>{type.name}</option>
@@ -333,6 +341,7 @@ function BrewSessionTable({
             aria-label="Filter by brew method"
             value={filters.brew_method} 
             onChange={(e) => handleFilterChange('brew_method', e.target.value)}
+            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
           >
             <option value="">All Brew Methods</option>
             {uniqueValues.brew_methods.map(method => (
@@ -340,28 +349,44 @@ function BrewSessionTable({
             ))}
           </select>
           
-          <select value={filters.recipe} onChange={(e) => handleFilterChange('recipe', e.target.value)}>
+          <select 
+            value={filters.recipe} 
+            onChange={(e) => handleFilterChange('recipe', e.target.value)}
+            style={{ width: '110px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Recipes</option>
             {uniqueValues.recipes.map(recipe => (
               <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
             ))}
           </select>
           
-          <select value={filters.filter} onChange={(e) => handleFilterChange('filter', e.target.value)}>
+          <select 
+            value={filters.filter} 
+            onChange={(e) => handleFilterChange('filter', e.target.value)}
+            style={{ width: '100px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Filters</option>
             {uniqueValues.filters.map(filter => (
               <option key={filter.id} value={filter.id}>{filter.name}</option>
             ))}
           </select>
 
-          <select value={filters.country} onChange={(e) => handleFilterChange('country', e.target.value)}>
+          <select 
+            value={filters.country} 
+            onChange={(e) => handleFilterChange('country', e.target.value)}
+            style={{ width: '110px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Countries</option>
             {uniqueValues.countries.map(country => (
               <option key={country.id} value={country.id}>{country.name}</option>
             ))}
           </select>
 
-          <select value={filters.grinder} onChange={(e) => handleFilterChange('grinder', e.target.value)}>
+          <select 
+            value={filters.grinder} 
+            onChange={(e) => handleFilterChange('grinder', e.target.value)}
+            style={{ width: '110px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
             <option value="">All Grinders</option>
             {uniqueValues.grinders.map(grinder => (
               <option key={grinder.id} value={grinder.id}>{grinder.name}</option>
@@ -373,7 +398,7 @@ function BrewSessionTable({
             placeholder="Min Score"
             value={filters.min_score}
             onChange={(e) => handleFilterChange('min_score', e.target.value)}
-            style={{ width: '80px', padding: '4px' }}
+            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
             min="0"
             max="10"
             step="0.1"
@@ -384,7 +409,7 @@ function BrewSessionTable({
             placeholder="Max Score"
             value={filters.max_score}
             onChange={(e) => handleFilterChange('max_score', e.target.value)}
-            style={{ width: '80px', padding: '4px' }}
+            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
             min="0"
             max="10"
             step="0.1"

@@ -54,5 +54,11 @@
     "short_form": "George Howell",
     "description": "Boston-based coffee pioneer",
     "url": "https://www.georgehowellcoffee.com"
+  },
+  {
+    "name": "Test Roaster",
+    "id": 9,
+    "created_at": "2025-08-05T22:34:14.360511+00:00",
+    "updated_at": "2025-08-05T22:34:14.360511+00:00"
   }
 ]

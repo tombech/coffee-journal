@@ -218,23 +218,6 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
     }));
   };
 
-  // Handle mobile datalist issues
-  const handleMobileDatalistFocus = (e) => {
-    // On mobile, temporarily remove the list attribute to prevent sticky dropdown
-    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      e.target.removeAttribute('list');
-    }
-  };
-
-  const handleMobileDatalistBlur = (e) => {
-    // Restore the list attribute after blur
-    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      const listId = e.target.getAttribute('data-list');
-      if (listId) {
-        e.target.setAttribute('list', listId);
-      }
-    }
-  };
 
 
   const handleSubmit = async (e) => {
@@ -418,100 +401,36 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="recipe" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Recipe
           </label>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              id="recipe"
-              name="recipe"
-              value={formData.recipe}
-              onChange={handleChange}
-              list="recipesOptions"
-              data-list="recipesOptions"
-              onFocus={handleMobileDatalistFocus}
-              onBlur={handleMobileDatalistBlur}
-              placeholder="e.g., James Hoffmann V60"
-              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
-            />
-            {formData.recipe && (
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, recipe: '' }))}
-                style={{
-                  position: 'absolute',
-                  right: '4px',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '16px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  padding: '0',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Clear recipe"
-              >
-                ×
-              </button>
-            )}
-          </div>
-          <datalist id="recipesOptions">
+          <select
+            id="recipe"
+            name="recipe"
+            value={formData.recipe}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select recipe</option>
             {recipes.map((r) => (
-              <option key={r.id} value={r.name} />
+              <option key={r.id} value={r.name}>{r.name}</option>
             ))}
-          </datalist>
+          </select>
         </div>
         
         <div>
           <label htmlFor="grinder" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Grinder
           </label>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              id="grinder"
-              name="grinder"
-              value={formData.grinder}
-              onChange={handleChange}
-              list="grindersOptions"
-              data-list="grindersOptions"
-              onFocus={handleMobileDatalistFocus}
-              onBlur={handleMobileDatalistBlur}
-              placeholder="e.g., Comandante, Wilfa Uniform"
-              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
-            />
-            {formData.grinder && (
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, grinder: '' }))}
-                style={{
-                  position: 'absolute',
-                  right: '4px',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '16px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  padding: '0',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Clear grinder"
-              >
-                ×
-              </button>
-            )}
-          </div>
-          <datalist id="grindersOptions">
+          <select
+            id="grinder"
+            name="grinder"
+            value={formData.grinder}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select grinder</option>
             {grinders.map((g) => (
-              <option key={g.id} value={g.name} />
+              <option key={g.id} value={g.name}>{g.name}</option>
             ))}
-          </datalist>
+          </select>
         </div>
         
         <div>
@@ -533,150 +452,54 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           <label htmlFor="filter" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Filter
           </label>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              id="filter"
-              name="filter"
-              value={formData.filter}
-              onChange={handleChange}
-              list="filtersOptions"
-              data-list="filtersOptions"
-              onFocus={handleMobileDatalistFocus}
-              onBlur={handleMobileDatalistBlur}
-              placeholder="e.g., Hario V60, Paper Filter"
-              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
-            />
-            {formData.filter && (
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, filter: '' }))}
-                style={{
-                  position: 'absolute',
-                  right: '4px',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '16px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  padding: '0',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Clear filter"
-              >
-                ×
-              </button>
-            )}
-          </div>
-          <datalist id="filtersOptions">
+          <select
+            id="filter"
+            name="filter"
+            value={formData.filter}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select filter</option>
             {filters.map((f) => (
-              <option key={f.id} value={f.name} />
+              <option key={f.id} value={f.name}>{f.name}</option>
             ))}
-          </datalist>
+          </select>
         </div>
         
         <div>
           <label htmlFor="kettle" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Kettle
           </label>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              id="kettle"
-              name="kettle"
-              value={formData.kettle}
-              onChange={handleChange}
-              list="kettlesOptions"
-              data-list="kettlesOptions"
-              onFocus={handleMobileDatalistFocus}
-              onBlur={handleMobileDatalistBlur}
-              placeholder="e.g., Hario Buono, Fellow Stagg"
-              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
-            />
-            {formData.kettle && (
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, kettle: '' }))}
-                style={{
-                  position: 'absolute',
-                  right: '4px',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '16px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  padding: '0',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Clear kettle"
-              >
-                ×
-              </button>
-            )}
-          </div>
-          <datalist id="kettlesOptions">
+          <select
+            id="kettle"
+            name="kettle"
+            value={formData.kettle}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select kettle</option>
             {kettles.map((k) => (
-              <option key={k.id} value={k.name} />
+              <option key={k.id} value={k.name}>{k.name}</option>
             ))}
-          </datalist>
+          </select>
         </div>
         
         <div>
           <label htmlFor="scale" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
             Scale
           </label>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              id="scale"
-              name="scale"
-              value={formData.scale}
-              onChange={handleChange}
-              list="scalesOptions"
-              data-list="scalesOptions"
-              onFocus={handleMobileDatalistFocus}
-              onBlur={handleMobileDatalistBlur}
-              placeholder="e.g., Acaia Pearl, Hario V60"
-              style={{ width: '100%', fontSize: '14px', padding: '6px 28px 6px 6px', height: '32px', boxSizing: 'border-box' }}
-            />
-            {formData.scale && (
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, scale: '' }))}
-                style={{
-                  position: 'absolute',
-                  right: '4px',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '16px',
-                  color: '#666',
-                  cursor: 'pointer',
-                  padding: '0',
-                  width: '20px',
-                  height: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Clear scale"
-              >
-                ×
-              </button>
-            )}
-          </div>
-          <datalist id="scalesOptions">
+          <select
+            id="scale"
+            name="scale"
+            value={formData.scale}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select scale</option>
             {scales.map((s) => (
-              <option key={s.id} value={s.name} />
+              <option key={s.id} value={s.name}>{s.name}</option>
             ))}
-          </datalist>
+          </select>
         </div>
       </div>
 

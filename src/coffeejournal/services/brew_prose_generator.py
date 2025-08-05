@@ -218,11 +218,17 @@ class BrewProseGenerator:
         if best_temp is None:
             return "N/A"
         
-        best_rounded = int(round(best_temp))
+        # Convert to float in case it's passed as a string
+        try:
+            best_temp_float = float(best_temp)
+        except (ValueError, TypeError):
+            return "N/A"
+            
+        best_rounded = int(round(best_temp_float))
         
         if temp_data.get('type') == 'range':
-            min_temp = int(round(temp_data.get('min', best_temp)))
-            max_temp = int(round(temp_data.get('max', best_temp)))
+            min_temp = int(round(temp_data.get('min', best_temp_float)))
+            max_temp = int(round(temp_data.get('max', best_temp_float)))
             # Only show range if there's actual variation and it's different from best temp
             if min_temp == max_temp or (min_temp == best_rounded and max_temp == best_rounded):
                 return f"{best_rounded}°C"
