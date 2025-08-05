@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../config';
+import MobileSearchModal from './MobileSearchModal';
+import { isDefinitelyAndroidTablet } from '../utils/androidDetection';
 
 function BeanTypeMultiAutocomplete({ 
   value = [], 
@@ -13,6 +15,10 @@ function BeanTypeMultiAutocomplete({
   const [query, setQuery] = useState('');
   const [allBeanTypes, setAllBeanTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  
+  // Mobile detection - Android tablets always use mobile modal (even in desktop mode)
+  const isMobileDevice = window.innerWidth <= 768 || isDefinitelyAndroidTablet();
 
   // Fetch all bean types when component mounts
   useEffect(() => {
@@ -40,6 +46,12 @@ function BeanTypeMultiAutocomplete({
   const handleInputChange = (event) => {
     const inputValue = event.target.value;
     setQuery(inputValue);
+    
+    // On mobile, open modal instead of using datalist
+    if (isMobileDevice && inputValue && !isMobileModalOpen) {
+      setIsMobileModalOpen(true);
+      return;
+    }
     
     // Check if the user selected from datalist (input value matches an option exactly)
     const matchingBeanType = allBeanTypes.find(bt => bt.name === inputValue);
@@ -81,6 +93,12 @@ function BeanTypeMultiAutocomplete({
     setQuery('');
   };
 
+  const handleInputFocus = () => {
+    if (isMobileDevice) {
+      setIsMobileModalOpen(true);
+    }
+  };
+
   const handleInputBlur = () => {
     // Auto-select on blur if there's a value (for manual typing)
     if (query.trim() && !allBeanTypes.find(bt => bt.name === query.trim())) {
@@ -93,6 +111,11 @@ function BeanTypeMultiAutocomplete({
   const removeItem = (indexToRemove) => {
     const newValue = value.filter((_, index) => index !== indexToRemove);
     onChange(newValue);
+  };
+
+  const handleMobileModalChange = (selectedValues) => {
+    onChange(selectedValues);
+    setIsMobileModalOpen(false);
   };
 
   // Handle mobile datalist issues (borrowed from BrewSessionForm)
@@ -174,11 +197,15 @@ function BeanTypeMultiAutocomplete({
             handleMobileDatalistBlur(e);
             handleInputBlur();
           }}
-          onFocus={handleMobileDatalistFocus}
+          onFocus={(e) => {
+            handleMobileDatalistFocus(e);
+            handleInputFocus();
+          }}
           list={datalistId}
           data-list={datalistId}
           placeholder={availableBeanTypes.length > 0 ? "Start typing or select from dropdown..." : "Type a bean type name..."}
           disabled={disabled}
+          readOnly={isMobileDevice}
           style={{
             width: '100%',
             fontSize: '14px',
@@ -255,6 +282,19 @@ function BeanTypeMultiAutocomplete({
           <option key={beanType.id} value={beanType.name} />
         ))}
       </datalist>
+      
+      {/* Mobile Search Modal */}
+      {isMobileDevice && (
+        <MobileSearchModal
+          isOpen={isMobileModalOpen}
+          onClose={() => setIsMobileModalOpen(false)}
+          lookupType="bean_types"
+          value={value}
+          onChange={handleMobileModalChange}
+          placeholder={placeholder}
+          multiSelect={true}
+        />
+      )}
     </div>
   );
 }
