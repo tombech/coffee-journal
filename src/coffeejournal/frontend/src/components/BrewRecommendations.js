@@ -6,6 +6,9 @@ function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Check if onApplyRecommendation is functional (not a no-op)
+  const canApplyRecommendations = onApplyRecommendation && onApplyRecommendation.toString() !== '() => {}';
+
   useEffect(() => {
     if (!productId) {
       setRecommendations(null);
@@ -249,23 +252,25 @@ function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation 
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               {rec.type === 'template' ? '🎯' : '📊'} {method}
             </span>
-            <button
-              type="button"
-              onClick={() => handleApplyRecommendation(method, rec.parameters)}
-              style={{
-                fontSize: '11px',
-                padding: '4px 8px',
-                backgroundColor: '#4caf50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-              title="Apply these settings to form"
-            >
-              Use These Settings
-            </button>
+            {canApplyRecommendations && (
+              <button
+                type="button"
+                onClick={() => handleApplyRecommendation(method, rec.parameters)}
+                style={{
+                  fontSize: '11px',
+                  padding: '4px 8px',
+                  backgroundColor: '#4caf50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+                title="Apply these settings to form"
+              >
+                Use These Settings
+              </button>
+            )}
           </div>
           
           {/* Prose recommendation */}
@@ -315,7 +320,7 @@ function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation 
       
       <div style={{ fontSize: '11px', color: '#558b2f', fontStyle: 'italic', marginTop: '8px' }}>
         💡 Recommendations based on previous sessions with score &gt; 3.5. 
-        Click "Apply" to use these settings in your form.
+        {canApplyRecommendations && ' Click "Use These Settings" to apply to your form.'}
       </div>
     </div>
   );
