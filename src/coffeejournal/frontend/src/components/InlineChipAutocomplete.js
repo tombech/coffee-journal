@@ -9,6 +9,7 @@ function InlineChipAutocomplete({
   disabled = false,
   multiSelect = false,
   maxHeight = '200px',
+  singleSelectStyle = false,
   id,
   'aria-label': ariaLabel,
   ...rest
@@ -176,7 +177,9 @@ function InlineChipAutocomplete({
             }}
           >
             <span>🔍</span>
-            <span>Search or add new {lookupType.replace(/_/g, ' ').slice(0, -1)} ({allOptions.length} available)</span>
+            <span>
+              {singleSelectStyle ? 'Select one' : 'Search or add new'} {lookupType.replace(/_/g, ' ').slice(0, -1)} ({allOptions.length} available)
+            </span>
           </button>
         </div>
       )}
@@ -259,6 +262,32 @@ function InlineChipAutocomplete({
           }}>
             {filteredOptions.map((option) => {
               const selected = isItemSelected(option);
+              
+              // Different styles for single vs multi-select
+              const chipStyle = singleSelectStyle ? {
+                // Single-select: Radio button style with emphasis on the selected item
+                backgroundColor: selected ? '#28a745' : '#ffffff',
+                color: selected ? 'white' : '#495057',
+                padding: selected ? '8px 12px' : '6px 10px',
+                borderRadius: selected ? '20px' : '16px',
+                fontSize: selected ? '14px' : '13px',
+                fontWeight: selected ? '600' : '400',
+                border: selected ? '2px solid #28a745' : '1px solid #dee2e6',
+                boxShadow: selected ? '0 2px 6px rgba(40, 167, 69, 0.4)' : '0 1px 2px rgba(0,0,0,0.1)',
+                transform: selected ? 'translateY(-1px)' : 'none'
+              } : {
+                // Multi-select: Standard chip style
+                backgroundColor: selected ? '#1976d2' : '#ffffff',
+                color: selected ? 'white' : '#495057',
+                padding: '6px 10px',
+                borderRadius: '16px',
+                fontSize: '13px',
+                fontWeight: '400',
+                border: `1px solid ${selected ? '#1976d2' : '#dee2e6'}`,
+                boxShadow: selected ? '0 1px 3px rgba(25, 118, 210, 0.3)' : '0 1px 2px rgba(0,0,0,0.1)',
+                transform: 'none'
+              };
+
               return (
                 <div
                   key={option.id}
@@ -266,19 +295,13 @@ function InlineChipAutocomplete({
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    backgroundColor: selected ? '#1976d2' : '#ffffff',
-                    color: selected ? 'white' : '#495057',
-                    padding: '6px 10px',
-                    borderRadius: '16px',
-                    fontSize: '13px',
                     cursor: disabled ? 'not-allowed' : 'pointer',
-                    border: `1px solid ${selected ? '#1976d2' : '#dee2e6'}`,
                     transition: 'all 0.15s ease',
                     userSelect: 'none',
                     minHeight: '32px',
                     boxSizing: 'border-box',
                     opacity: disabled ? 0.6 : 1,
-                    boxShadow: selected ? '0 1px 3px rgba(25, 118, 210, 0.3)' : '0 1px 2px rgba(0,0,0,0.1)'
+                    ...chipStyle
                   }}
                 >
                   <span>{option.name}</span>
@@ -298,10 +321,10 @@ function InlineChipAutocomplete({
                   {selected && !option.isNew && (
                     <span style={{ 
                       marginLeft: '4px', 
-                      fontSize: '14px',
+                      fontSize: singleSelectStyle ? '16px' : '14px',
                       fontWeight: 'bold'
                     }}>
-                      ✓
+                      {singleSelectStyle ? '●' : '✓'}
                     </span>
                   )}
                 </div>
