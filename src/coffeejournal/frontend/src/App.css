@@ -117,7 +117,7 @@ form input[type="submit"]:hover {
 /* List Styling */
 .list-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
   gap: 15px;
   margin-top: 10px;
 }

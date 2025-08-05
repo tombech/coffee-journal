@@ -297,6 +297,37 @@ function ProductList() {
                       </a>
                     )}
                     
+                    {/* Diagonal DECAF band */}
+                    {product.decaf && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '60px',
+                        height: '60px',
+                        overflow: 'hidden',
+                        zIndex: 2
+                      }}>
+                        <div style={{
+                          position: 'absolute',
+                          top: '12px',
+                          left: '-20px',
+                          width: '100px',
+                          textAlign: 'center',
+                          backgroundColor: 'rgba(33, 150, 243, 0.7)',
+                          color: 'white',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          padding: '4px 0',
+                          transform: 'rotate(-45deg)',
+                          transformOrigin: 'center',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                        }}>
+                          DECAF
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* Green score badge - floating like Home page */}
                     {product.average_score && (
                       <div style={{ 
@@ -320,19 +351,6 @@ function ProductList() {
                         <h4 style={{ margin: '0', color: '#333', flex: 1, fontSize: '18px', fontWeight: 'bold' }}>
                           {product.product_name}
                         </h4>
-                        {product.decaf && (
-                          <span style={{ 
-                            backgroundColor: '#e3f2fd', 
-                            color: '#1976d2', 
-                            padding: '2px 6px', 
-                            borderRadius: '3px', 
-                            fontSize: '11px', 
-                            fontWeight: 'bold',
-                            marginLeft: '8px'
-                          }}>
-                            DECAF
-                          </span>
-                        )}
                       </div>
                       <p style={{ margin: '0 0 6px 0', fontSize: '14px', color: '#666' }}>
                         <strong>{Array.isArray(product.bean_type) ? product.bean_type.map(bt => bt.name).join(', ') : 'Unknown'}</strong> • {product.country?.name || 'Unknown'}{Array.isArray(product.region) && product.region.length > 0 ? ` (${product.region.map(r => r.name).join(', ')})` : ''}

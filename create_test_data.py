@@ -132,6 +132,7 @@ products = [
         "roast_type": 3,
         "description": "Bright, floral coffee with citrus notes",
         "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+        "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
         "decaf": False
     },
     {
@@ -144,6 +145,7 @@ products = [
         "roast_type": 5,
         "description": "Rich Colombian coffee with chocolate and caramel notes",
         "url": "https://www.intelligentsia.com/coffee/el-diablo",
+        "image_url": "https://via.placeholder.com/300x300/6D4C41/FFFFFF?text=El+Diablo",
         "decaf": False
     },
     {
@@ -156,6 +158,7 @@ products = [
         "roast_type": 4,
         "description": "Full-bodied Guatemalan coffee with spicy undertones",
         "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+        "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
         "decaf": False
     },
     {
@@ -168,6 +171,7 @@ products = [
         "roast_type": 3,
         "description": "Kenyan coffee with bright acidity and wine-like characteristics",
         "url": "https://counterculturecoffee.com/coffee/hologram",
+        "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
         "decaf": False
     },
     {
@@ -180,6 +184,7 @@ products = [
         "roast_type": 6,
         "description": "Dark roasted Brazilian blend with nutty and chocolate notes",
         "url": "https://www.lacolombe.com/products/corsica",
+        "image_url": "https://via.placeholder.com/300x300/5D4037/FFFFFF?text=Corsica",
         "decaf": False
     },
     {
@@ -192,6 +197,7 @@ products = [
         "roast_type": 2,
         "description": "Light roasted Ethiopian with complex fruit notes",
         "url": "https://www.ritualcoffee.com/products/ethiopia-sidama",
+        "image_url": "https://via.placeholder.com/300x300/A1887F/FFFFFF?text=Ethiopia+Sidama",
         "decaf": False
     },
     {
@@ -204,6 +210,7 @@ products = [
         "roast_type": 3,
         "description": "Swiss water processed Costa Rican coffee",
         "url": "https://www.vervecoffee.com/products/decaf",
+        "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Costa+Rica+Decaf",
         "decaf": True,
         "decaf_method_id": 1
     }
