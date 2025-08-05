@@ -6,7 +6,8 @@ import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
 import HeadlessAutocomplete from './HeadlessAutocomplete';
 import BeanTypeMultiAutocomplete from './BeanTypeMultiAutocomplete';
-import RegionMultiAutocomplete from './RegionMultiAutocomplete';
+import CountryAutocomplete from './CountryAutocomplete';
+import RegionAutocomplete from './RegionAutocomplete';
 
 function ProductForm() {
   const { id } = useParams(); // Get ID from URL for edit mode
@@ -316,9 +317,8 @@ function ProductForm() {
             <label htmlFor="country-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
               Country
             </label>
-            <HeadlessAutocomplete
+            <CountryAutocomplete
               id="country-input"
-              lookupType="countries"
               value={formData.country}
               onChange={(value) => {
                 setFormData(prev => ({ 
@@ -328,7 +328,7 @@ function ProductForm() {
                   region: prev.country.id !== value.id ? [] : prev.region
                 }));
               }}
-              placeholder="Start typing to search countries..."
+              placeholder="Search countries..."
               aria-label="Country"
             />
           </div>
@@ -337,11 +337,11 @@ function ProductForm() {
             <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
               Region
             </label>
-            <RegionMultiAutocomplete
+            <RegionAutocomplete
               countryId={formData.country.id}
               value={formData.region}
               onChange={(value) => setFormData(prev => ({ ...prev, region: value }))}
-              placeholder="Start typing to search regions..."
+              placeholder="Search regions..."
             />
           </div>
         </div>

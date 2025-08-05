@@ -1,10 +1,10 @@
 import React from 'react';
 import InlineChipAutocomplete from './InlineChipAutocomplete';
 
-function BeanTypeMultiAutocomplete({ 
-  value = [], 
+function CountryAutocomplete({ 
+  value, 
   onChange, 
-  placeholder = "Search bean types...", 
+  placeholder = "Search countries...", 
   disabled = false,
   id,
   'aria-label': ariaLabel,
@@ -12,12 +12,13 @@ function BeanTypeMultiAutocomplete({
 }) {
   return (
     <InlineChipAutocomplete
-      lookupType="bean_types"
+      lookupType="countries"
       value={value}
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      multiSelect={true}
+      multiSelect={false}
+      maxHeight="250px"
       id={id}
       aria-label={ariaLabel}
       {...rest}
@@ -25,4 +26,4 @@ function BeanTypeMultiAutocomplete({
   );
 }
 
-export default BeanTypeMultiAutocomplete;
+export default CountryAutocomplete;
