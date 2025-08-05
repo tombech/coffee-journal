@@ -4,6 +4,7 @@ import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import BrewSessionTable from './BrewSessionTable';
 import BrewSessionForm from './BrewSessionForm';
+import StarRating from './StarRating';
 import { useToast } from './Toast';
 
 function Home() {
@@ -18,6 +19,101 @@ function Home() {
   const [showNewForm, setShowNewForm] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
   const [filterOptions, setFilterOptions] = useState(null);
+
+  // Roast degree visualization using custom PNG images with half-filled beans
+  const getRoastVisualization = (roastType) => {
+    if (!roastType) {
+      // Default - all white/light beans
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+          {[...Array(5)].map((_, i) => (
+            <img 
+              key={i}
+              src="/coffee-bean-white.png" 
+              alt="Light roast bean" 
+              style={{ width: '16px', height: '16px' }}
+            />
+          ))}
+        </span>
+      );
+    }
+    
+    const normalizedValue = Math.max(1, Math.min(10, roastType)); // Clamp between 1-10
+    const scaledValue = normalizedValue / 2; // Convert to 0.5-5.0 scale
+    
+    const beans = [];
+    for (let i = 0; i < 5; i++) {
+      const beanValue = scaledValue - i; // How much this bean should be filled
+      
+      if (beanValue >= 1) {
+        // Full bean - completely brown
+        beans.push(
+          <img 
+            key={i}
+            src="/coffee-bean-brown.png" 
+            alt="Dark roast bean" 
+            style={{ width: '16px', height: '16px' }}
+          />
+        );
+      } else if (beanValue > 0) {
+        // Partial bean - brown overlaid on white with clip-path
+        const fillPercentage = Math.round(beanValue * 100);
+        beans.push(
+          <div 
+            key={i}
+            style={{ 
+              position: 'relative', 
+              width: '16px', 
+              height: '16px',
+              display: 'inline-block'
+            }}
+          >
+            {/* White base bean */}
+            <img 
+              src="/coffee-bean-white.png" 
+              alt={`${fillPercentage}% roasted bean`}
+              style={{ 
+                width: '16px', 
+                height: '16px',
+                position: 'absolute',
+                top: 0,
+                left: 0
+              }}
+            />
+            {/* Brown overlay clipped to percentage */}
+            <img 
+              src="/coffee-bean-brown.png" 
+              alt=""
+              style={{ 
+                width: '16px', 
+                height: '16px',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                clipPath: `inset(0 ${100 - fillPercentage}% 0 0)`
+              }}
+            />
+          </div>
+        );
+      } else {
+        // Empty bean - white only
+        beans.push(
+          <img 
+            key={i}
+            src="/coffee-bean-white.png" 
+            alt="Light roast bean" 
+            style={{ width: '16px', height: '16px' }}
+          />
+        );
+      }
+    }
+    
+    return (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+        {beans}
+      </span>
+    );
+  };
 
   const fetchBrewSessions = async () => {
     try {
@@ -341,7 +437,8 @@ function Home() {
                 display: 'grid', 
                 gridTemplateColumns: 'repeat(auto-fill, 600px)', 
                 gap: '20px',
-                justifyContent: 'start'
+                justifyContent: 'start',
+                paddingTop: '20px'
               }}>
                 {topProducts.map((item, index) => (
                   <Link 
@@ -373,7 +470,7 @@ function Home() {
                     {/* Rank Badge */}
                     <div style={{ 
                       position: 'absolute',
-                      top: '-10px',
+                      top: '-18px',
                       left: '20px',
                       padding: '8px 12px',
                       backgroundColor: '#2196f3',
@@ -389,7 +486,7 @@ function Home() {
                     {/* Score Badge */}
                     <div style={{ 
                       position: 'absolute',
-                      top: '-10px',
+                      top: '-18px',
                       right: '20px',
                       padding: '8px 12px',
                       backgroundColor: '#4caf50',
@@ -399,25 +496,52 @@ function Home() {
                       fontWeight: 'bold',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                     }}>
-                      {typeof item.avg_score === 'number' ? item.avg_score : '0.0'}
+                      {typeof item.avg_score === 'number' ? item.avg_score.toFixed(1) : '0.0'}
                     </div>
 
                     {/* Left side - Product Info */}
                     <div style={{ flex: '1', paddingRight: '15px' }}>
                       <div style={{ marginTop: '5px', marginBottom: '5px' }}>
-                        <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          {ICONS.VIEW} {item.product.product_name}
+                        <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold' }}>
+                          {item.product.product_name}
                         </h4>
                         <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
-                          <div><strong>Roaster:</strong> {item.product.roaster?.name || 'Unknown'}</div>
-                          <div><strong>Bean Type:</strong> {
-                            Array.isArray(item.product.bean_type) 
-                              ? item.product.bean_type.map(bt => bt.name).join(', ')
-                              : 'Unknown'
-                          }</div>
-                          <div><strong>Country:</strong> {item.product.country?.name || 'Unknown'}</div>
-                          <div><strong>Sessions:</strong> {item.brew_count} brews</div>
+                          <div style={{ marginBottom: '4px', color: '#666' }}>
+                            <strong>{Array.isArray(item.product.bean_type) ? item.product.bean_type.map(bt => bt.name).join(', ') : 'Unknown'}</strong> • {item.product.country?.name || 'Unknown'}{Array.isArray(item.product.region) && item.product.region.length > 0 ? ` (${item.product.region.map(r => r.name).join(', ')})` : ''}
+                          </div>
+                          <div style={{ marginBottom: '4px', fontSize: '13px', color: '#777' }}>
+                            {item.product.roaster?.name || 'Unknown Roaster'}
+                          </div>
+                          {item.product.roast_type && (
+                            <div style={{ margin: '4px 0' }}>
+                              {getRoastVisualization(item.product.roast_type)}
+                            </div>
+                          )}
+                          {item.product.rating && (
+                            <div style={{ margin: '4px 0' }}>
+                              <StarRating rating={item.product.rating} readOnly={true} maxRating={5} />
+                            </div>
+                          )}
+                          <div style={{ fontSize: '13px', color: '#777' }}>
+                            {item.brew_count} brewing sessions
+                          </div>
                         </div>
+                        {item.product.description && (
+                          <p style={{ 
+                            margin: '8px 0 0 0', 
+                            fontSize: '13px', 
+                            lineHeight: '1.3',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            fontStyle: 'italic',
+                            color: '#777'
+                          }}>
+                            {item.product.description}
+                          </p>
+                        )}
                       </div>
                     </div>
 

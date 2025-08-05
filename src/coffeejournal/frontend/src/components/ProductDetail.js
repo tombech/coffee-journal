@@ -164,25 +164,99 @@ function ProductDetail() {
     return `${day}.${month}.${year}`;
   };
 
-  // Roast degree visualization
+  // Roast degree visualization using custom PNG images with half-filled beans
   const getRoastVisualization = (roastType) => {
-    if (!roastType) return '☕☕☕☕☕'; // Default light outline
+    if (!roastType) {
+      // Default - all white/light beans
+      return (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+          {[...Array(5)].map((_, i) => (
+            <img 
+              key={i}
+              src="/coffee-bean-white.png" 
+              alt="Light roast bean" 
+              style={{ width: '16px', height: '16px' }}
+            />
+          ))}
+        </span>
+      );
+    }
     
     const normalizedValue = Math.max(1, Math.min(10, roastType)); // Clamp between 1-10
-    const filledBeans = Math.ceil(normalizedValue / 2); // Each bean represents 2 levels
-    const darkBeans = Math.floor(normalizedValue / 2); // How many should be dark
+    const scaledValue = normalizedValue / 2; // Convert to 0.5-5.0 scale
     
-    let visualization = '';
+    const beans = [];
     for (let i = 0; i < 5; i++) {
-      if (i < darkBeans) {
-        visualization += '🫘'; // Dark roasted bean
-      } else if (i < filledBeans) {
-        visualization += '🤎'; // Medium/light roasted bean
+      const beanValue = scaledValue - i; // How much this bean should be filled
+      
+      if (beanValue >= 1) {
+        // Full bean - completely brown
+        beans.push(
+          <img 
+            key={i}
+            src="/coffee-bean-brown.png" 
+            alt="Dark roast bean" 
+            style={{ width: '16px', height: '16px' }}
+          />
+        );
+      } else if (beanValue > 0) {
+        // Partial bean - brown overlaid on white with clip-path
+        const fillPercentage = Math.round(beanValue * 100);
+        beans.push(
+          <div 
+            key={i}
+            style={{ 
+              position: 'relative', 
+              width: '16px', 
+              height: '16px',
+              display: 'inline-block'
+            }}
+          >
+            {/* White base bean */}
+            <img 
+              src="/coffee-bean-white.png" 
+              alt={`${fillPercentage}% roasted bean`}
+              style={{ 
+                width: '16px', 
+                height: '16px',
+                position: 'absolute',
+                top: 0,
+                left: 0
+              }}
+            />
+            {/* Brown overlay clipped to percentage */}
+            <img 
+              src="/coffee-bean-brown.png" 
+              alt=""
+              style={{ 
+                width: '16px', 
+                height: '16px',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                clipPath: `inset(0 ${100 - fillPercentage}% 0 0)`
+              }}
+            />
+          </div>
+        );
       } else {
-        visualization += '☕'; // Bean outline
+        // Empty bean - white only
+        beans.push(
+          <img 
+            key={i}
+            src="/coffee-bean-white.png" 
+            alt="Light roast bean" 
+            style={{ width: '16px', height: '16px' }}
+          />
+        );
       }
     }
-    return visualization;
+    
+    return (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+        {beans}
+      </span>
+    );
   };
 
 
@@ -247,9 +321,9 @@ function ProductDetail() {
   const RadarChart = ({ data }) => {
     if (!data) return null;
     
-    const size = 200;
+    const size = 400;
     const center = size / 2;
-    const maxRadius = 80;
+    const maxRadius = 160;
     const angles = [0, 72, 144, 216, 288]; // 5 points, 72 degrees apart
     const labels = ['Sweetness', 'Acidity', 'Body', 'Aroma', 'Bitterness'];
     const values = [data.sweetness, data.acidity, data.body, data.aroma, data.bitterness];
@@ -302,7 +376,7 @@ function ProductDetail() {
     
     // Generate labels
     const labelElements = labels.map((label, index) => {
-      const point = getPoint(angles[index], maxRadius + 20);
+      const point = getPoint(angles[index], maxRadius + 40);
       return (
         <text
           key={index}
@@ -310,7 +384,7 @@ function ProductDetail() {
           y={point.y}
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="11"
+          fontSize="14"
           fill="#666"
         >
           {label}
@@ -323,8 +397,17 @@ function ProductDetail() {
         <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>
           Tasting Profile ({data.sessionCount} sessions)
         </h4>
-        <svg width={size + 40} height={size + 40} viewBox={`0 0 ${size + 40} ${size + 40}`}>
-          <g transform="translate(20, 20)">
+        <svg 
+          width={size + 80} 
+          height={size + 80} 
+          viewBox={`0 0 ${size + 80} ${size + 80}`}
+          style={{ 
+            minWidth: `${size + 80}px`, 
+            minHeight: `${size + 80}px`,
+            maxWidth: 'none'
+          }}
+        >
+          <g transform="translate(40, 40)">
             {gridCircles}
             {axisLines}
             <polygon
@@ -391,10 +474,19 @@ function ProductDetail() {
       </div>
 
       {/* Top Section: Product Details and Flavor Profile */}
-      <div style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      <div style={{ marginBottom: '30px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         {/* Product Details - Left Side */}
-        <div style={{ padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 15px', alignItems: 'start' }}>
+        <div style={{ 
+          padding: '20px', 
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            ☕ Product Information
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '12px 20px', alignItems: 'start' }}>
           <strong>Roaster:</strong>
           <span>{product.roaster?.name || '-'}</span>
           
@@ -414,7 +506,14 @@ function ProductDetail() {
           <span>{product.product_name || '-'}</span>
           
           <strong>Roast Type:</strong>
-          <span>{product.roast_type ? `${getRoastVisualization(product.roast_type)} (${product.roast_type})` : '-'}</span>
+          <span>
+            {product.roast_type ? (
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {getRoastVisualization(product.roast_type)}
+                <span>({product.roast_type})</span>
+              </span>
+            ) : '-'}
+          </span>
           
           <strong>Decaffeinated:</strong>
           <span>
@@ -457,14 +556,18 @@ function ProductDetail() {
         {/* Flavor Profile - Right Side */}
         <div style={{ 
           padding: '20px', 
-          borderRadius: '8px',
-          border: '1px solid #ddd',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#f8f9fa'
+          minWidth: '520px'  // Ensure container is wide enough for the larger chart
         }}>
-          <h3 style={{ margin: '0 0 15px 0', textAlign: 'center' }}>📊 Flavor Profile</h3>
+          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            📊 Flavor Profile
+          </h3>
           {getTastingAverages() ? (
             <RadarChart data={getTastingAverages()} />
           ) : (
@@ -475,9 +578,19 @@ function ProductDetail() {
         </div>
       </div>
 
-      <div className="detail-section">
-        <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <h3 style={{ margin: 0, marginRight: 'auto' }}>Batches for this Product</h3>
+      {/* Batches Section */}
+      <div style={{ 
+        marginBottom: '30px',
+        padding: '20px', 
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        border: '1px solid #e0e0e0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <h3 style={{ margin: 0, marginRight: 'auto', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            📦 Batches for this Product
+          </h3>
           <button 
             onClick={() => setShowBatchForm(!showBatchForm)}
             data-testid={showBatchForm ? 'cancel-batch-form' : 'add-batch-button'}
@@ -497,155 +610,287 @@ function ProductDetail() {
         {batches.length === 0 ? (
           <p>No batches registered for this product.</p>
         ) : (
-          <div className="batch-list">
-            {batches.map(batch => (
-              <div key={batch.id} style={{ 
-                marginBottom: '20px', 
-                padding: '15px', 
-                border: '1px solid #ddd', 
-                borderRadius: '8px', 
-                backgroundColor: '#fafafa' 
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <h4 style={{ margin: 0 }}>
-                    Batch #{batch.id}
-                  </h4>
-                  <div>
-                    <button 
-                      onClick={() => navigate(`/batches/${batch.id}`)}
-                      style={{ 
-                        padding: '4px 6px', 
-                        border: 'none', 
-                        background: 'none', 
-                        cursor: 'pointer', 
-                        fontSize: '14px',
-                        marginRight: '5px'
-                      }}
-                      title="View Batch"
-                      aria-label="View Batch"
-                    >
-                      {ICONS.VIEW}
-                    </button>
-                    <button 
-                      onClick={() => handleEditBatch(batch)}
-                      style={{ 
-                        padding: '4px 6px', 
-                        border: 'none', 
-                        background: 'none', 
-                        cursor: 'pointer', 
-                        fontSize: '14px',
-                        marginRight: '5px'
-                      }}
-                      title="Edit Batch"
-                      aria-label="Edit Batch"
-                    >
-                      {ICONS.EDIT}
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteBatch(batch.id)}
-                      style={{ 
-                        padding: '4px 6px', 
-                        border: 'none', 
-                        background: 'none', 
-                        cursor: 'pointer', 
-                        fontSize: '14px'
-                      }}
-                      title="Delete Batch"
-                      aria-label="Delete Batch"
-                    >
-                      {ICONS.DELETE}
-                    </button>
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 15px', alignItems: 'start' }}>
-                  <strong>Roast Date:</strong>
-                  <span>{batch.roast_date ? formatDateNorwegian(batch.roast_date) : 'Unknown'}</span>
-                  
-                  <strong>Purchase Date:</strong>
-                  <span>{batch.purchase_date ? formatDateNorwegian(batch.purchase_date) : '-'}</span>
-                  
-                  <strong>Amount:</strong>
-                  <span>{batch.amount_grams ? `${batch.amount_grams}g` : '-'}</span>
-                  
-                  <strong>Price:</strong>
-                  <span>{batch.price != null && !isNaN(batch.price) ? `${Number(batch.price).toFixed(2)} kr` : '-'}</span>
-                  
-                  <strong>Price per Cup:</strong>
-                  <span>{batch.price_per_cup != null && !isNaN(batch.price_per_cup) ? `${Number(batch.price_per_cup).toFixed(2)} kr` : '-'}</span>
-                  
-                  <strong>Seller:</strong>
-                  <span>{batch.seller || '-'}</span>
-                  
-                  <strong>Rating:</strong>
-                  <span>
-                    {batch.rating ? (
-                      <StarRating rating={batch.rating} readOnly={true} maxRating={5} />
-                    ) : '-'}
-                  </span>
-                  
-                  <strong>Notes:</strong>
-                  <span>{batch.notes || '-'}</span>
-                </div>
-              </div>
-            ))}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ 
+              width: '100%', 
+              borderCollapse: 'collapse', 
+              marginTop: '10px',
+              backgroundColor: 'white',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f5f5f5' }}>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Actions</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Batch #</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Status</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Roast Date</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Purchase Date</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Amount</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Price</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Price/Cup</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Rating</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Seller</th>
+                  <th style={{ 
+                    padding: '12px 8px', 
+                    textAlign: 'left', 
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {batches.map((batch, index) => (
+                  <tr key={batch.id} style={{ 
+                    backgroundColor: index % 2 === 0 ? 'white' : '#fafafa',
+                    borderBottom: '1px solid #eee'
+                  }}>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button 
+                          onClick={() => navigate(`/batches/${batch.id}`)}
+                          style={{ 
+                            padding: '4px 6px', 
+                            border: 'none', 
+                            background: 'none', 
+                            cursor: 'pointer', 
+                            fontSize: '14px'
+                          }}
+                          title="View Batch"
+                          aria-label="View Batch"
+                        >
+                          {ICONS.VIEW}
+                        </button>
+                        <button 
+                          onClick={() => handleEditBatch(batch)}
+                          style={{ 
+                            padding: '4px 6px', 
+                            border: 'none', 
+                            background: 'none', 
+                            cursor: 'pointer', 
+                            fontSize: '14px'
+                          }}
+                          title="Edit Batch"
+                          aria-label="Edit Batch"
+                        >
+                          {ICONS.EDIT}
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteBatch(batch.id)}
+                          style={{ 
+                            padding: '4px 6px', 
+                            border: 'none', 
+                            background: 'none', 
+                            cursor: 'pointer', 
+                            fontSize: '14px'
+                          }}
+                          title="Delete Batch"
+                          aria-label="Delete Batch"
+                        >
+                          {ICONS.DELETE}
+                        </button>
+                      </div>
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold' }}>
+                      #{batch.id}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      <span style={{ 
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        backgroundColor: batch.is_active !== false ? '#e8f5e8' : '#ffebee',
+                        color: batch.is_active !== false ? '#2e7d32' : '#c62828'
+                      }}>
+                        {batch.is_active !== false ? '✓ Active' : '✗ Inactive'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.roast_date ? formatDateNorwegian(batch.roast_date) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.purchase_date ? formatDateNorwegian(batch.purchase_date) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.amount_grams ? `${batch.amount_grams}g` : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.price != null && !isNaN(batch.price) ? `${Number(batch.price).toFixed(2)} kr` : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.price_per_cup != null && !isNaN(batch.price_per_cup) ? `${Number(batch.price_per_cup).toFixed(2)} kr` : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.rating ? (
+                        <StarRating rating={batch.rating} readOnly={true} maxRating={5} />
+                      ) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batch.seller || '-'}
+                    </td>
+                    <td style={{ 
+                      padding: '8px', 
+                      borderBottom: '1px solid #eee',
+                      maxWidth: '200px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {batch.notes || '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
+        
         {showBatchForm && (
-          <BatchForm 
-            productId={id}
-            onBatchSubmitted={handleBatchSubmitted}
-            onCancel={handleCancelBatchForm}
-          />
+          <div style={{ marginTop: '20px' }}>
+            <BatchForm 
+              productId={id}
+              onBatchSubmitted={handleBatchSubmitted}
+              onCancel={handleCancelBatchForm}
+            />
+          </div>
         )}
         
         {editingBatch && (
-          <BatchForm 
-            productId={id}
-            initialData={editingBatch}
-            onBatchSubmitted={handleBatchSubmitted}
-            onCancel={handleCancelBatchForm}
-          />
+          <div style={{ marginTop: '20px' }}>
+            <BatchForm 
+              productId={id}
+              initialData={editingBatch}
+              onBatchSubmitted={handleBatchSubmitted}
+              onCancel={handleCancelBatchForm}
+            />
+          </div>
         )}
       </div>
 
       {/* Brew Recommendations */}
-      <BrewRecommendations 
-        productId={id} 
-        selectedMethod={null}
-        onApplyRecommendation={() => {}} // No-op for ProductDetail view
-      />
+      <div style={{ 
+        marginBottom: '30px',
+        padding: '20px', 
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        border: '1px solid #e0e0e0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+          🤖 Brew Assistant
+        </h3>
+        <BrewRecommendations 
+          productId={id} 
+          selectedMethod={null}
+          onApplyRecommendation={() => {}} // No-op for ProductDetail view
+          showUseButton={false}
+        />
+      </div>
 
       {/* Brew Analytics Section */}
       {brewSessions.length > 0 && (
-        <div style={{ marginTop: '40px' }}>
+        <div style={{ marginBottom: '30px' }}>
           {/* Top 5 Brews */}
-          <BrewSessionTable 
-            sessions={topBrewSessions} 
-            title="🏆 Top 5 Brews"
-            showProduct={false}
-            showActions={false}
-            showFilters={false}
-            showAddButton={false}
-            preserveOrder={true}
-            onDelete={() => {}}
-            onDuplicate={() => {}}
-            onEdit={() => {}}
-          />
+          <div style={{ 
+            marginBottom: '20px',
+            padding: '20px', 
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
+            <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+              🏆 Top 5 Brews
+            </h3>
+            <BrewSessionTable 
+              sessions={topBrewSessions} 
+              title=""
+              showProduct={false}
+              showActions={false}
+              showFilters={false}
+              showAddButton={false}
+              preserveOrder={true}
+              onDelete={() => {}}
+              onDuplicate={() => {}}
+              onEdit={() => {}}
+            />
+          </div>
 
           {/* Bottom 5 Brews */}
-          <BrewSessionTable 
-            sessions={bottomBrewSessions} 
-            title="💩 Bottom 5 Brews"
-            showProduct={false}
-            showActions={false}
-            showFilters={false}
-            showAddButton={false}
-            preserveOrder={true}
-            onDelete={() => {}}
-            onDuplicate={() => {}}
-            onEdit={() => {}}
-          />
-
+          <div style={{ 
+            marginBottom: '20px',
+            padding: '20px', 
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
+            <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+              💩 Bottom 5 Brews
+            </h3>
+            <BrewSessionTable 
+              sessions={bottomBrewSessions} 
+              title=""
+              showProduct={false}
+              showActions={false}
+              showFilters={false}
+              showAddButton={false}
+              preserveOrder={true}
+              onDelete={() => {}}
+              onDuplicate={() => {}}
+              onEdit={() => {}}
+            />
+          </div>
         </div>
       )}
 

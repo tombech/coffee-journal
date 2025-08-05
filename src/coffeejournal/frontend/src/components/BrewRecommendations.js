@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiFetch } from '../config';
 
-function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation }) {
+function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation, showUseButton = true }) {
   const [recommendations, setRecommendations] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Check if onApplyRecommendation is functional (not a no-op)
-  const canApplyRecommendations = onApplyRecommendation && onApplyRecommendation.toString() !== '() => {}';
+  // Check if we should show the "Use These Settings" button
+  const canApplyRecommendations = showUseButton && onApplyRecommendation && typeof onApplyRecommendation === 'function';
 
   useEffect(() => {
     if (!productId) {
