@@ -45,13 +45,23 @@ function BrewRecommendations({ productId, selectedMethod, onApplyRecommendation 
     
     // Apply exact values or ranges
     Object.entries(parameters).forEach(([param, data]) => {
+      let value;
+      
       if (data.type === 'exact') {
-        formData[param] = data.value;
+        value = data.value;
       } else if (data.type === 'range') {
         // Use the average for ranges
-        formData[param] = data.avg;
+        value = data.avg;
       } else if (data.type === 'frequent') {
-        formData[param] = data.value;
+        value = data.value;
+      }
+      
+      // Handle equipment objects - extract the name
+      if (typeof value === 'object' && value !== null) {
+        // Equipment objects have name field
+        formData[param] = value.name || value;
+      } else {
+        formData[param] = value;
       }
     });
 
