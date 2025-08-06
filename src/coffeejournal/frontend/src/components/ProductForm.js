@@ -20,6 +20,7 @@ function ProductForm() {
     region: [],
     product_name: '',
     roast_type: '',
+    roast_type_display: '', // Add display value for input field
     description: '',
     url: '',
     image_url: '',
@@ -61,6 +62,7 @@ function ProductForm() {
     fetchData();
   }, [id]);
 
+
   const fetchProduct = async () => {
     try {
       const response = await apiFetch(`/products/${id}`);
@@ -76,6 +78,7 @@ function ProductForm() {
         region: data.region?.map(r => ({ id: r.id, name: r.name, isNew: false })) || [],
         product_name: data.product_name || '',
         roast_type: data.roast_type || '',
+        roast_type_display: data.roast_type || '', // Initialize display value
         description: data.description || '',
         url: data.url || '',
         image_url: data.image_url || '',
@@ -131,11 +134,22 @@ function ProductForm() {
 
   const handleRoastTypeChange = (e) => {
     const inputValue = e.target.value;
-    const convertedValue = convertRoastType(inputValue);
+    
+    // Allow the user to type freely, including "/" character
+    setFormData((prev) => ({ 
+      ...prev, 
+      roast_type_display: inputValue
+    }));
+  };
+
+  const handleRoastTypeBlur = () => {
+    // Convert the display value when user leaves the field
+    const convertedValue = convertRoastType(formData.roast_type_display);
     
     setFormData((prev) => ({ 
       ...prev, 
-      roast_type: convertedValue
+      roast_type: convertedValue,
+      roast_type_display: convertedValue.toString() // Update display to show converted value
     }));
   };
 
@@ -437,8 +451,9 @@ function ProductForm() {
                 id="roast-type-input"
                 type="text"
                 name="roast_type"
-                value={formData.roast_type}
+                value={formData.roast_type_display}
                 onChange={handleRoastTypeChange}
+                onBlur={handleRoastTypeBlur}
                 placeholder="e.g., 5, 3/7, 2/5"
                 aria-label="Roast Type"
                 style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
