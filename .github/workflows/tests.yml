@@ -40,7 +40,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
         cache-dependency-path: src/coffeejournal/frontend/package-lock.json
         
@@ -63,11 +63,14 @@ jobs:
     - name: Install backend dependencies
       run: uv sync
       
+    - name: Create test data directory
+      run: mkdir -p test_data
+      
     - name: Run E2E tests (Grouped Configuration)
       working-directory: src/coffeejournal/frontend
       run: npm run test:e2e
       env:
-        PYTHONPATH: ../../
+        PYTHONPATH: ${{ github.workspace }}/src
         CI: true
         
     - name: Upload test results

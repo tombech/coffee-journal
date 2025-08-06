@@ -22,9 +22,9 @@ const getWorkerCount = (preferred) => {
 
 module.exports = defineConfig({
   testDir: './src/components/__tests__/playwright/e2e',
-  timeout: 30 * 1000, // 30 seconds
+  timeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI
   expect: {
-    timeout: 5000
+    timeout: process.env.CI ? 10000 : 5000 // Longer wait in CI
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -283,16 +283,21 @@ module.exports = defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
-      command: 'cd ../../../ && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi',
+      command: process.env.CI 
+        ? 'cd ../../.. && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi'
+        : 'cd ../../../ && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi',
       port: 5000,
       reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 120 * 1000, // Longer startup timeout in CI
+      env: {
+        DATA_DIR: process.env.CI ? '../../../test_data' : undefined
+      }
     },
     {
       command: 'npm run start',
       port: 3000,
       reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 120 * 1000, // Longer startup timeout in CI
     }
   ],
 });
