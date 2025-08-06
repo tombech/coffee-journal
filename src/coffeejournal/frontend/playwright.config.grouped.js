@@ -12,19 +12,19 @@ const { defineConfig, devices } = require('@playwright/test');
 
 // Helper to determine optimal worker count based on CI environment
 const getWorkerCount = (preferred) => {
-  // In CI (GitHub Actions public repo has 4 vCPUs), allow up to 4 workers
-  // Locally, use the preferred count for development flexibility
+  // In CI, use much lower worker counts to avoid resource contention and timeouts
+  // GitHub Actions has limited resources and concurrent tests cause instability
   if (process.env.CI) {
-    return preferred <= 4 ? preferred : 4;
+    return preferred <= 2 ? preferred : (preferred > 4 ? 2 : 1);
   }
   return preferred;
 };
 
 module.exports = defineConfig({
   testDir: './src/components/__tests__/playwright/e2e',
-  timeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI
+  timeout: process.env.CI ? 120 * 1000 : 30 * 1000, // Much longer timeout in CI
   expect: {
-    timeout: process.env.CI ? 10000 : 5000 // Longer wait in CI
+    timeout: process.env.CI ? 15000 : 5000 // Longer wait in CI
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -34,9 +34,14 @@ module.exports = defineConfig({
   use: {
     actionTimeout: 0,
     baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'retain-on-failure' : 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: process.env.CI ? 'retain-on-failure' : 'retain-on-failure',
+    // Add more debugging context in CI
+    contextOptions: process.env.CI ? {
+      reducedMotion: 'reduce',
+      colorScheme: 'light',
+    } : {},
   },
 
   projects: [
@@ -284,20 +289,17 @@ module.exports = defineConfig({
   webServer: [
     {
       command: process.env.CI 
-        ? 'cd ../../.. && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi'
+        ? 'cd ../../.. && PYTHONPATH="$(pwd)/src" DATA_DIR="$(pwd)/test_data" uv run python3 -m coffeejournal.wsgi'
         : 'cd ../../../ && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi',
       port: 5000,
       reuseExistingServer: !process.env.CI,
-      timeout: process.env.CI ? 180 * 1000 : 120 * 1000, // Longer startup timeout in CI
-      env: {
-        DATA_DIR: process.env.CI ? '../../../test_data' : undefined
-      }
+      timeout: process.env.CI ? 240 * 1000 : 120 * 1000, // Even longer startup timeout in CI
     },
     {
       command: 'npm run start',
       port: 3000,
       reuseExistingServer: !process.env.CI,
-      timeout: process.env.CI ? 180 * 1000 : 120 * 1000, // Longer startup timeout in CI
+      timeout: process.env.CI ? 240 * 1000 : 120 * 1000, // Even longer startup timeout in CI
     }
   ],
 });
