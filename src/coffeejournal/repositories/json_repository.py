@@ -34,11 +34,21 @@ class JSONRepositoryBase(BaseRepository):
         
         # Keep threading lock for backwards compatibility within single process
         self._thread_lock = threading.Lock()
+        
+        # In-memory cache for performance
+        self._cache = None
+        self._cache_mtime = None
+        
         self._ensure_file_exists()
     
     def _get_lock(self, timeout: float = 10.0) -> FileLock:
         """Get a cross-process file lock with specified timeout."""
         return FileLock(str(self.lock_filepath), timeout=timeout)
+    
+    def invalidate_cache(self):
+        """Invalidate the in-memory cache, forcing a reload on next read."""
+        self._cache = None
+        self._cache_mtime = None
     
     def _ensure_file_exists(self):
         """Create file with empty list if it doesn't exist (cross-process safe)."""
@@ -59,17 +69,34 @@ class JSONRepositoryBase(BaseRepository):
                     raise RuntimeError(f"Could not create or access {self.filepath} - timeout acquiring lock")
     
     def _read_data(self) -> List[Dict[str, Any]]:
-        """Read data from JSON file with cross-process locking."""
+        """Read data from JSON file with cross-process locking and caching."""
+        # Check if we have a valid cache
+        if self._cache is not None and self.filepath.exists():
+            current_mtime = os.path.getmtime(self.filepath)
+            if self._cache_mtime == current_mtime:
+                # Cache is still valid, return cached data
+                return self._cache.copy()  # Return copy to prevent external modifications
+        
+        # Cache is invalid or doesn't exist, read from disk
         try:
             with self._get_lock(timeout=5.0):
                 if not self.filepath.exists():
+                    self._cache = []
+                    self._cache_mtime = None
                     return []
+                
                 with open(self.filepath, 'r') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    # Update cache
+                    self._cache = data
+                    self._cache_mtime = os.path.getmtime(self.filepath)
+                    return data.copy()  # Return copy to prevent external modifications
         except Timeout:
             raise RuntimeError(f"Timeout waiting for read lock on {self.filepath}")
         except (FileNotFoundError, json.JSONDecodeError):
             # File was deleted or corrupted between existence check and read
+            self._cache = []
+            self._cache_mtime = None
             return []
     
     def _write_data(self, data: List[Dict[str, Any]]):
@@ -86,6 +113,11 @@ class JSONRepositoryBase(BaseRepository):
                         os.fsync(f.fileno())
                     # Atomic rename - works on all platforms
                     temp_file.replace(self.filepath)
+                    
+                    # Update cache with the new data
+                    self._cache = data.copy()
+                    self._cache_mtime = os.path.getmtime(self.filepath)
+                    
                     # Ensure directory entry is synced
                     try:
                         dir_fd = os.open(str(self.filepath.parent), os.O_RDONLY)
@@ -113,11 +145,12 @@ class JSONRepositoryBase(BaseRepository):
         return self._read_data()
     
     def find_by_id(self, id: int) -> Optional[Dict[str, Any]]:
-        """Get entity by ID."""
+        """Get entity by ID with optimized caching."""
+        # First ensure cache is up to date
         data = self._read_data()
         for item in data:
             if item['id'] == id:
-                return item
+                return item.copy()  # Return copy to prevent external modifications
         return None
     
     def create(self, data: Dict[str, Any]) -> Dict[str, Any]:

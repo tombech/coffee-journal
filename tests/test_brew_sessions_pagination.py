@@ -380,8 +380,8 @@ class TestBrewSessionsPagination:
                 'notes': f'Method test {i}'
             })
         
-        # Test ascending sort by brew method
-        response = client.get('/api/brew_sessions?page=1&page_size=10&sort=brew_method&sort_direction=asc')
+        # Test ascending sort by brew method with larger page size to ensure we capture all test methods
+        response = client.get('/api/brew_sessions?page=1&page_size=100&sort=brew_method&sort_direction=asc')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -389,13 +389,16 @@ class TestBrewSessionsPagination:
         
         # Extract method names from sessions that have methods
         method_names = []
+        test_sessions_found = []
         for session in sessions:
             if session.get('brew_method') and session['brew_method'].get('name'):
                 method_names.append(session['brew_method']['name'])
+                # Check if this is one of our test sessions by looking at notes
+                if session.get('notes', '').startswith('Method test'):
+                    test_sessions_found.append(session['brew_method']['name'])
         
-        # Verify we have our test methods
-        test_methods_found = [name for name in method_names if name in methods]
-        assert len(test_methods_found) >= 3, f"Expected at least 3 test methods, found: {test_methods_found}"
+        # Verify we have our test methods - look specifically for the sessions we created
+        assert len(test_sessions_found) >= 3, f"Expected at least 3 test methods from our created sessions, found: {test_sessions_found}"
         
         # For sessions with methods, verify they're in sorted order
         if len(method_names) > 1:

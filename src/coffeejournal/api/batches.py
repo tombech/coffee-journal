@@ -18,6 +18,7 @@ from datetime import datetime
 from ..repositories.factory import get_repository_factory
 from .utils import (
     calculate_brew_ratio,
+    calculate_total_score,
     enrich_product_with_lookups,
     safe_float,
     safe_int,
@@ -549,7 +550,7 @@ def get_all_brew_sessions():
     factory = get_repository_factory()
     all_sessions = factory.get_brew_session_repository(user_id).find_all()
     
-    # Enrich all sessions with product information and calculate brew ratio
+    # Pre-load all lookup data into dictionaries for O(1) lookups
     product_repo = factory.get_product_repository(user_id)
     batch_repo = factory.get_batch_repository(user_id)
     brew_method_repo = factory.get_brew_method_repository(user_id)
@@ -559,14 +560,58 @@ def get_all_brew_sessions():
     kettle_repo = factory.get_kettle_repository(user_id)
     scale_repo = factory.get_scale_repository(user_id)
     
+    # Load all data once and create lookup dictionaries
+    all_products = {p['id']: p for p in product_repo.find_all()}
+    all_batches = {b['id']: b for b in batch_repo.find_all()}
+    all_brew_methods = {m['id']: m for m in brew_method_repo.find_all()}
+    all_recipes = {r['id']: r for r in recipe_repo.find_all()}
+    all_grinders = {g['id']: g for g in grinder_repo.find_all()}
+    all_filters = {f['id']: f for f in filter_repo.find_all()}
+    all_kettles = {k['id']: k for k in kettle_repo.find_all()}
+    all_scales = {s['id']: s for s in scale_repo.find_all()}
+    
+    # Also pre-load product lookups for enrichment
+    roaster_repo = factory.get_roaster_repository(user_id)
+    bean_type_repo = factory.get_bean_type_repository(user_id)
+    country_repo = factory.get_country_repository(user_id)
+    region_repo = factory.get_region_repository(user_id)
+    decaf_method_repo = factory.get_decaf_method_repository(user_id)
+    
+    all_roasters = {r['id']: r for r in roaster_repo.find_all()}
+    all_bean_types = {bt['id']: bt for bt in bean_type_repo.find_all()}
+    all_countries = {c['id']: c for c in country_repo.find_all()}
+    all_regions = {r['id']: r for r in region_repo.find_all()}
+    all_decaf_methods = {dm['id']: dm for dm in decaf_method_repo.find_all()}
+    
     for session in all_sessions:
-        # Get product and batch info for enrichment
-        product = product_repo.find_by_id(session.get('product_id'))
-        batch = batch_repo.find_by_id(session.get('product_batch_id'))
+        # Get product and batch info for enrichment using pre-loaded dictionaries
+        product = all_products.get(session.get('product_id'))
+        batch = all_batches.get(session.get('product_batch_id'))
         
         if product:
-            # Use consistent product enrichment
-            enriched_product = enrich_product_with_lookups(product.copy(), factory, user_id)
+            # Inline optimized product enrichment using pre-loaded lookups
+            enriched_product = product.copy()
+            
+            # Enrich roaster
+            enriched_product['roaster'] = all_roasters.get(product.get('roaster_id'))
+            
+            # Enrich bean types
+            bean_type_ids = product.get('bean_type_id', [])
+            if isinstance(bean_type_ids, int):
+                bean_type_ids = [bean_type_ids]
+            enriched_product['bean_type'] = [all_bean_types.get(bt_id) for bt_id in bean_type_ids if bt_id in all_bean_types]
+            
+            # Enrich country
+            enriched_product['country'] = all_countries.get(product.get('country_id'))
+            
+            # Enrich regions
+            region_ids = product.get('region_id', [])
+            if isinstance(region_ids, int):
+                region_ids = [region_ids]
+            enriched_product['region'] = [all_regions.get(r_id) for r_id in region_ids if r_id in all_regions]
+            
+            # Enrich decaf method
+            enriched_product['decaf_method'] = all_decaf_methods.get(product.get('decaf_method_id'))
             
             # Create display name from enriched data
             roaster_name = enriched_product.get('roaster', {}).get('name', 'N/A') if enriched_product.get('roaster') else 'N/A'
@@ -592,8 +637,16 @@ def get_all_brew_sessions():
             session['product_name'] = 'N/A'
             session['product_details'] = {}
         
-        # Use centralized enrichment function to add lookup objects and calculated score
-        enrich_brew_session_with_lookups(session, factory, user_id)
+        # Enrich equipment lookups using pre-loaded dictionaries
+        session['brew_method'] = all_brew_methods.get(session.get('brew_method_id'))
+        session['recipe'] = all_recipes.get(session.get('recipe_id'))
+        session['grinder'] = all_grinders.get(session.get('grinder_id'))
+        session['filter'] = all_filters.get(session.get('filter_id'))
+        session['kettle'] = all_kettles.get(session.get('kettle_id'))
+        session['scale'] = all_scales.get(session.get('scale_id'))
+        
+        # Add calculated score
+        session['calculated_score'] = calculate_total_score(session)
         
         # Calculate brew ratio using consistent field names
         session['brew_ratio'] = calculate_brew_ratio(session.get('amount_coffee_grams'), session.get('amount_water_grams'))
