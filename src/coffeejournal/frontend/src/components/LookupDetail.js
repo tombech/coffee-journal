@@ -11,6 +11,7 @@ function LookupDetail({ type, singularName, pluralName }) {
   const { addToast } = useToast();
   const [item, setItem] = useState(null);
   const [usageData, setUsageData] = useState(null);
+  const [statsData, setStatsData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -40,8 +41,9 @@ function LookupDetail({ type, singularName, pluralName }) {
       setItem(itemData);
       setError(null); // Clear any previous errors
       
-      // Fetch usage data separately without blocking the main render
+      // Fetch usage data and stats separately without blocking the main render
       fetchUsageData();
+      fetchStatsData();
     } catch (err) {
       setError(`Failed to fetch ${singularName.toLowerCase()} details: ` + err.message);
       console.error(`Error fetching ${singularName.toLowerCase()} details:`, err);
@@ -61,6 +63,20 @@ function LookupDetail({ type, singularName, pluralName }) {
       // Silently fail for usage data - it's not critical for the main view
       console.warn(`Usage data fetch failed for ${singularName}: ${err.message}`);
       setUsageData(null);
+    }
+  };
+
+  const fetchStatsData = async () => {
+    try {
+      const statsResponse = await apiFetch(`/stats/${type}/${id}`);
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json();
+        setStatsData(statsData);
+      }
+    } catch (err) {
+      // Silently fail for stats data - it's not critical for the main view
+      console.warn(`Stats data fetch failed for ${singularName}: ${err.message}`);
+      setStatsData(null);
     }
   };
 
@@ -304,6 +320,88 @@ function LookupDetail({ type, singularName, pluralName }) {
                 'records'
               } yet.
             </p>
+          )}
+          
+          {/* Top 5 Brew Sessions */}
+          {statsData && statsData.top_5_sessions && statsData.top_5_sessions.length > 0 && (
+            <div style={{ marginTop: '20px' }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f5f5f5' }}>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {statsData.top_5_sessions.map((session, index) => (
+                      <tr key={session.id || index}>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.brew_method_id || session.brew_method || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#2e7d32' }}>
+                          {session.score || session.calculated_score || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          
+          {/* Bottom 5 Brew Sessions */}
+          {statsData && statsData.bottom_5_sessions && statsData.bottom_5_sessions.length > 0 && (
+            <div style={{ marginTop: '20px' }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f5f5f5' }}>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {statsData.bottom_5_sessions.map((session, index) => (
+                      <tr key={session.id || index}>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.brew_method_id || session.brew_method || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#f44336' }}>
+                          {session.score || session.calculated_score || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           )}
         </div>
       )}

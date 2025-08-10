@@ -1553,6 +1553,17 @@ def create_grinder():
         error_msg, status_code = validate_lookup_data(data)
         if error_msg:
             return jsonify({'error': error_msg}), status_code
+        
+        # Validate and convert manually_ground_grams to float
+        if 'manually_ground_grams' in data:
+            try:
+                if data['manually_ground_grams'] is not None:
+                    data['manually_ground_grams'] = float(data['manually_ground_grams'])
+                    if data['manually_ground_grams'] < 0:
+                        return jsonify({'error': 'Manual ground amount cannot be negative'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'Manual ground amount must be a valid number'}), 400
+        
         factory = get_repository_factory()
         repo = factory.get_grinder_repository(user_id)
         
@@ -1592,6 +1603,17 @@ def update_grinder(grinder_id):
         data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
+        
+        # Validate and convert manually_ground_grams to float
+        if 'manually_ground_grams' in data:
+            try:
+                if data['manually_ground_grams'] is not None:
+                    data['manually_ground_grams'] = float(data['manually_ground_grams'])
+                    if data['manually_ground_grams'] < 0:
+                        return jsonify({'error': 'Manual ground amount cannot be negative'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'Manual ground amount must be a valid number'}), 400
+        
         factory = get_repository_factory()
         repo = factory.get_grinder_repository(user_id)
         

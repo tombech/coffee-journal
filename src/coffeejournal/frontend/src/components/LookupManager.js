@@ -105,6 +105,22 @@ function LookupManager({
       }
     }
 
+    // Validate number fields
+    for (const field of allFields) {
+      if (field.type === 'number' && formData[field.name] !== null && formData[field.name] !== undefined) {
+        if (isNaN(formData[field.name])) {
+          addToast(`${field.label} must be a valid number`, 'error');
+          setSubmitting(false);
+          return;
+        }
+        if (formData[field.name] < 0) {
+          addToast(`${field.label} cannot be negative`, 'error');
+          setSubmitting(false);
+          return;
+        }
+      }
+    }
+
     try {
       const method = editingItem ? 'PUT' : 'POST';
       const url = editingItem 
@@ -212,6 +228,10 @@ function LookupManager({
       setFormData(prev => ({ ...prev, [name]: files[0]?.name || '' }));
     } else if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
+    } else if (type === 'number') {
+      // Convert number inputs to actual numbers, handle empty string as null
+      const numericValue = value === '' ? null : parseFloat(value);
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -219,7 +239,7 @@ function LookupManager({
 
   const renderField = (field) => {
     const { name, label, type, required } = field;
-    const value = formData[name] || '';
+    const value = formData[name] === null || formData[name] === undefined ? '' : formData[name];
 
     switch (type) {
       case 'textarea':

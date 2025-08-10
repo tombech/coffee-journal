@@ -350,4 +350,53 @@ def create_stats_blueprint():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
+    @stats_bp.route('/grinders/<int:grinder_id>', methods=['GET'])
+    def get_grinder_stats(grinder_id):
+        """Get detailed statistics for a specific grinder."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            grinder_repo = factory.get_grinder_repository(user_id)
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            
+            # Use the repository method for core statistics
+            core_stats = grinder_repo.get_usage_stats(grinder_id, factory)
+            
+            # Get brew sessions for score calculations
+            all_sessions = brew_session_repo.find_all()
+            grinder_sessions = [s for s in all_sessions if s.get('grinder_id') == grinder_id]
+            
+            # Calculate scores for additional statistics
+            scores = []
+            for session in grinder_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(grinder_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            # Combine core stats with additional scoring statistics
+            result = core_stats.copy()
+            result.update({
+                'total_brew_sessions': core_stats['total_brews'],  # Alias for consistency with other endpoints
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+            return jsonify(result)
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
     return stats_bp
