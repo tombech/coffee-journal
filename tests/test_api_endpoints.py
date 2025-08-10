@@ -311,6 +311,54 @@ class TestBrewSessionEndpoints:
         sessions = result['data']  # Handle pagination response
         assert len(sessions) >= 1
     
+    def test_brew_session_decaf_method_enrichment(self, client):
+        """Test that brew sessions include decaf_method enrichment in product_details."""
+        # First create a decaf method
+        decaf_method_response = client.post('/api/decaf_methods', json={
+            'name': 'Test Swiss Water Process',
+            'short_form': 'TSWP'
+        })
+        decaf_method_data = decaf_method_response.get_json()
+        
+        # Create product with decaf method
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster',
+            'decaf': True,
+            'decaf_method_id': decaf_method_data['id']
+        })
+        product_id = product_response.get_json()['id']
+        assert product_response.get_json()['decaf_method']['id'] == decaf_method_data['id']
+        
+        # Create batch and session
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={'roast_date': '2025-01-01'})
+        batch_id = batch_response.get_json()['id']
+        
+        session_response = client.post(f'/api/batches/{batch_id}/brew_sessions', json={'brew_method': 'V60'})
+        assert session_response.status_code == 201
+        
+        # Get all brew sessions and verify decaf_method enrichment
+        response = client.get('/api/brew_sessions')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Find our session and verify decaf_method is enriched
+        found_session = None
+        for session in sessions:
+            if session['product_id'] == product_id:
+                found_session = session
+                break
+        
+        assert found_session is not None, "Could not find the created session"
+        assert 'product_details' in found_session
+        assert 'decaf_method' in found_session['product_details']
+        
+        decaf_method = found_session['product_details']['decaf_method']
+        assert decaf_method is not None
+        assert decaf_method['id'] == decaf_method_data['id']
+        assert decaf_method['name'] == decaf_method_data['name']
+    
     def test_update_brew_session(self, client):
         """Test updating a brew session."""
         # Create product and batch
@@ -710,3 +758,74 @@ class TestIDBasedFilteringAPI:
         assert len(sessions) >= 1
         for session in sessions:
             assert session['brew_method']['id'] == brew_method_id
+    
+    def test_filter_by_region_id(self, client):
+        """Test filtering brew sessions by region ID."""
+        # Create product with specific region
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster',
+            'country_name': 'Ethiopia',
+            'region_name': ['Yirgacheffe']
+        })
+        product_id = product_response.get_json()['id']
+        regions = product_response.get_json()['region']
+        region_id = regions[0]['id']  # Get first region ID
+        
+        # Create batch and session
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={'roast_date': '2025-01-01'})
+        batch_id = batch_response.get_json()['id']
+        
+        client.post(f'/api/batches/{batch_id}/brew_sessions', json={'brew_method': 'V60'})
+        
+        # Filter by region ID
+        response = client.get(f'/api/brew_sessions?region={region_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Should return sessions from Yirgacheffe region
+        assert len(sessions) >= 1
+        for session in sessions:
+            found = False
+            for region in session['product_details']['region']:
+                if region['id'] == region_id:
+                    found = True
+                    break
+            assert found, f"Region ID {region_id} not found in session regions"
+    
+    def test_filter_by_decaf_method_id(self, client):
+        """Test filtering brew sessions by decaf method ID."""
+        # First create a decaf method
+        decaf_method_response = client.post('/api/decaf_methods', json={
+            'name': 'Test Swiss Water Process',
+            'short_form': 'TSWP'
+        })
+        decaf_method_id = decaf_method_response.get_json()['id']
+        
+        # Create product with decaf method
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster',
+            'decaf': True,
+            'decaf_method_id': decaf_method_id
+        })
+        product_id = product_response.get_json()['id']
+        assert product_response.get_json()['decaf_method']['id'] == decaf_method_id
+        
+        # Create batch and session
+        batch_response = client.post(f'/api/products/{product_id}/batches', json={'roast_date': '2025-01-01'})
+        batch_id = batch_response.get_json()['id']
+        
+        client.post(f'/api/batches/{batch_id}/brew_sessions', json={'brew_method': 'V60'})
+        
+        # Filter by decaf method ID
+        response = client.get(f'/api/brew_sessions?decaf_method={decaf_method_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        sessions = result['data']
+        
+        # Should return sessions from products with Swiss Water Process
+        assert len(sessions) >= 1
+        for session in sessions:
+            assert session['product_details']['decaf_method']['id'] == decaf_method_id

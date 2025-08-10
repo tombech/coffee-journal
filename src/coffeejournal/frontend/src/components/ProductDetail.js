@@ -7,6 +7,7 @@ import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
+import UsageStatistics from './UsageStatistics';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ function ProductDetail() {
   const [brewSessions, setBrewSessions] = useState([]);
   const [topBrewSessions, setTopBrewSessions] = useState([]);
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [recentBrewSessions, setRecentBrewSessions] = useState([]);
   const [productStats, setProductStats] = useState(null);
 
   useEffect(() => {
@@ -74,25 +76,28 @@ function ProductDetail() {
   const fetchBrewSessions = async () => {
     try {
       // Fetch recent sessions, top sessions, and bottom sessions efficiently
-      const [recentResponse, topResponse, bottomResponse] = await Promise.all([
-        apiFetch(`/brew_sessions?product_id=${id}&page_size=20&sort=timestamp&sort_direction=desc`), // Recent sessions
+      const [recentResponse, topResponse, bottomResponse, recentForStatsResponse] = await Promise.all([
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=20&sort=timestamp&sort_direction=desc`), // Recent sessions for main display
         apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=score&sort_direction=desc`), // Top 5 by score
-        apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=score&sort_direction=asc`) // Bottom 5 by score
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=score&sort_direction=asc`), // Bottom 5 by score
+        apiFetch(`/brew_sessions?product_id=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 for stats
       ]);
       
-      if (!recentResponse.ok || !topResponse.ok || !bottomResponse.ok) {
+      if (!recentResponse.ok || !topResponse.ok || !bottomResponse.ok || !recentForStatsResponse.ok) {
         throw new Error('Failed to fetch brew sessions');
       }
       
-      const [recentResult, topResult, bottomResult] = await Promise.all([
+      const [recentResult, topResult, bottomResult, recentForStatsResult] = await Promise.all([
         recentResponse.json(),
         topResponse.json(),
-        bottomResponse.json()
+        bottomResponse.json(),
+        recentForStatsResponse.json()
       ]);
       
       setBrewSessions(recentResult.data || []);
       setTopBrewSessions(topResult.data || []);
       setBottomBrewSessions(bottomResult.data || []);
+      setRecentBrewSessions(recentForStatsResult.data || []);
     } catch (err) {
       console.error("Error fetching brew sessions:", err);
     }
@@ -592,21 +597,18 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* Product Statistics Section */}
-      {productStats && (
-        <div style={{ 
-          marginBottom: '30px',
-          padding: '20px', 
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          border: '1px solid #e0e0e0',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-            📊 Usage Statistics
-          </h3>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '30px' }}>
+      {/* Product Statistics and Brew Sessions Section */}
+      <UsageStatistics 
+        statsData={{
+          ...productStats,
+          top_5_sessions: topBrewSessions,
+          bottom_5_sessions: bottomBrewSessions,
+          recent_5_sessions: recentBrewSessions
+        }}
+        itemName="product"
+        showProduct={false}
+        customStatistics={productStats && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{productStats.total_brew_sessions}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Total Brew Sessions</div>
@@ -629,90 +631,8 @@ function ProductDetail() {
               <div style={{ fontSize: '12px', color: '#666' }}>Score Range</div>
             </div>
           </div>
-
-          {/* Top 5 Brew Sessions */}
-          {productStats.top_5_sessions && productStats.top_5_sessions.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#f5f5f5' }}>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {productStats.top_5_sessions.map((session, index) => (
-                      <tr key={session.id || index}>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.brew_method_id || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#2e7d32' }}>
-                          {session.score || session.calculated_score || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Bottom 5 Brew Sessions */}
-          {productStats.bottom_5_sessions && productStats.bottom_5_sessions.length > 0 && (
-            <div>
-              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#f5f5f5' }}>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {productStats.bottom_5_sessions.map((session, index) => (
-                      <tr key={session.id || index}>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.brew_method_id || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#f44336' }}>
-                          {session.score || session.calculated_score || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      />
 
       {/* Batches Section */}
       <div style={{ 
@@ -973,62 +893,6 @@ function ProductDetail() {
         />
       </div>
 
-      {/* Brew Analytics Section */}
-      {brewSessions.length > 0 && (
-        <div style={{ marginBottom: '30px' }}>
-          {/* Top 5 Brews */}
-          <div style={{ 
-            marginBottom: '20px',
-            padding: '20px', 
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            border: '1px solid #e0e0e0',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-              🏆 Top 5 Brews
-            </h3>
-            <BrewSessionTable 
-              sessions={topBrewSessions} 
-              title=""
-              showProduct={false}
-              showActions={false}
-              showFilters={false}
-              showAddButton={false}
-              preserveOrder={true}
-              onDelete={() => {}}
-              onDuplicate={() => {}}
-              onEdit={() => {}}
-            />
-          </div>
-
-          {/* Bottom 5 Brews */}
-          <div style={{ 
-            marginBottom: '20px',
-            padding: '20px', 
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            border: '1px solid #e0e0e0',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-              💩 Bottom 5 Brews
-            </h3>
-            <BrewSessionTable 
-              sessions={bottomBrewSessions} 
-              title=""
-              showProduct={false}
-              showActions={false}
-              showFilters={false}
-              showAddButton={false}
-              preserveOrder={true}
-              onDelete={() => {}}
-              onDuplicate={() => {}}
-              onEdit={() => {}}
-            />
-          </div>
-        </div>
-      )}
 
     </div>
   );

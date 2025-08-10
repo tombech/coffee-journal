@@ -4,7 +4,7 @@ import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import BrewSessionTable from './BrewSessionTable';
+import UsageStatistics from './UsageStatistics';
 
 function GrinderDetail() {
   const { id } = useParams();
@@ -16,6 +16,9 @@ function GrinderDetail() {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [usageInfo, setUsageInfo] = useState(null);
+  const [topBrewSessions, setTopBrewSessions] = useState([]);
+  const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [recentBrewSessions, setRecentBrewSessions] = useState([]);
 
   useEffect(() => {
     fetchGrinderDetail();
@@ -41,8 +44,9 @@ function GrinderDetail() {
       setGrinder(grinderData);
       setError(null); // Clear any previous errors
       
-      // Fetch stats data separately without blocking the main render
+      // Fetch stats data and brew sessions separately without blocking the main render
       fetchStatsData();
+      fetchBrewSessions();
     } catch (err) {
       setError("Failed to fetch grinder details: " + err.message);
       console.error("Error fetching grinder details:", err);
@@ -62,6 +66,31 @@ function GrinderDetail() {
       // Silently fail for stats data - it's not critical for the main view
       console.warn(`Stats data fetch failed for grinder: ${err.message}`);
       setStats(null);
+    }
+  };
+
+  const fetchBrewSessions = async () => {
+    try {
+      // Fetch top, bottom, and recent brew sessions for this grinder
+      const [topResponse, bottomResponse, recentResponse] = await Promise.all([
+        apiFetch(`/brew_sessions?grinder=${id}&page_size=5&sort=score&sort_direction=desc`), // Top 5 by score
+        apiFetch(`/brew_sessions?grinder=${id}&page_size=5&sort=score&sort_direction=asc`),   // Bottom 5 by score
+        apiFetch(`/brew_sessions?grinder=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 by timestamp
+      ]);
+      
+      if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
+        const [topResult, bottomResult, recentResult] = await Promise.all([
+          topResponse.json(),
+          bottomResponse.json(),
+          recentResponse.json()
+        ]);
+        
+        setTopBrewSessions(topResult.data || []);
+        setBottomBrewSessions(bottomResult.data || []);
+        setRecentBrewSessions(recentResult.data || []);
+      }
+    } catch (err) {
+      console.warn(`Failed to fetch brew sessions for grinder: ${err.message}`);
     }
   };
 
@@ -236,105 +265,73 @@ function GrinderDetail() {
       </div>
 
       {/* Usage Statistics */}
-      {stats && (
-        <div style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#e8f5e8', borderRadius: '8px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h3 style={{ margin: 0 }}>📊 Usage Statistics</h3>
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(stats.total_brews)}</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Total Brews</div>
+      <UsageStatistics 
+        statsData={{
+          ...stats,
+          top_5_sessions: topBrewSessions,
+          bottom_5_sessions: bottomBrewSessions,
+          recent_5_sessions: recentBrewSessions
+        }}
+        itemName="grinder"
+        showProduct={true}
+        customStatistics={stats && (
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(stats.total_brews)}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Total Brews</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
+                  {stats.total_kilos > 0 ? `${Math.round(stats.total_kilos)}kg` : `${Math.round(stats.total_grams_ground)}g`}
+                </div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (Brews)</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{Math.round(stats.manually_ground_grams)}g</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Manual Grinding</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
+                  {stats.total_grams_with_manual >= 1000 
+                    ? `${Math.round(stats.total_grams_with_manual / 1000)}kg` 
+                    : `${Math.round(stats.total_grams_with_manual)}g`}
+                </div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Total Ground</div>
+              </div>
             </div>
             
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
-                {stats.total_kilos > 0 ? `${Math.round(stats.total_kilos)}kg` : `${Math.round(stats.total_grams_ground)}g`}
-              </div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (Brews)</div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{Math.round(stats.manually_ground_grams)}g</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Manual Grinding</div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
-                {stats.total_grams_with_manual >= 1000 
-                  ? `${Math.round(stats.total_grams_with_manual / 1000)}kg` 
-                  : `${Math.round(stats.total_grams_with_manual)}g`}
-              </div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Total Ground</div>
-            </div>
-          </div>
-          
-          {/* Progress Bar for Seasoning */}
-          {stats.total_grams_with_manual < 1000 && (
-            <div style={{ marginTop: '20px' }}>
-              <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
-                Seasoning Progress (1kg recommended)
-              </div>
-              <div style={{ 
-                width: '100%', 
-                height: '8px', 
-                backgroundColor: '#e0e0e0', 
-                borderRadius: '4px',
-                overflow: 'hidden'
-              }}>
+            {/* Progress Bar for Seasoning */}
+            {stats.total_grams_with_manual < 1000 && (
+              <div style={{ marginTop: '20px' }}>
+                <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
+                  Seasoning Progress (1kg recommended)
+                </div>
                 <div style={{ 
-                  width: `${Math.min(100, (stats.total_grams_with_manual / 1000) * 100)}%`, 
-                  height: '100%', 
-                  backgroundColor: stats.total_grams_with_manual >= 1000 ? '#4caf50' : '#ff9800',
-                  transition: 'width 0.3s ease'
-                }} />
+                  width: '100%', 
+                  height: '8px', 
+                  backgroundColor: '#e0e0e0', 
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ 
+                    width: `${Math.min(100, (stats.total_grams_with_manual / 1000) * 100)}%`, 
+                    height: '100%', 
+                    backgroundColor: stats.total_grams_with_manual >= 1000 ? '#4caf50' : '#ff9800',
+                    transition: 'width 0.3s ease'
+                  }} />
+                </div>
+                <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                  {Math.round(1000 - stats.total_grams_with_manual)}g remaining for full seasoning
+                </div>
               </div>
-              <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
-                {Math.round(1000 - stats.total_grams_with_manual)}g remaining for full seasoning
-              </div>
-            </div>
-          )}
-          
-          {/* Top 5 Brew Sessions */}
-          {stats && stats.top_5_sessions && stats.top_5_sessions.length > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
-              <BrewSessionTable 
-                sessions={stats.top_5_sessions} 
-                title=""
-                showProduct={false}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-          
-          {/* Bottom 5 Brew Sessions */}
-          {stats && stats.bottom_5_sessions && stats.bottom_5_sessions.length > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
-              <BrewSessionTable 
-                sessions={stats.bottom_5_sessions} 
-                title=""
-                showProduct={false}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </>
+        )}
+      />
 
       <DeleteConfirmationModal
         isOpen={showDeleteModal}

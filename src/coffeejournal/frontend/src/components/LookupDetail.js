@@ -4,7 +4,26 @@ import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import BrewSessionTable from './BrewSessionTable';
+import UsageStatistics from './UsageStatistics';
+
+// Helper function to map lookup types to brew_sessions API filter parameter names
+function getFilterType(lookupType) {
+  const typeMap = {
+    'roasters': 'roaster',
+    'bean_types': 'bean_type', 
+    'countries': 'country',
+    'regions': 'region',
+    'brew_methods': 'brew_method',
+    'recipes': 'recipe',
+    'decaf_methods': 'decaf_method',
+    'grinders': 'grinder',
+    'filters': 'filter',
+    'kettles': 'kettle', 
+    'scales': 'scale'
+  };
+  
+  return typeMap[lookupType] || null;
+}
 
 function LookupDetail({ type, singularName, pluralName }) {
   const { id } = useParams();
@@ -283,85 +302,15 @@ function LookupDetail({ type, singularName, pluralName }) {
       </div>
 
       {/* Usage Statistics */}
-      {usageData && (
-        <div style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#e8f5e8', borderRadius: '8px' }}>
-<h3 style={{ margin: '0 0 15px 0' }}>{ICONS.STATS} Usage Statistics</h3>
-          
-          {usageData.usage_count > 0 ? (
-            <div>
-              <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{usageData.usage_count}</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>
-                  Times Used in {usageData.usage_type === 'products' ? 'Products' : 
-                                 usageData.usage_type === 'brew_sessions' ? 'Brew Sessions' : 
-                                 usageData.usage_type ? usageData.usage_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 
-                                 'Records'}
-                </div>
-              </div>
-              
-              {usageData.recent_usage && usageData.recent_usage.length > 0 && (
-                <div>
-                  <h4 style={{ margin: '15px 0 10px 0', fontSize: '14px' }}>Recent Usage:</h4>
-                  <div style={{ fontSize: '12px' }}>
-                    {usageData.recent_usage.slice(0, 5).map((usage, index) => (
-                      <div key={index} style={{ marginBottom: '5px', color: '#666' }}>
-                        • {new Date(usage.timestamp).toLocaleDateString()} - {usage.product_name || 'Unknown Product'}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p style={{ color: '#666', fontStyle: 'italic' }}>
-              This {singularName.toLowerCase()} has not been used in any {
-                usageData?.usage_type === 'products' ? 'products' : 
-                usageData?.usage_type === 'brew_sessions' ? 'brew sessions' : 
-                usageData?.usage_type ? usageData.usage_type.replace('_', ' ') : 
-                'records'
-              } yet.
-            </p>
-          )}
-          
-          {/* Top 5 Brew Sessions */}
-          {statsData && statsData.top_5_sessions && statsData.top_5_sessions.length > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
-              <BrewSessionTable 
-                sessions={statsData.top_5_sessions} 
-                title=""
-                showProduct={false}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-          
-          {/* Bottom 5 Brew Sessions */}
-          {statsData && statsData.bottom_5_sessions && statsData.bottom_5_sessions.length > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
-              <BrewSessionTable 
-                sessions={statsData.bottom_5_sessions} 
-                title=""
-                showProduct={false}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-        </div>
-      )}
+      <UsageStatistics 
+        usageData={usageData}
+        statsData={statsData}
+        itemName={singularName}
+        showProduct={false}
+        // New props for filtering brew sessions
+        filterType={getFilterType(type)}
+        filterId={parseInt(id)}
+      />
 
       {/* Item Image */}
       {item.image_url && (

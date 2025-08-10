@@ -521,6 +521,8 @@ def get_all_brew_sessions():
     roaster_id = request.args.get('roaster', type=int)
     bean_type_id = request.args.get('bean_type', type=int)
     country_id = request.args.get('country', type=int)
+    region_id = request.args.get('region', type=int)
+    decaf_method_id = request.args.get('decaf_method', type=int)
     grinder_id = request.args.get('grinder', type=int)
     filter_id = request.args.get('filter', type=int)
     kettle_id = request.args.get('kettle', type=int)
@@ -630,6 +632,7 @@ def get_all_brew_sessions():
                 'roast_date': batch.get('roast_date') if batch else None,
                 'roast_type': enriched_product.get('roast_type'),
                 'decaf': enriched_product.get('decaf', False),
+                'decaf_method': enriched_product.get('decaf_method'),
                 'country': enriched_product.get('country'),
                 'region': enriched_product.get('region')
             }
@@ -691,7 +694,7 @@ def get_all_brew_sessions():
             continue
         
         # Product detail filters (by ID)
-        if roaster_id or bean_type_id or country_id:
+        if roaster_id or bean_type_id or country_id or region_id or decaf_method_id:
             product_details = session.get('product_details', {})
             
             # Roaster filter (by ID)
@@ -715,6 +718,23 @@ def get_all_brew_sessions():
             if country_id:
                 country = product_details.get('country')
                 if not country or country.get('id') != country_id:
+                    continue
+            
+            # Region filter (by ID) - check if any region matches
+            if region_id:
+                regions = product_details.get('region', [])
+                found = False
+                for region in regions:
+                    if region.get('id') == region_id:
+                        found = True
+                        break
+                if not found:
+                    continue
+            
+            # Decaf method filter (by ID)
+            if decaf_method_id:
+                decaf_method = product_details.get('decaf_method')
+                if not decaf_method or decaf_method.get('id') != decaf_method_id:
                     continue
         
         # Decaf filter (still using request parameter directly)

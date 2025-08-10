@@ -46,6 +46,8 @@ function LookupManager({
     allFields.forEach(field => {
       if (field.type === 'checkbox') {
         initialData[field.name] = false;
+      } else if (field.type === 'number') {
+        initialData[field.name] = null;
       } else {
         initialData[field.name] = '';
       }

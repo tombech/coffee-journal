@@ -16,5 +16,19 @@
     "name": "Ethyl Acetate Process",
     "short_form": "EA",
     "description": "Natural decaffeination using fruit-derived EA"
+  },
+  {
+    "name": "Swiss Water Process",
+    "short_form": "SWP",
+    "id": 4,
+    "created_at": "2025-08-10T17:24:29.412190+00:00",
+    "updated_at": "2025-08-10T17:24:29.412190+00:00"
+  },
+  {
+    "name": "Test Decaf",
+    "short_form": "TD",
+    "id": 5,
+    "created_at": "2025-08-10T17:32:40.735533+00:00",
+    "updated_at": "2025-08-10T17:32:40.735533+00:00"
   }
 ]

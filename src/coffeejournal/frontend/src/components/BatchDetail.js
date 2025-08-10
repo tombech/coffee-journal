@@ -6,6 +6,7 @@ import StarRating from './StarRating';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import BatchForm from './BatchForm';
 import { ICONS } from '../config/icons';
+import UsageStatistics from './UsageStatistics';
 
 function BatchDetail() {
   const { id } = useParams();
@@ -17,7 +18,9 @@ function BatchDetail() {
   const [product, setProduct] = useState(null);
   const [statistics, setStatistics] = useState(null);
   const [batchStats, setBatchStats] = useState(null);
-  const [recentSessions, setRecentSessions] = useState([]);
+  const [topBrewSessions, setTopBrewSessions] = useState([]);
+  const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [recentBrewSessions, setRecentBrewSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,6 +28,7 @@ function BatchDetail() {
   useEffect(() => {
     fetchBatchDetail();
     fetchBatchStats();
+    fetchBrewSessions();
   }, [id]);
 
   const fetchBatchDetail = async () => {
@@ -38,7 +42,6 @@ function BatchDetail() {
       setBatch(data.batch);
       setProduct(data.product);
       setStatistics(data.statistics);
-      setRecentSessions(data.recent_sessions || []);
     } catch (err) {
       setError("Failed to fetch batch details: " + err.message);
       console.error("Error fetching batch details:", err);
@@ -57,6 +60,31 @@ function BatchDetail() {
     } catch (err) {
       console.error("Error fetching batch stats:", err);
       // Don't set error state, just log - stats are optional
+    }
+  };
+
+  const fetchBrewSessions = async () => {
+    try {
+      // Fetch top, bottom, and recent brew sessions for this batch
+      const [topResponse, bottomResponse, recentResponse] = await Promise.all([
+        apiFetch(`/brew_sessions?batch_id=${id}&page_size=5&sort=score&sort_direction=desc`), // Top 5 by score
+        apiFetch(`/brew_sessions?batch_id=${id}&page_size=5&sort=score&sort_direction=asc`),   // Bottom 5 by score
+        apiFetch(`/brew_sessions?batch_id=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 by timestamp
+      ]);
+      
+      if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
+        const [topResult, bottomResult, recentResult] = await Promise.all([
+          topResponse.json(),
+          bottomResponse.json(),
+          recentResponse.json()
+        ]);
+        
+        setTopBrewSessions(topResult.data || []);
+        setBottomBrewSessions(bottomResult.data || []);
+        setRecentBrewSessions(recentResult.data || []);
+      }
+    } catch (err) {
+      console.warn(`Failed to fetch brew sessions for batch: ${err.message}`);
     }
   };
 
@@ -259,207 +287,99 @@ function BatchDetail() {
       </div>
 
       {/* Usage Statistics */}
-      {statistics && (
-        <div style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#e8f5e8', borderRadius: '8px' }}>
-          <h3 style={{ margin: '0 0 15px 0' }}>📊 Usage Statistics</h3>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_brew_sessions)}</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Brew Sessions</div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_coffee_used)}g</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Coffee Used</div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{Math.round(statistics.coffee_remaining)}g</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Remaining</div>
-            </div>
-            
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff9800' }}>{Math.round(statistics.sessions_remaining_estimate)}</div>
-              <div style={{ fontSize: '12px', color: '#666' }}>Est. Sessions Left</div>
-            </div>
-            
-            {statistics.avg_rating && (
+      <UsageStatistics 
+        statsData={{
+          ...batchStats,
+          top_5_sessions: topBrewSessions,
+          bottom_5_sessions: bottomBrewSessions,
+          recent_5_sessions: recentBrewSessions
+        }}
+        itemName="batch"
+        showProduct={false}
+        customStatistics={statistics && (
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
-                  <StarRating rating={statistics.avg_rating} readOnly={true} maxRating={5} />
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_brew_sessions)}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Brew Sessions</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_coffee_used)}g</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Used</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{Math.round(statistics.coffee_remaining)}g</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Remaining</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff9800' }}>{Math.round(statistics.sessions_remaining_estimate)}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Est. Sessions Left</div>
+              </div>
+              
+              {statistics.avg_rating && (
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
+                    <StarRating rating={statistics.avg_rating} readOnly={true} maxRating={5} />
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>Avg Rating</div>
                 </div>
-                <div style={{ fontSize: '12px', color: '#666' }}>Avg Rating</div>
+              )}
+            </div>
+
+            {/* Progress Bar */}
+            {batch.amount_grams > 0 && (
+              <div style={{ marginTop: '20px' }}>
+                <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
+                  Usage Progress ({Math.round(statistics.total_coffee_used)}g of {Math.round(batch.amount_grams)}g used)
+                </div>
+                <div style={{ 
+                  width: '100%', 
+                  height: '8px', 
+                  backgroundColor: '#e0e0e0', 
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ 
+                    width: `${Math.min(100, (statistics.total_coffee_used / batch.amount_grams) * 100)}%`, 
+                    height: '100%', 
+                    backgroundColor: statistics.coffee_remaining <= 0 ? '#f44336' : '#4caf50',
+                    transition: 'width 0.3s ease'
+                  }} />
+                </div>
               </div>
             )}
-          </div>
-
-          {/* Progress Bar */}
-          {batch.amount_grams > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
-                Usage Progress ({Math.round(statistics.total_coffee_used)}g of {Math.round(batch.amount_grams)}g used)
-              </div>
-              <div style={{ 
-                width: '100%', 
-                height: '8px', 
-                backgroundColor: '#e0e0e0', 
-                borderRadius: '4px',
-                overflow: 'hidden'
-              }}>
-                <div style={{ 
-                  width: `${Math.min(100, (statistics.total_coffee_used / batch.amount_grams) * 100)}%`, 
-                  height: '100%', 
-                  backgroundColor: statistics.coffee_remaining <= 0 ? '#f44336' : '#4caf50',
-                  transition: 'width 0.3s ease'
-                }} />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Brew Sessions */}
-      <div style={{ marginBottom: '30px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-          <h3 style={{ margin: 0 }}>🔥 Brew Sessions</h3>
-          <button
-            onClick={() => navigate(`/brew-sessions/new?batch_id=${id}`)}
-            title="Add Brew Session"
-            aria-label="Add Brew Session"
-            data-testid="add-brew-session-btn"
-            style={{
-              padding: '6px 8px',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            {ICONS.CREATE}
-          </button>
-        </div>
-        
-        {recentSessions.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#e9ecef' }}>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Water</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentSessions.map(session => (
-                  <tr key={session.id}>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                      <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
-                        {formatDateNorwegian(session.timestamp)}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}</td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}</td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                      {session.score ? session.score.toFixed(1) : '-'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p style={{ color: '#666', fontStyle: 'italic', textAlign: 'center', padding: '20px' }}>
-            No brew sessions yet. Click "Add Brew Session" to start tracking your brews.
-          </p>
+          </>
         )}
+      />
+
+      {/* Add Brew Session */}
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <button
+          onClick={() => navigate(`/brew-sessions/new?batch_id=${id}`)}
+          title="Add Brew Session"
+          aria-label="Add Brew Session"
+          data-testid="add-brew-session-btn"
+          style={{
+            padding: '12px 20px',
+            background: 'none',
+            border: '1px solid #ccc',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            margin: '0 auto'
+          }}
+        >
+          {ICONS.CREATE} Add New Brew Session
+        </button>
       </div>
 
-      {/* Top/Bottom Brew Sessions Statistics */}
-      {batchStats && (batchStats.top_5_sessions?.length > 0 || batchStats.bottom_5_sessions?.length > 0) && (
-        <div style={{ marginBottom: '30px' }}>
-          {/* Top 5 Sessions */}
-          {batchStats.top_5_sessions?.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <h3 style={{ margin: '0 0 15px 0' }}>🏆 Top 5 Brew Sessions</h3>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#e8f5e8' }}>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Score</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Water</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Ratio</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {batchStats.top_5_sessions.map(session => (
-                      <tr key={session.id}>
-                        <td style={{ padding: '8px', border: '1px solid #ddd', fontWeight: 'bold', color: '#2e7d32' }}>
-                          {session.score ? session.score.toFixed(1) : '-'}
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                          <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
-                            {formatDateNorwegian(session.timestamp)}
-                          </Link>
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_ratio ? `1:${session.brew_ratio.toFixed(1)}` : '-'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Bottom 5 Sessions */}
-          {batchStats.bottom_5_sessions?.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <h3 style={{ margin: '0 0 15px 0' }}>📉 Bottom 5 Brew Sessions</h3>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#ffebee' }}>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Score</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Water</th>
-                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Ratio</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {batchStats.bottom_5_sessions.map(session => (
-                      <tr key={session.id}>
-                        <td style={{ padding: '8px', border: '1px solid #ddd', fontWeight: 'bold', color: '#d32f2f' }}>
-                          {session.score ? session.score.toFixed(1) : '-'}
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                          <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
-                            {formatDateNorwegian(session.timestamp)}
-                          </Link>
-                        </td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}</td>
-                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_ratio ? `1:${session.brew_ratio.toFixed(1)}` : '-'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
       
       {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal

@@ -5,7 +5,7 @@ import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import StarRating from './StarRating';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-import BrewSessionTable from './BrewSessionTable';
+import UsageStatistics from './UsageStatistics';
 
 function RoasterDetail() {
   const { id } = useParams();
@@ -15,7 +15,9 @@ function RoasterDetail() {
   const [statistics, setStatistics] = useState(null);
   const [roasterStats, setRoasterStats] = useState(null);
   const [recentProducts, setRecentProducts] = useState([]);
-  const [recentSessions, setRecentSessions] = useState([]);
+  const [topBrewSessions, setTopBrewSessions] = useState([]);
+  const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [recentBrewSessions, setRecentBrewSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,6 +26,7 @@ function RoasterDetail() {
   useEffect(() => {
     fetchRoasterDetail();
     fetchRoasterStats();
+    fetchBrewSessions();
   }, [id]);
 
   const fetchRoasterDetail = async (retryCount = 0) => {
@@ -43,7 +46,7 @@ function RoasterDetail() {
       setRoaster(data.roaster);
       setStatistics(data.statistics);
       setRecentProducts(data.recent_products || []);
-      setRecentSessions(data.recent_sessions || []);
+      // Note: recent_sessions from detail endpoint not used since we fetch via brew_sessions API
       setError(null); // Clear any previous errors
     } catch (err) {
       // Fallback: try to fetch basic roaster info if detail fails
@@ -56,7 +59,7 @@ function RoasterDetail() {
             setRoaster(basicData);
             setStatistics(null); // No stats available
             setRecentProducts([]);
-            setRecentSessions([]);
+            // Note: recent_sessions from detail endpoint not used since we fetch via brew_sessions API
             setError(null);
             return;
           }
@@ -81,6 +84,31 @@ function RoasterDetail() {
     } catch (err) {
       console.error("Error fetching roaster stats:", err);
       // Don't set error state, just log - stats are optional
+    }
+  };
+
+  const fetchBrewSessions = async () => {
+    try {
+      // Fetch top, bottom, and recent brew sessions for this roaster
+      const [topResponse, bottomResponse, recentResponse] = await Promise.all([
+        apiFetch(`/brew_sessions?roaster=${id}&page_size=5&sort=score&sort_direction=desc`), // Top 5 by score
+        apiFetch(`/brew_sessions?roaster=${id}&page_size=5&sort=score&sort_direction=asc`),   // Bottom 5 by score
+        apiFetch(`/brew_sessions?roaster=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 by timestamp
+      ]);
+      
+      if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
+        const [topResult, bottomResult, recentResult] = await Promise.all([
+          topResponse.json(),
+          bottomResponse.json(),
+          recentResponse.json()
+        ]);
+        
+        setTopBrewSessions(topResult.data || []);
+        setBottomBrewSessions(bottomResult.data || []);
+        setRecentBrewSessions(recentResult.data || []);
+      }
+    } catch (err) {
+      console.warn(`Failed to fetch brew sessions for roaster: ${err.message}`);
     }
   };
 
@@ -250,10 +278,17 @@ function RoasterDetail() {
         </div>
       </div>
 
-      {/* Statistics */}
-      {statistics && (
-        <div style={{ marginBottom: '30px', padding: '15px', backgroundColor: '#e8f5e8', borderRadius: '8px' }}>
-          <h3 style={{ margin: '0 0 15px 0' }}>📊 Statistics</h3>
+      {/* Usage Statistics */}
+      <UsageStatistics 
+        statsData={{
+          ...roasterStats,
+          top_5_sessions: topBrewSessions,
+          bottom_5_sessions: bottomBrewSessions,
+          recent_5_sessions: recentBrewSessions
+        }}
+        itemName="roaster"
+        showProduct={true}
+        customStatistics={statistics && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_products)}</div>
@@ -280,8 +315,8 @@ function RoasterDetail() {
               </div>
             )}
           </div>
-        </div>
-      )}
+        )}
+      />
 
       {/* Recent Products */}
       {recentProducts.length > 0 && (
@@ -311,89 +346,7 @@ function RoasterDetail() {
         </div>
       )}
 
-      {/* Recent Brew Sessions */}
-      {recentSessions.length > 0 && (
-        <div style={{ marginBottom: '30px' }}>
-          <h3>🔥 Recent Brews</h3>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#e9ecef' }}>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Product</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
-                  <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentSessions.map(session => (
-                  <tr key={session.id}>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                      <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
-                        {formatDateNorwegian(session.timestamp)}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                      <Link to={`/products/${session.product_id}`} style={{ textDecoration: 'none' }}>
-                        {session.product_details?.product_name || 'Unknown'}
-                      </Link>
-                    </td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams || '-'}g</td>
-                    <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                      {session.score ? session.score.toFixed(1) : '-'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
 
-      {/* Top/Bottom Brew Sessions Statistics */}
-      {roasterStats && (roasterStats.top_5_sessions?.length > 0 || roasterStats.bottom_5_sessions?.length > 0) && (
-        <div style={{ marginBottom: '30px' }}>
-          {/* Top 5 Sessions */}
-          {roasterStats.top_5_sessions?.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <h3 style={{ margin: '0 0 15px 0' }}>🏆 Top 5 Brew Sessions</h3>
-              <BrewSessionTable 
-                sessions={roasterStats.top_5_sessions} 
-                title=""
-                showProduct={true}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-
-          {/* Bottom 5 Sessions */}
-          {roasterStats.bottom_5_sessions?.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <h3 style={{ margin: '0 0 15px 0' }}>📉 Bottom 5 Brew Sessions</h3>
-              <BrewSessionTable 
-                sessions={roasterStats.bottom_5_sessions} 
-                title=""
-                showProduct={true}
-                showActions={false}
-                showFilters={false}
-                showAddButton={false}
-                preserveOrder={true}
-                onDelete={() => {}}
-                onDuplicate={() => {}}
-                onEdit={() => {}}
-              />
-            </div>
-          )}
-        </div>
-      )}
 
       <DeleteConfirmationModal
         isOpen={showDeleteModal}

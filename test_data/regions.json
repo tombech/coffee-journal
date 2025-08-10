@@ -47,5 +47,13 @@
     "short_form": "Nari\u00f1o",
     "country_id": 2,
     "description": "Colombian region near Ecuador border"
+  },
+  {
+    "country_id": 11,
+    "name": "Test Region",
+    "short_form": "TR",
+    "id": 8,
+    "created_at": "2025-08-10T17:32:40.731924+00:00",
+    "updated_at": "2025-08-10T17:32:40.731924+00:00"
   }
 ]
