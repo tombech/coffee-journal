@@ -22,11 +22,10 @@ test.describe('Home Page', () => {
     }
   });
 
-  test('displays welcome message and main sections', async ({ page }) => {
+  test('displays main sections', async ({ page }) => {
     await page.goto('/');
     
-    // Check main heading and welcome message using semantic selectors
-    await expect(page.locator('body')).toContainText('Welcome to your Coffee Journal!');
+    // Check main heading using semantic selectors
     await expect(page.getByRole('heading', { name: /recent.*brew.*sessions/i })).toBeVisible();
   });
 
@@ -65,7 +64,7 @@ test.describe('Home Page', () => {
     // Navigate back to home
     await page.getByRole('link', { name: /home/i }).click();
     await page.waitForURL('/');
-    await expect(page.locator('body')).toContainText('Welcome to your Coffee Journal!');
+    await expect(page.getByRole('heading', { name: /recent.*brew.*sessions/i })).toBeVisible();
   });
 
   test('responsive design works on mobile', async ({ page }) => {
@@ -75,7 +74,6 @@ test.describe('Home Page', () => {
     await page.goto('/');
     
     // Main elements should still be visible on mobile
-    await expect(page.locator('body')).toContainText('Welcome to your Coffee Journal!');
     await expect(page.getByRole('heading', { name: /recent.*brew.*sessions/i })).toBeVisible();
     
     // Navigation should still be accessible using semantic selectors

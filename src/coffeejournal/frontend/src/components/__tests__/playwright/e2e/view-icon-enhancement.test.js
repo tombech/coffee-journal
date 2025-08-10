@@ -44,7 +44,7 @@ test.describe('View Icon Enhancement', () => {
     await page.goto('/');
     
     // Wait for home page to load
-    await expect(page.getByRole('heading', { name: 'Welcome to your Coffee Journal!' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible();
     
     // Verify that view icons are NOT present in product card headings (they were explicitly removed from top products)
     const productCardHeadingsWithViewIcon = await page.locator('h4').filter({ hasText: /👁️/ }).count();
@@ -75,7 +75,7 @@ test.describe('View Icon Enhancement', () => {
     await page.goto('/');
     
     // Wait for home page and analytics to load
-    await expect(page.getByRole('heading', { name: 'Welcome to your Coffee Journal!' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Top 5 Products/i })).toBeVisible();
     
     // Verify that view icons are NOT present in product links (they were explicitly removed)

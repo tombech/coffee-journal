@@ -356,8 +356,6 @@ function Home() {
 
   return (
     <div>
-      <h2>Welcome to your Coffee Journal!</h2>
-      
       {showNewForm && (
         <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ddd', borderRadius: '5px' }}>
           <BrewSessionForm
