@@ -37,7 +37,7 @@ test.describe('Home Page', () => {
     await page.goto('/');
     
     // Wait for page to load and data to appear
-    await expect(page.getByRole('heading', { name: /coffee journal/i })).toBeVisible({ timeout: 2000 });
+    await expect(page.getByRole('heading', { name: 'My Coffee Journal' })).toBeVisible({ timeout: 2000 });
     
     // Should show analytics sections when data exists using semantic approach
     await expect(page.locator('body')).toContainText(/top.*brews/i, { timeout: 5000 });
