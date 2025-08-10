@@ -21,11 +21,13 @@ function ProductDetail() {
   const [brewSessions, setBrewSessions] = useState([]);
   const [topBrewSessions, setTopBrewSessions] = useState([]);
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [productStats, setProductStats] = useState(null);
 
   useEffect(() => {
     fetchProductDetails();
     fetchBatches();
     fetchBrewSessions();
+    fetchProductStats();
   }, [id]);
 
   const fetchProductDetails = async () => {
@@ -93,6 +95,18 @@ function ProductDetail() {
       setBottomBrewSessions(bottomResult.data || []);
     } catch (err) {
       console.error("Error fetching brew sessions:", err);
+    }
+  };
+
+  const fetchProductStats = async () => {
+    try {
+      const response = await apiFetch(`/stats/products/${id}`);
+      if (response.ok) {
+        const stats = await response.json();
+        setProductStats(stats);
+      }
+    } catch (err) {
+      console.error("Error fetching product stats:", err);
     }
   };
 
@@ -578,6 +592,128 @@ function ProductDetail() {
         </div>
       </div>
 
+      {/* Product Statistics Section */}
+      {productStats && (
+        <div style={{ 
+          marginBottom: '30px',
+          padding: '20px', 
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            📊 Usage Statistics
+          </h3>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '30px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{productStats.total_brew_sessions}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Total Brew Sessions</div>
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{productStats.total_batches}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Total Batches</div>
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff9800' }}>{productStats.average_score}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Average Score</div>
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#9c27b0' }}>
+                {productStats.score_range.min} - {productStats.score_range.max}
+              </div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Score Range</div>
+            </div>
+          </div>
+
+          {/* Top 5 Brew Sessions */}
+          {productStats.top_5_sessions && productStats.top_5_sessions.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f5f5f5' }}>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {productStats.top_5_sessions.map((session, index) => (
+                      <tr key={session.id || index}>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.brew_method_id || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#2e7d32' }}>
+                          {session.score || session.calculated_score || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom 5 Brew Sessions */}
+          {productStats.bottom_5_sessions && productStats.bottom_5_sessions.length > 0 && (
+            <div>
+              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f5f5f5' }}>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
+                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {productStats.bottom_5_sessions.map((session, index) => (
+                      <tr key={session.id || index}>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.brew_method_id || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#f44336' }}>
+                          {session.score || session.calculated_score || '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
+                        </td>
+                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Batches Section */}
       <div style={{ 
         marginBottom: '30px',
@@ -762,13 +898,13 @@ function ProductDetail() {
                       {batch.purchase_date ? formatDateNorwegian(batch.purchase_date) : '-'}
                     </td>
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                      {batch.amount_grams ? `${batch.amount_grams}g` : '-'}
+                      {batch.amount_grams ? `${Math.round(batch.amount_grams)}g` : '-'}
                     </td>
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                      {batch.price != null && !isNaN(batch.price) ? `${Number(batch.price).toFixed(2)} kr` : '-'}
+                      {batch.price != null && !isNaN(batch.price) ? `${Math.round(Number(batch.price))} kr` : '-'}
                     </td>
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                      {batch.price_per_cup != null && !isNaN(batch.price_per_cup) ? `${Number(batch.price_per_cup).toFixed(2)} kr` : '-'}
+                      {batch.price_per_cup != null && !isNaN(batch.price_per_cup) ? `${Math.round(Number(batch.price_per_cup))} kr` : '-'}
                     </td>
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
                       {batch.rating ? (

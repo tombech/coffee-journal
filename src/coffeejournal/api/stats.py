@@ -127,4 +127,227 @@ def create_stats_blueprint():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
+    @stats_bp.route('/products/<int:product_id>', methods=['GET'])
+    def get_product_stats(product_id):
+        """Get detailed statistics for a specific product."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            batch_repo = factory.get_batch_repository(user_id)
+            
+            # Get all brew sessions for this product
+            all_sessions = brew_session_repo.find_all()
+            product_sessions = [s for s in all_sessions if s.get('product_id') == product_id]
+            
+            # Calculate statistics
+            total_sessions = len(product_sessions)
+            scores = []
+            for session in product_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(product_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            # Get batch statistics
+            all_batches = batch_repo.find_all()
+            product_batches = [b for b in all_batches if b.get('product_id') == product_id]
+            
+            return jsonify({
+                'total_brew_sessions': total_sessions,
+                'total_batches': len(product_batches),
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @stats_bp.route('/batches/<int:batch_id>', methods=['GET'])
+    def get_batch_stats(batch_id):
+        """Get detailed statistics for a specific batch."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            
+            # Get all brew sessions for this batch
+            all_sessions = brew_session_repo.find_all()
+            batch_sessions = [s for s in all_sessions if s.get('batch_id') == batch_id]
+            
+            # Calculate statistics
+            total_sessions = len(batch_sessions)
+            scores = []
+            for session in batch_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(batch_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            return jsonify({
+                'total_brew_sessions': total_sessions,
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @stats_bp.route('/roasters/<int:roaster_id>', methods=['GET'])
+    def get_roaster_stats(roaster_id):
+        """Get detailed statistics for a specific roaster."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            product_repo = factory.get_product_repository(user_id)
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            
+            # Get all products from this roaster
+            all_products = product_repo.find_all()
+            roaster_products = [p for p in all_products if p.get('roaster_id') == roaster_id]
+            product_ids = [p['id'] for p in roaster_products]
+            
+            # Get all brew sessions for these products
+            all_sessions = brew_session_repo.find_all()
+            roaster_sessions = [s for s in all_sessions if s.get('product_id') in product_ids]
+            
+            # Calculate statistics
+            total_sessions = len(roaster_sessions)
+            scores = []
+            for session in roaster_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(roaster_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            return jsonify({
+                'total_products': len(roaster_products),
+                'total_brew_sessions': total_sessions,
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @stats_bp.route('/brew_methods/<int:method_id>', methods=['GET'])
+    def get_brew_method_stats(method_id):
+        """Get detailed statistics for a specific brew method."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            
+            # Get all brew sessions using this method
+            all_sessions = brew_session_repo.find_all()
+            method_sessions = [s for s in all_sessions if s.get('brew_method_id') == method_id]
+            
+            # Calculate statistics
+            total_sessions = len(method_sessions)
+            scores = []
+            for session in method_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(method_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            return jsonify({
+                'total_brew_sessions': total_sessions,
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @stats_bp.route('/filters/<int:filter_id>', methods=['GET'])
+    def get_filter_stats(filter_id):
+        """Get detailed statistics for a specific filter."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+            
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            
+            # Get all brew sessions using this filter
+            all_sessions = brew_session_repo.find_all()
+            filter_sessions = [s for s in all_sessions if s.get('filter_id') == filter_id]
+            
+            # Calculate statistics
+            total_sessions = len(filter_sessions)
+            scores = []
+            for session in filter_sessions:
+                score = calculate_brew_score(session)
+                if score > 0:
+                    scores.append(score)
+            
+            # Get top and bottom 5 sessions by score
+            sorted_sessions = sorted(filter_sessions, 
+                                    key=lambda s: calculate_brew_score(s), 
+                                    reverse=True)
+            top_5 = sorted_sessions[:5]
+            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            return jsonify({
+                'total_brew_sessions': total_sessions,
+                'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
+                'score_range': {
+                    'min': round(min(scores), 1) if scores else 0,
+                    'max': round(max(scores), 1) if scores else 0
+                },
+                'top_5_sessions': top_5,
+                'bottom_5_sessions': bottom_5
+            })
+            
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
     return stats_bp

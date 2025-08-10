@@ -243,27 +243,27 @@ function GrinderDetail() {
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{stats.total_brews}</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(stats.total_brews)}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Total Brews</div>
             </div>
             
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
-                {stats.total_kilos > 0 ? `${stats.total_kilos}kg` : `${stats.total_grams_ground}g`}
+                {stats.total_kilos > 0 ? `${Math.round(stats.total_kilos)}kg` : `${Math.round(stats.total_grams_ground)}g`}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (Brews)</div>
             </div>
             
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{stats.manually_ground_grams}g</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{Math.round(stats.manually_ground_grams)}g</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Manual Grinding</div>
             </div>
             
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
                 {stats.total_grams_with_manual >= 1000 
-                  ? `${(stats.total_grams_with_manual / 1000).toFixed(1)}kg` 
-                  : `${stats.total_grams_with_manual}g`}
+                  ? `${Math.round(stats.total_grams_with_manual / 1000)}kg` 
+                  : `${Math.round(stats.total_grams_with_manual)}g`}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>Total Ground</div>
             </div>
@@ -290,7 +290,7 @@ function GrinderDetail() {
                 }} />
               </div>
               <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
-                {1000 - stats.total_grams_with_manual}g remaining for full seasoning
+                {Math.round(1000 - stats.total_grams_with_manual)}g remaining for full seasoning
               </div>
             </div>
           )}

@@ -1036,5 +1036,1506 @@
     "id": 51,
     "created_at": "2025-08-05T22:37:45.947658+00:00",
     "updated_at": "2025-08-05T22:37:45.947658+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 52,
+    "created_at": "2025-08-06T19:13:34.662871+00:00",
+    "updated_at": "2025-08-06T19:13:34.662871+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 53,
+    "created_at": "2025-08-06T19:13:34.805262+00:00",
+    "updated_at": "2025-08-06T19:13:34.805262+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 54,
+    "created_at": "2025-08-06T19:13:34.942248+00:00",
+    "updated_at": "2025-08-06T19:13:34.942248+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 55,
+    "created_at": "2025-08-06T19:13:35.081370+00:00",
+    "updated_at": "2025-08-06T19:13:35.081370+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 56,
+    "created_at": "2025-08-06T19:13:35.221053+00:00",
+    "updated_at": "2025-08-06T19:13:35.221053+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 57,
+    "created_at": "2025-08-06T19:13:35.394348+00:00",
+    "updated_at": "2025-08-06T19:13:35.394348+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 58,
+    "created_at": "2025-08-06T19:13:35.543363+00:00",
+    "updated_at": "2025-08-06T19:13:35.543363+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 59,
+    "created_at": "2025-08-06T19:13:35.700465+00:00",
+    "updated_at": "2025-08-06T19:13:35.700465+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 60,
+    "created_at": "2025-08-06T19:13:35.849130+00:00",
+    "updated_at": "2025-08-06T19:13:35.849130+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 61,
+    "created_at": "2025-08-06T19:13:35.999156+00:00",
+    "updated_at": "2025-08-06T19:13:35.999156+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 62,
+    "created_at": "2025-08-06T19:13:36.167464+00:00",
+    "updated_at": "2025-08-06T19:13:36.167464+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 63,
+    "created_at": "2025-08-06T19:13:37.000687+00:00",
+    "updated_at": "2025-08-06T19:13:37.000687+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 64,
+    "created_at": "2025-08-06T19:13:37.176890+00:00",
+    "updated_at": "2025-08-06T19:13:37.176890+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 65,
+    "created_at": "2025-08-06T19:13:37.336942+00:00",
+    "updated_at": "2025-08-06T19:13:37.336942+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 66,
+    "created_at": "2025-08-06T19:13:37.498128+00:00",
+    "updated_at": "2025-08-06T19:13:37.498128+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 67,
+    "created_at": "2025-08-06T19:13:37.692092+00:00",
+    "updated_at": "2025-08-06T19:13:37.692092+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Sorting Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 68,
+    "created_at": "2025-08-06T19:13:37.807305+00:00",
+    "updated_at": "2025-08-06T19:13:37.807305+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 69,
+    "created_at": "2025-08-06T19:14:54.188996+00:00",
+    "updated_at": "2025-08-06T19:14:54.188996+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Sorting Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 70,
+    "created_at": "2025-08-06T19:14:54.322157+00:00",
+    "updated_at": "2025-08-06T19:14:54.322157+00:00"
+  },
+  {
+    "roaster_id": 10,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Debug Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 71,
+    "created_at": "2025-08-06T19:15:06.554305+00:00",
+    "updated_at": "2025-08-06T19:15:06.554305+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 72,
+    "created_at": "2025-08-06T19:16:29.520293+00:00",
+    "updated_at": "2025-08-06T19:16:29.520293+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Sorting Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 73,
+    "created_at": "2025-08-06T19:16:29.641267+00:00",
+    "updated_at": "2025-08-06T19:16:29.641267+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 74,
+    "created_at": "2025-08-06T19:16:49.918415+00:00",
+    "updated_at": "2025-08-06T19:16:49.918415+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 75,
+    "created_at": "2025-08-06T19:16:50.110941+00:00",
+    "updated_at": "2025-08-06T19:16:50.110941+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 76,
+    "created_at": "2025-08-06T19:16:50.287139+00:00",
+    "updated_at": "2025-08-06T19:16:50.287139+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 77,
+    "created_at": "2025-08-06T19:16:50.459837+00:00",
+    "updated_at": "2025-08-06T19:16:50.459837+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 78,
+    "created_at": "2025-08-06T19:16:50.641675+00:00",
+    "updated_at": "2025-08-06T19:16:50.641675+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 79,
+    "created_at": "2025-08-06T19:16:50.868644+00:00",
+    "updated_at": "2025-08-06T19:16:50.868644+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 80,
+    "created_at": "2025-08-06T19:16:51.071095+00:00",
+    "updated_at": "2025-08-06T19:16:51.071095+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 81,
+    "created_at": "2025-08-06T19:16:51.263198+00:00",
+    "updated_at": "2025-08-06T19:16:51.263198+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 82,
+    "created_at": "2025-08-06T19:16:51.447957+00:00",
+    "updated_at": "2025-08-06T19:16:51.447957+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 83,
+    "created_at": "2025-08-06T19:16:51.632617+00:00",
+    "updated_at": "2025-08-06T19:16:51.632617+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 84,
+    "created_at": "2025-08-06T19:16:51.861629+00:00",
+    "updated_at": "2025-08-06T19:16:51.861629+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 85,
+    "created_at": "2025-08-06T19:16:53.219821+00:00",
+    "updated_at": "2025-08-06T19:16:53.219821+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 86,
+    "created_at": "2025-08-06T19:16:53.420891+00:00",
+    "updated_at": "2025-08-06T19:16:53.420891+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 87,
+    "created_at": "2025-08-06T19:16:53.643597+00:00",
+    "updated_at": "2025-08-06T19:16:53.643597+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 88,
+    "created_at": "2025-08-06T19:16:53.840980+00:00",
+    "updated_at": "2025-08-06T19:16:53.840980+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 89,
+    "created_at": "2025-08-06T19:16:54.075115+00:00",
+    "updated_at": "2025-08-06T19:16:54.075115+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Sorting Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 90,
+    "created_at": "2025-08-06T19:16:54.236620+00:00",
+    "updated_at": "2025-08-06T19:16:54.236620+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 91,
+    "created_at": "2025-08-06T19:16:54.380195+00:00",
+    "updated_at": "2025-08-06T19:16:54.380195+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Score Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 92,
+    "created_at": "2025-08-06T19:16:54.541993+00:00",
+    "updated_at": "2025-08-06T19:16:54.541993+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 93,
+    "created_at": "2025-08-06T19:16:54.669175+00:00",
+    "updated_at": "2025-08-06T19:16:54.669175+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 94,
+    "created_at": "2025-08-06T19:16:56.187867+00:00",
+    "updated_at": "2025-08-06T19:16:56.187867+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 95,
+    "created_at": "2025-08-06T19:16:56.477878+00:00",
+    "updated_at": "2025-08-06T19:16:56.477878+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 96,
+    "created_at": "2025-08-10T10:07:26.444158+00:00",
+    "updated_at": "2025-08-10T10:07:26.444158+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 97,
+    "created_at": "2025-08-10T10:07:26.651168+00:00",
+    "updated_at": "2025-08-10T10:07:26.651168+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 98,
+    "created_at": "2025-08-10T10:07:26.888441+00:00",
+    "updated_at": "2025-08-10T10:07:26.888441+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 99,
+    "created_at": "2025-08-10T10:07:27.097462+00:00",
+    "updated_at": "2025-08-10T10:07:27.097462+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 100,
+    "created_at": "2025-08-10T10:07:27.307869+00:00",
+    "updated_at": "2025-08-10T10:07:27.307869+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 101,
+    "created_at": "2025-08-10T10:07:27.529333+00:00",
+    "updated_at": "2025-08-10T10:07:27.529333+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 102,
+    "created_at": "2025-08-10T10:07:27.750900+00:00",
+    "updated_at": "2025-08-10T10:07:27.750900+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 103,
+    "created_at": "2025-08-10T10:07:27.986412+00:00",
+    "updated_at": "2025-08-10T10:07:27.986412+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 104,
+    "created_at": "2025-08-10T10:07:28.202880+00:00",
+    "updated_at": "2025-08-10T10:07:28.202880+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 105,
+    "created_at": "2025-08-10T10:07:28.420457+00:00",
+    "updated_at": "2025-08-10T10:07:28.420457+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 106,
+    "created_at": "2025-08-10T10:07:28.658642+00:00",
+    "updated_at": "2025-08-10T10:07:28.658642+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 107,
+    "created_at": "2025-08-10T10:07:30.632888+00:00",
+    "updated_at": "2025-08-10T10:07:30.632888+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 108,
+    "created_at": "2025-08-10T10:07:30.867243+00:00",
+    "updated_at": "2025-08-10T10:07:30.867243+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 109,
+    "created_at": "2025-08-10T10:07:31.093488+00:00",
+    "updated_at": "2025-08-10T10:07:31.093488+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 110,
+    "created_at": "2025-08-10T10:07:31.349274+00:00",
+    "updated_at": "2025-08-10T10:07:31.349274+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 111,
+    "created_at": "2025-08-10T10:07:31.590034+00:00",
+    "updated_at": "2025-08-10T10:07:31.590034+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Sorting Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 112,
+    "created_at": "2025-08-10T10:07:31.768958+00:00",
+    "updated_at": "2025-08-10T10:07:31.768958+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 113,
+    "created_at": "2025-08-10T10:07:31.915058+00:00",
+    "updated_at": "2025-08-10T10:07:31.915058+00:00",
+    "roaster": {
+      "name": "Test Roaster",
+      "id": 9,
+      "created_at": "2025-08-05T22:34:14.360511+00:00",
+      "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    },
+    "bean_type": [
+      {
+        "id": 1,
+        "name": "Arabica",
+        "short_form": "Arabica",
+        "description": "High-quality coffee species with complex flavors"
+      }
+    ],
+    "country": null,
+    "region": [],
+    "decaf_method": null
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Score Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 114,
+    "created_at": "2025-08-10T10:07:32.097869+00:00",
+    "updated_at": "2025-08-10T10:07:32.097869+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 115,
+    "created_at": "2025-08-10T10:07:32.243774+00:00",
+    "updated_at": "2025-08-10T10:07:32.243774+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 116,
+    "created_at": "2025-08-10T10:07:34.506299+00:00",
+    "updated_at": "2025-08-10T10:07:34.506299+00:00"
+  },
+  {
+    "roaster_id": 9,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": null,
+    "region_id": [],
+    "product_name": "Test Coffee",
+    "roast_type": null,
+    "description": null,
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 117,
+    "created_at": "2025-08-10T10:07:34.759402+00:00",
+    "updated_at": "2025-08-10T10:07:34.759402+00:00"
   }
 ]

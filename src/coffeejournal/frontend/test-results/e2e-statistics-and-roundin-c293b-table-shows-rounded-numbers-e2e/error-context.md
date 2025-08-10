@@ -1,0 +1,206 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - heading "My Coffee Journal" [level=1]
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "All brews":
+          - /url: /brew-sessions
+      - listitem:
+        - link "Settings":
+          - /url: /settings
+- main:
+  - heading "Test Product statistics_test_1754820420552" [level=2]
+  - button "Edit Product": ✏️
+  - button "Delete Product": 🗑️
+  - heading "☕ Product Information" [level=3]
+  - strong: "Roaster:"
+  - text: Test Roaster statistics_test_1754820420552
+  - strong: "Bean Type:"
+  - text: Arabica
+  - strong: "Country:"
+  - text: Colombia
+  - strong: "Region:"
+  - text: "-"
+  - strong: "Bean Process:"
+  - text: "-"
+  - strong: "Product Name:"
+  - text: Test Product statistics_test_1754820420552
+  - strong: "Roast Type:"
+  - text: "-"
+  - strong: "Decaffeinated:"
+  - text: "No"
+  - strong: "Rating:"
+  - text: "-"
+  - strong: "Description:"
+  - text: "-"
+  - strong: "Notes:"
+  - text: "-"
+  - strong: "Product URL:"
+  - text: "-"
+  - strong: "Image:"
+  - text: "-"
+  - heading "📊 Flavor Profile" [level=3]
+  - heading "Tasting Profile (1 sessions)" [level=4]
+  - img: Sweetness Acidity Body Aroma Bitterness
+  - heading "📊 Usage Statistics" [level=3]
+  - text: 1 Total Brew Sessions 1 Total Batches 7.2 Average Score 7.2 - 7.2 Score Range
+  - heading "🏆 Top 5 Brew Sessions" [level=4]
+  - table:
+    - rowgroup:
+      - row "Date Method Score Coffee Water":
+        - cell "Date"
+        - cell "Method"
+        - cell "Score"
+        - cell "Coffee"
+        - cell "Water"
+    - rowgroup:
+      - row "8/10/2025 1 - 20g 320g":
+        - cell "8/10/2025"
+        - cell "1"
+        - cell "-"
+        - cell "20g"
+        - cell "320g"
+  - heading "📦 Batches for this Product" [level=3]
+  - button "Add New Batch": ➕
+  - table:
+    - rowgroup:
+      - 'row "Actions Batch # Status Roast Date Purchase Date Amount Price Price/Cup Rating Seller Notes"':
+        - cell "Actions"
+        - 'cell "Batch #"'
+        - cell "Status"
+        - cell "Roast Date"
+        - cell "Purchase Date"
+        - cell "Amount"
+        - cell "Price"
+        - cell "Price/Cup"
+        - cell "Rating"
+        - cell "Seller"
+        - cell "Notes"
+    - rowgroup:
+      - 'row "View Batch Edit Batch Delete Batch #1 ✓ Active 10.08.25 10.08.25 250g 16 kr 1 kr - - -"':
+        - cell "View Batch Edit Batch Delete Batch":
+          - button "View Batch": 👁️
+          - button "Edit Batch": ✏️
+          - button "Delete Batch": 🗑️
+        - cell "#1"
+        - cell "✓ Active"
+        - cell "10.08.25"
+        - cell "10.08.25"
+        - cell "250g"
+        - cell "16 kr"
+        - cell "1 kr"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+  - heading "🤖 Brew Assistant" [level=3]
+  - text: 🤖 Brew Assistant Not enough information for brew setting recommendations yet. Need at least 2 sessions with score > 3.5.
+  - heading "🏆 Top 5 Brews" [level=3]
+  - table:
+    - rowgroup:
+      - row "📅 ↓ ☕ ↕️ 📋 ↕️ 📄 ↕️ 🫘 ↕️ 💧 ↕️ ⚖️ ↕️ 🌡️ ↕️ 🌸 ↕️ ⏱️ ↕️ 🍯 ↕️ 🍋 ↕️ ☕ ↕️ 💪 ↕️ 👃 ↕️ ⚙️ ↕️ 🔧 ⭐ ↕️ 📝":
+        - cell "📅 ↓"
+        - cell "☕ ↕️"
+        - cell "📋 ↕️"
+        - cell "📄 ↕️"
+        - cell "🫘 ↕️"
+        - cell "💧 ↕️"
+        - cell "⚖️ ↕️"
+        - cell "🌡️ ↕️"
+        - cell "🌸 ↕️"
+        - cell "⏱️ ↕️"
+        - cell "🍯 ↕️"
+        - cell "🍋 ↕️"
+        - cell "☕ ↕️"
+        - cell "💪 ↕️"
+        - cell "👃 ↕️"
+        - cell "⚙️ ↕️"
+        - cell "🔧"
+        - cell "⭐ ↕️"
+        - cell "📝"
+    - rowgroup:
+      - row "View details for brew session from 10.08.25 TMs TRs - 20g 320g 1:16.0 93°C - - 7 8 3 6 8 - - 7.2 Test notes for statistics_test_1754820420552":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/1
+            - text: 10.08.25
+        - cell "TMs":
+          - link "TMs":
+            - /url: /brew-methods/1
+        - cell "TRs":
+          - link "TRs":
+            - /url: /recipes/1
+        - cell "-"
+        - cell "20g"
+        - cell "320g"
+        - cell "1:16.0"
+        - cell "93°C"
+        - cell "-"
+        - cell "-"
+        - cell "7"
+        - cell "8"
+        - cell "3"
+        - cell "6"
+        - cell "8"
+        - cell "-"
+        - cell "-"
+        - cell "7.2"
+        - cell "Test notes for statistics_test_1754820420552"
+  - heading "💩 Bottom 5 Brews" [level=3]
+  - table:
+    - rowgroup:
+      - row "📅 ↓ ☕ ↕️ 📋 ↕️ 📄 ↕️ 🫘 ↕️ 💧 ↕️ ⚖️ ↕️ 🌡️ ↕️ 🌸 ↕️ ⏱️ ↕️ 🍯 ↕️ 🍋 ↕️ ☕ ↕️ 💪 ↕️ 👃 ↕️ ⚙️ ↕️ 🔧 ⭐ ↕️ 📝":
+        - cell "📅 ↓"
+        - cell "☕ ↕️"
+        - cell "📋 ↕️"
+        - cell "📄 ↕️"
+        - cell "🫘 ↕️"
+        - cell "💧 ↕️"
+        - cell "⚖️ ↕️"
+        - cell "🌡️ ↕️"
+        - cell "🌸 ↕️"
+        - cell "⏱️ ↕️"
+        - cell "🍯 ↕️"
+        - cell "🍋 ↕️"
+        - cell "☕ ↕️"
+        - cell "💪 ↕️"
+        - cell "👃 ↕️"
+        - cell "⚙️ ↕️"
+        - cell "🔧"
+        - cell "⭐ ↕️"
+        - cell "📝"
+    - rowgroup:
+      - row "View details for brew session from 10.08.25 TMs TRs - 20g 320g 1:16.0 93°C - - 7 8 3 6 8 - - 7.2 Test notes for statistics_test_1754820420552":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/1
+            - text: 10.08.25
+        - cell "TMs":
+          - link "TMs":
+            - /url: /brew-methods/1
+        - cell "TRs":
+          - link "TRs":
+            - /url: /recipes/1
+        - cell "-"
+        - cell "20g"
+        - cell "320g"
+        - cell "1:16.0"
+        - cell "93°C"
+        - cell "-"
+        - cell "-"
+        - cell "7"
+        - cell "8"
+        - cell "3"
+        - cell "6"
+        - cell "8"
+        - cell "-"
+        - cell "-"
+        - cell "7.2"
+        - cell "Test notes for statistics_test_1754820420552"
+- contentinfo: "Coffee Journal v0.1.0 Build: developm • 8/10/2025"
+```

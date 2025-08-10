@@ -12,6 +12,7 @@ function RoasterDetail() {
   const { addToast } = useToast();
   const [roaster, setRoaster] = useState(null);
   const [statistics, setStatistics] = useState(null);
+  const [roasterStats, setRoasterStats] = useState(null);
   const [recentProducts, setRecentProducts] = useState([]);
   const [recentSessions, setRecentSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ function RoasterDetail() {
 
   useEffect(() => {
     fetchRoasterDetail();
+    fetchRoasterStats();
   }, [id]);
 
   const fetchRoasterDetail = async (retryCount = 0) => {
@@ -65,6 +67,19 @@ function RoasterDetail() {
       console.error("Error fetching roaster details:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchRoasterStats = async () => {
+    try {
+      const response = await apiFetch(`/stats/roasters/${id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setRoasterStats(data);
+      }
+    } catch (err) {
+      console.error("Error fetching roaster stats:", err);
+      // Don't set error state, just log - stats are optional
     }
   };
 
@@ -240,19 +255,19 @@ function RoasterDetail() {
           <h3 style={{ margin: '0 0 15px 0' }}>📊 Statistics</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{statistics.total_products}</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_products)}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Products</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{statistics.total_batches}</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_batches)}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Batches</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{statistics.total_brew_sessions}</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_brew_sessions)}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Brew Sessions</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{statistics.active_batches}</div>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.active_batches)}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Active Batches</div>
             </div>
             {statistics.avg_rating && (
@@ -333,6 +348,97 @@ function RoasterDetail() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* Top/Bottom Brew Sessions Statistics */}
+      {roasterStats && (roasterStats.top_5_sessions?.length > 0 || roasterStats.bottom_5_sessions?.length > 0) && (
+        <div style={{ marginBottom: '30px' }}>
+          {/* Top 5 Sessions */}
+          {roasterStats.top_5_sessions?.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ margin: '0 0 15px 0' }}>🏆 Top 5 Brew Sessions</h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#e8f5e8' }}>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Score</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Product</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roasterStats.top_5_sessions.map(session => (
+                      <tr key={session.id}>
+                        <td style={{ padding: '8px', border: '1px solid #ddd', fontWeight: 'bold', color: '#2e7d32' }}>
+                          {session.score ? session.score.toFixed(1) : '-'}
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                          <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
+                            {formatDateNorwegian(session.timestamp)}
+                          </Link>
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                          <Link to={`/products/${session.product_id}`} style={{ textDecoration: 'none' }}>
+                            {session.product_name || 'Unknown'}
+                          </Link>
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}</td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom 5 Sessions */}
+          {roasterStats.bottom_5_sessions?.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ margin: '0 0 15px 0' }}>📉 Bottom 5 Brew Sessions</h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap', width: '100%' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#ffebee' }}>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Score</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Date</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Product</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Method</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Coffee</th>
+                      <th style={{ padding: '8px', border: '1px solid #ddd', textAlign: 'left' }}>Water</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roasterStats.bottom_5_sessions.map(session => (
+                      <tr key={session.id}>
+                        <td style={{ padding: '8px', border: '1px solid #ddd', fontWeight: 'bold', color: '#d32f2f' }}>
+                          {session.score ? session.score.toFixed(1) : '-'}
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                          <Link to={`/brew-sessions/${session.id}`} style={{ textDecoration: 'none' }}>
+                            {formatDateNorwegian(session.timestamp)}
+                          </Link>
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>
+                          <Link to={`/products/${session.product_id}`} style={{ textDecoration: 'none' }}>
+                            {session.product_name || 'Unknown'}
+                          </Link>
+                        </td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.brew_method?.name || '-'}</td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}</td>
+                        <td style={{ padding: '8px', border: '1px solid #ddd' }}>{session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,0 +1,71 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - heading "My Coffee Journal" [level=1]
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "All brews":
+          - /url: /brew-sessions
+      - listitem:
+        - link "Settings":
+          - /url: /settings
+- main:
+  - 'heading "Batch #1 Details" [level=2]'
+  - button "Edit batch": ✏️
+  - button "Delete batch": 🗑️
+  - button "Go Back": ←
+  - strong: "Product:"
+  - link "Test Roaster statistics_test_1754820419096 - Test Product statistics_test_1754820419096":
+    - /url: /products/1
+  - strong: "Roast Date:"
+  - text: 10.08.25(roasted 1 day ago)
+  - strong: "Purchase Date:"
+  - text: 10.08.25(purchased 1 day ago)
+  - strong: "Amount (grams):"
+  - text: 250g
+  - strong: "Price:"
+  - text: 16 kr
+  - strong: "Price per Cup:"
+  - text: "-"
+  - strong: "Seller:"
+  - text: "-"
+  - strong: "Rating:"
+  - text: "-"
+  - strong: "Status:"
+  - text: Active
+  - heading "📊 Usage Statistics" [level=3]
+  - text: 2 Brew Sessions 39g Coffee Used 211g Remaining 10 Est. Sessions Left Usage Progress (39g of 250g used)
+  - heading "🔥 Brew Sessions" [level=3]
+  - button "Add Brew Session": ➕
+  - table:
+    - rowgroup:
+      - row "Date Method Coffee Water Rating":
+        - cell "Date"
+        - cell "Method"
+        - cell "Coffee"
+        - cell "Water"
+        - cell "Rating"
+    - rowgroup:
+      - row "10.08.25 Test Method statistics_test_1754820419096 20g 320g -":
+        - cell "10.08.25":
+          - link "10.08.25":
+            - /url: /brew-sessions/1
+        - cell "Test Method statistics_test_1754820419096"
+        - cell "20g"
+        - cell "320g"
+        - cell "-"
+      - row "10.08.25 French Press 19g 280g 7.5":
+        - cell "10.08.25":
+          - link "10.08.25":
+            - /url: /brew-sessions/2
+        - cell "French Press"
+        - cell "19g"
+        - cell "280g"
+        - cell "7.5"
+- contentinfo: "Coffee Journal v0.1.0 Build: developm • 8/10/2025"
+```

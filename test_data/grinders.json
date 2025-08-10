@@ -1,9 +1,15 @@
 [
   {
     "id": 1,
-    "name": "Hario Mini Mill",
+    "name": "Test Grinder Rounding",
     "short_form": "Mini Mill",
-    "description": "Compact ceramic burr hand grinder"
+    "description": "Compact ceramic burr hand grinder",
+    "brand": "Wilfa",
+    "burr_material": "Steel",
+    "grinder_type": "Flat Burr",
+    "manually_ground_grams": 125.75,
+    "created_at": "2025-08-10T08:58:38.378371+00:00",
+    "updated_at": "2025-08-10T09:52:17.005064+00:00"
   },
   {
     "id": 2,

@@ -1,0 +1,470 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - heading "My Coffee Journal" [level=1]
+  - navigation:
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /
+      - listitem:
+        - link "All brews":
+          - /url: /brew-sessions
+      - listitem:
+        - link "Settings":
+          - /url: /settings
+- main:
+  - heading "Test Product statistics_test_1754820416541" [level=2]
+  - button "Edit Product": ✏️
+  - button "Delete Product": 🗑️
+  - heading "☕ Product Information" [level=3]
+  - strong: "Roaster:"
+  - text: Test Roaster statistics_test_1754820416541
+  - strong: "Bean Type:"
+  - text: Arabica
+  - strong: "Country:"
+  - text: Colombia
+  - strong: "Region:"
+  - text: "-"
+  - strong: "Bean Process:"
+  - text: "-"
+  - strong: "Product Name:"
+  - text: Test Product statistics_test_1754820416541
+  - strong: "Roast Type:"
+  - text: "-"
+  - strong: "Decaffeinated:"
+  - text: "No"
+  - strong: "Rating:"
+  - text: "-"
+  - strong: "Description:"
+  - text: "-"
+  - strong: "Notes:"
+  - text: "-"
+  - strong: "Product URL:"
+  - text: "-"
+  - strong: "Image:"
+  - text: "-"
+  - heading "📊 Flavor Profile" [level=3]
+  - heading "Tasting Profile (1 sessions)" [level=4]
+  - img: Sweetness Acidity Body Aroma Bitterness
+  - heading "📊 Usage Statistics" [level=3]
+  - text: 6 Total Brew Sessions 1 Total Batches 6.4 Average Score 3.5 - 9.1 Score Range
+  - heading "🏆 Top 5 Brew Sessions" [level=4]
+  - table:
+    - rowgroup:
+      - row "Date Method Score Coffee Water":
+        - cell "Date"
+        - cell "Method"
+        - cell "Score"
+        - cell "Coffee"
+        - cell "Water"
+    - rowgroup:
+      - row "8/10/2025 2 9.1 22g 323g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "9.1"
+        - cell "22g"
+        - cell "323g"
+      - row "8/10/2025 2 7.8 21g 322g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "7.8"
+        - cell "21g"
+        - cell "322g"
+      - row "8/10/2025 1 7.2 20g 320g":
+        - cell "8/10/2025"
+        - cell "1"
+        - cell "7.2"
+        - cell "20g"
+        - cell "320g"
+      - row "8/10/2025 2 6.7 24g 325g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "6.7"
+        - cell "24g"
+        - cell "325g"
+      - row "8/10/2025 2 4.2 20g 321g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "4.2"
+        - cell "20g"
+        - cell "321g"
+  - heading "📉 Bottom 5 Brew Sessions" [level=4]
+  - table:
+    - rowgroup:
+      - row "Date Method Score Coffee Water":
+        - cell "Date"
+        - cell "Method"
+        - cell "Score"
+        - cell "Coffee"
+        - cell "Water"
+    - rowgroup:
+      - row "8/10/2025 2 7.8 21g 322g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "7.8"
+        - cell "21g"
+        - cell "322g"
+      - row "8/10/2025 1 7.2 20g 320g":
+        - cell "8/10/2025"
+        - cell "1"
+        - cell "7.2"
+        - cell "20g"
+        - cell "320g"
+      - row "8/10/2025 2 6.7 24g 325g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "6.7"
+        - cell "24g"
+        - cell "325g"
+      - row "8/10/2025 2 4.2 20g 321g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "4.2"
+        - cell "20g"
+        - cell "321g"
+      - row "8/10/2025 2 3.5 23g 324g":
+        - cell "8/10/2025"
+        - cell "2"
+        - cell "3.5"
+        - cell "23g"
+        - cell "324g"
+  - heading "📦 Batches for this Product" [level=3]
+  - button "Add New Batch": ➕
+  - table:
+    - rowgroup:
+      - 'row "Actions Batch # Status Roast Date Purchase Date Amount Price Price/Cup Rating Seller Notes"':
+        - cell "Actions"
+        - 'cell "Batch #"'
+        - cell "Status"
+        - cell "Roast Date"
+        - cell "Purchase Date"
+        - cell "Amount"
+        - cell "Price"
+        - cell "Price/Cup"
+        - cell "Rating"
+        - cell "Seller"
+        - cell "Notes"
+    - rowgroup:
+      - 'row "View Batch Edit Batch Delete Batch #1 ✓ Active 10.08.25 10.08.25 250g 16 kr 1 kr - - -"':
+        - cell "View Batch Edit Batch Delete Batch":
+          - button "View Batch": 👁️
+          - button "Edit Batch": ✏️
+          - button "Delete Batch": 🗑️
+        - cell "#1"
+        - cell "✓ Active"
+        - cell "10.08.25"
+        - cell "10.08.25"
+        - cell "250g"
+        - cell "16 kr"
+        - cell "1 kr"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+  - heading "🤖 Brew Assistant" [level=3]
+  - text: "🤖 Brew Assistant - Recommendations 🎯 V60 Recreate your top-scoring session: 22g of coffee, 323g of water (1:14 ratio), your grinder grinder at your usual setting. Heat water to N/A and use the your filter filter. Follow the \"your recipe\" recipe with a N/A bloom, aiming for N/A total brew time. This exact setup gave you an excellent 9.1/10 last time. 💡 Recommendations based on previous sessions with score > 3.5."
+  - heading "🏆 Top 5 Brews" [level=3]
+  - table:
+    - rowgroup:
+      - row "📅 ↓ ☕ ↕️ 📋 ↕️ 📄 ↕️ 🫘 ↕️ 💧 ↕️ ⚖️ ↕️ 🌡️ ↕️ 🌸 ↕️ ⏱️ ↕️ 🍯 ↕️ 🍋 ↕️ ☕ ↕️ 💪 ↕️ 👃 ↕️ ⚙️ ↕️ 🔧 ⭐ ↕️ 📝":
+        - cell "📅 ↓"
+        - cell "☕ ↕️"
+        - cell "📋 ↕️"
+        - cell "📄 ↕️"
+        - cell "🫘 ↕️"
+        - cell "💧 ↕️"
+        - cell "⚖️ ↕️"
+        - cell "🌡️ ↕️"
+        - cell "🌸 ↕️"
+        - cell "⏱️ ↕️"
+        - cell "🍯 ↕️"
+        - cell "🍋 ↕️"
+        - cell "☕ ↕️"
+        - cell "💪 ↕️"
+        - cell "👃 ↕️"
+        - cell "⚙️ ↕️"
+        - cell "🔧"
+        - cell "⭐ ↕️"
+        - cell "📝"
+    - rowgroup:
+      - row "View details for brew session from 10.08.25 V60 - - 22.3g 322.7g 1:14.5 - - - - - - - - - - 9.1 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/4
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "22.3g"
+        - cell "322.7g"
+        - cell "1:14.5"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "9.1"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 V60 - - 21.3g 321.7g 1:15.1 - - - - - - - - - - 7.8 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/3
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "21.3g"
+        - cell "321.7g"
+        - cell "1:15.1"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "7.8"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 TMs TRs - 20g 320g 1:16.0 93°C - - 7 8 3 6 8 - - 7.2 Test notes for statistics_test_1754820416541":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/1
+            - text: 10.08.25
+        - cell "TMs":
+          - link "TMs":
+            - /url: /brew-methods/1
+        - cell "TRs":
+          - link "TRs":
+            - /url: /recipes/1
+        - cell "-"
+        - cell "20g"
+        - cell "320g"
+        - cell "1:16.0"
+        - cell "93°C"
+        - cell "-"
+        - cell "-"
+        - cell "7"
+        - cell "8"
+        - cell "3"
+        - cell "6"
+        - cell "8"
+        - cell "-"
+        - cell "-"
+        - cell "7.2"
+        - cell "Test notes for statistics_test_1754820416541"
+      - row "View details for brew session from 10.08.25 V60 - - 24.3g 324.7g 1:13.4 - - - - - - - - - - 6.7 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/6
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "24.3g"
+        - cell "324.7g"
+        - cell "1:13.4"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "6.7"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 V60 - - 20.3g 320.7g 1:15.8 - - - - - - - - - - 4.2 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/2
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "20.3g"
+        - cell "320.7g"
+        - cell "1:15.8"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "4.2"
+        - cell "-"
+  - heading "💩 Bottom 5 Brews" [level=3]
+  - table:
+    - rowgroup:
+      - row "📅 ↓ ☕ ↕️ 📋 ↕️ 📄 ↕️ 🫘 ↕️ 💧 ↕️ ⚖️ ↕️ 🌡️ ↕️ 🌸 ↕️ ⏱️ ↕️ 🍯 ↕️ 🍋 ↕️ ☕ ↕️ 💪 ↕️ 👃 ↕️ ⚙️ ↕️ 🔧 ⭐ ↕️ 📝":
+        - cell "📅 ↓"
+        - cell "☕ ↕️"
+        - cell "📋 ↕️"
+        - cell "📄 ↕️"
+        - cell "🫘 ↕️"
+        - cell "💧 ↕️"
+        - cell "⚖️ ↕️"
+        - cell "🌡️ ↕️"
+        - cell "🌸 ↕️"
+        - cell "⏱️ ↕️"
+        - cell "🍯 ↕️"
+        - cell "🍋 ↕️"
+        - cell "☕ ↕️"
+        - cell "💪 ↕️"
+        - cell "👃 ↕️"
+        - cell "⚙️ ↕️"
+        - cell "🔧"
+        - cell "⭐ ↕️"
+        - cell "📝"
+    - rowgroup:
+      - row "View details for brew session from 10.08.25 V60 - - 23.3g 323.7g 1:13.9 - - - - - - - - - - 3.5 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/5
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "23.3g"
+        - cell "323.7g"
+        - cell "1:13.9"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "3.5"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 V60 - - 20.3g 320.7g 1:15.8 - - - - - - - - - - 4.2 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/2
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "20.3g"
+        - cell "320.7g"
+        - cell "1:15.8"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "4.2"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 V60 - - 24.3g 324.7g 1:13.4 - - - - - - - - - - 6.7 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/6
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "24.3g"
+        - cell "324.7g"
+        - cell "1:13.4"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "6.7"
+        - cell "-"
+      - row "View details for brew session from 10.08.25 TMs TRs - 20g 320g 1:16.0 93°C - - 7 8 3 6 8 - - 7.2 Test notes for statistics_test_1754820416541":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/1
+            - text: 10.08.25
+        - cell "TMs":
+          - link "TMs":
+            - /url: /brew-methods/1
+        - cell "TRs":
+          - link "TRs":
+            - /url: /recipes/1
+        - cell "-"
+        - cell "20g"
+        - cell "320g"
+        - cell "1:16.0"
+        - cell "93°C"
+        - cell "-"
+        - cell "-"
+        - cell "7"
+        - cell "8"
+        - cell "3"
+        - cell "6"
+        - cell "8"
+        - cell "-"
+        - cell "-"
+        - cell "7.2"
+        - cell "Test notes for statistics_test_1754820416541"
+      - row "View details for brew session from 10.08.25 V60 - - 21.3g 321.7g 1:15.1 - - - - - - - - - - 7.8 -":
+        - cell "View details for brew session from 10.08.25":
+          - link "View details for brew session from 10.08.25":
+            - /url: /brew-sessions/3
+            - text: 10.08.25
+        - cell "V60":
+          - link "V60":
+            - /url: /brew-methods/2
+        - cell "-"
+        - cell "-"
+        - cell "21.3g"
+        - cell "321.7g"
+        - cell "1:15.1"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "-"
+        - cell "7.8"
+        - cell "-"
+- contentinfo: "Coffee Journal v0.1.0 Build: developm • 8/10/2025"
+```
