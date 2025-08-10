@@ -4,6 +4,7 @@ import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import BrewSessionTable from './BrewSessionTable';
 
 function LookupDetail({ type, singularName, pluralName }) {
   const { id } = useParams();
@@ -326,40 +327,18 @@ function LookupDetail({ type, singularName, pluralName }) {
           {statsData && statsData.top_5_sessions && statsData.top_5_sessions.length > 0 && (
             <div style={{ marginTop: '20px' }}>
               <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Brew Sessions</h4>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#f5f5f5' }}>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {statsData.top_5_sessions.map((session, index) => (
-                      <tr key={session.id || index}>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.brew_method_id || session.brew_method || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#2e7d32' }}>
-                          {session.score || session.calculated_score || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <BrewSessionTable 
+                sessions={statsData.top_5_sessions} 
+                title=""
+                showProduct={false}
+                showActions={false}
+                showFilters={false}
+                showAddButton={false}
+                preserveOrder={true}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+              />
             </div>
           )}
           
@@ -367,40 +346,18 @@ function LookupDetail({ type, singularName, pluralName }) {
           {statsData && statsData.bottom_5_sessions && statsData.bottom_5_sessions.length > 0 && (
             <div style={{ marginTop: '20px' }}>
               <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Brew Sessions</h4>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                  <thead>
-                    <tr style={{ backgroundColor: '#f5f5f5' }}>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Date</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Method</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Score</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Coffee</th>
-                      <th style={{ padding: '8px', textAlign: 'left', borderBottom: '2px solid #ddd' }}>Water</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {statsData.bottom_5_sessions.map((session, index) => (
-                      <tr key={session.id || index}>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.timestamp ? new Date(session.timestamp).toLocaleDateString() : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.brew_method_id || session.brew_method || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee', fontWeight: 'bold', color: '#f44336' }}>
-                          {session.score || session.calculated_score || '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_coffee_grams ? `${Math.round(session.amount_coffee_grams)}g` : '-'}
-                        </td>
-                        <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                          {session.amount_water_grams ? `${Math.round(session.amount_water_grams)}g` : '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <BrewSessionTable 
+                sessions={statsData.bottom_5_sessions} 
+                title=""
+                showProduct={false}
+                showActions={false}
+                showFilters={false}
+                showAddButton={false}
+                preserveOrder={true}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+              />
             </div>
           )}
         </div>
