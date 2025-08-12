@@ -56,21 +56,16 @@
     "url": "https://www.georgehowellcoffee.com"
   },
   {
-    "name": "Test Roaster",
+    "name": "Test Roaster 1",
+    "description": "Concurrent test roaster 1",
     "id": 9,
-    "created_at": "2025-08-05T22:34:14.360511+00:00",
-    "updated_at": "2025-08-05T22:34:14.360511+00:00"
+    "created_at": "2025-08-12T08:36:39.184275+00:00",
+    "updated_at": "2025-08-12T08:36:39.184275+00:00"
   },
   {
-    "name": "Debug Roaster",
+    "name": "Test Roaster",
     "id": 10,
-    "created_at": "2025-08-06T19:15:06.540042+00:00",
-    "updated_at": "2025-08-06T19:15:06.540042+00:00"
-  },
-  {
-    "name": "Test Roaster 2",
-    "id": 11,
-    "created_at": "2025-08-10T17:24:29.434032+00:00",
-    "updated_at": "2025-08-10T17:24:29.434032+00:00"
+    "created_at": "2025-08-12T14:18:23.420374+00:00",
+    "updated_at": "2025-08-12T14:18:23.420374+00:00"
   }
 ]

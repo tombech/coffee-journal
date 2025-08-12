@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Hario V60 Paper Filter",
+    "short_form": "V60-02",
+    "description": "Standard V60 size 02 paper filters"
+  },
+  {
+    "id": 2,
+    "name": "Chemex Paper Filter",
+    "short_form": "Chemex",
+    "description": "Thick bonded paper filters for Chemex"
+  },
+  {
+    "id": 3,
+    "name": "Metal Filter",
+    "short_form": "Metal",
+    "description": "Reusable stainless steel filter"
+  },
+  {
+    "id": 4,
+    "name": "Cafec Abaca+ Filter",
+    "short_form": "Abaca+",
+    "description": "Premium abaca fiber V60 filters"
+  },
+  {
+    "id": 5,
+    "name": "Cafec T-90 Filter",
+    "short_form": "T-90",
+    "description": "Fast-flow V60 paper filters"
+  },
+  {
+    "id": 6,
+    "name": "Kalita Wave Filter",
+    "short_form": "Wave",
+    "description": "Flat-bottom Kalita Wave filters"
+  },
+  {
+    "id": 7,
+    "name": "AeroPress Paper Filter",
+    "short_form": "AP Paper",
+    "description": "Round AeroPress paper filters"
+  }
+]

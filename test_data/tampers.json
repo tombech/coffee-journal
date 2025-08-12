@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Basic 58mm",
+    "short_form": "Basic 58mm",
+    "description": "Standard aluminum tamper",
+    "size": "58mm",
+    "weight": "400g",
+    "material": "aluminum",
+    "base_style": "flat"
+  },
+  {
+    "id": 2,
+    "name": "Decent Tamper",
+    "short_form": "Decent",
+    "description": "Precision tamper with level base",
+    "size": "58.5mm",
+    "weight": "500g",
+    "material": "stainless steel",
+    "base_style": "convex"
+  },
+  {
+    "id": 3,
+    "name": "Pullman Big Step",
+    "short_form": "Pullman",
+    "description": "Professional competition tamper",
+    "size": "58.55mm",
+    "weight": "750g",
+    "material": "stainless steel",
+    "base_style": "flat"
+  },
+  {
+    "id": 4,
+    "name": "Basic 54mm",
+    "short_form": "Basic 54mm",
+    "description": "Standard tamper for 54mm",
+    "size": "54mm",
+    "weight": "350g",
+    "material": "aluminum",
+    "base_style": "flat"
+  }
+]

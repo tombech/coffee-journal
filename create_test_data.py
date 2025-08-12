@@ -85,6 +85,51 @@ decaf_methods = [
     {"id": 3, "name": "Ethyl Acetate Process", "short_form": "EA", "description": "Natural decaffeination using fruit-derived EA"}
 ]
 
+# Espresso Equipment
+brewers = [
+    {"id": 1, "name": "Breville Bambino Plus", "short_form": "Bambino+", "description": "Entry-level espresso machine with automatic milk frother", "type": "espresso", "brand": "Breville", "model": "Bambino Plus"},
+    {"id": 2, "name": "Gaggia Classic Pro", "short_form": "Classic Pro", "description": "Traditional Italian espresso machine", "type": "espresso", "brand": "Gaggia", "model": "Classic Pro"},
+    {"id": 3, "name": "Rancilio Silvia", "short_form": "Silvia", "description": "Semi-professional home espresso machine", "type": "espresso", "brand": "Rancilio", "model": "Silvia"},
+    {"id": 4, "name": "La Marzocco Linea Mini", "short_form": "Linea Mini", "description": "Compact commercial-grade espresso machine", "type": "espresso", "brand": "La Marzocco", "model": "Linea Mini"},
+    {"id": 5, "name": "Rocket Appartamento", "short_form": "Appartamento", "description": "Heat exchanger espresso machine", "type": "espresso", "brand": "Rocket", "model": "Appartamento"},
+    {"id": 6, "name": "Hario V60", "short_form": "V60", "description": "Pour-over dripper", "type": "pourover", "brand": "Hario", "model": "V60-02"},
+    {"id": 7, "name": "Chemex 6-cup", "short_form": "Chemex", "description": "Glass pour-over brewer", "type": "pourover", "brand": "Chemex", "model": "6-cup"}
+]
+
+portafilters = [
+    {"id": 1, "name": "Standard 58mm", "short_form": "Standard 58mm", "description": "Standard 58mm portafilter", "size": "58mm", "basket_count": 2, "material": "brass"},
+    {"id": 2, "name": "Naked 58mm", "short_form": "Naked 58mm", "description": "Bottomless 58mm portafilter", "size": "58mm", "basket_count": 1, "material": "brass"},
+    {"id": 3, "name": "Standard 54mm", "short_form": "Standard 54mm", "description": "Standard 54mm portafilter", "size": "54mm", "basket_count": 2, "material": "brass"},
+    {"id": 4, "name": "VST 58mm", "short_form": "VST 58mm", "description": "Precision VST 58mm portafilter", "size": "58mm", "basket_count": 1, "material": "stainless steel"}
+]
+
+baskets = [
+    {"id": 1, "name": "Standard 18g", "short_form": "18g", "description": "Standard double basket", "size": "58mm", "capacity": "18g", "holes": 36},
+    {"id": 2, "name": "VST 18g", "short_form": "VST 18g", "description": "Precision VST 18g basket", "size": "58mm", "capacity": "18g", "holes": 37},
+    {"id": 3, "name": "IMS 20g", "short_form": "IMS 20g", "description": "Competition IMS 20g basket", "size": "58mm", "capacity": "20g", "holes": 39},
+    {"id": 4, "name": "Standard 15g", "short_form": "15g", "description": "Standard double basket", "size": "54mm", "capacity": "15g", "holes": 32},
+    {"id": 5, "name": "Triple 21g", "short_form": "21g", "description": "Triple shot basket", "size": "58mm", "capacity": "21g", "holes": 42}
+]
+
+tampers = [
+    {"id": 1, "name": "Basic 58mm", "short_form": "Basic 58mm", "description": "Standard aluminum tamper", "size": "58mm", "weight": "400g", "material": "aluminum", "base_style": "flat"},
+    {"id": 2, "name": "Decent Tamper", "short_form": "Decent", "description": "Precision tamper with level base", "size": "58.5mm", "weight": "500g", "material": "stainless steel", "base_style": "convex"},
+    {"id": 3, "name": "Pullman Big Step", "short_form": "Pullman", "description": "Professional competition tamper", "size": "58.55mm", "weight": "750g", "material": "stainless steel", "base_style": "flat"},
+    {"id": 4, "name": "Basic 54mm", "short_form": "Basic 54mm", "description": "Standard tamper for 54mm", "size": "54mm", "weight": "350g", "material": "aluminum", "base_style": "flat"}
+]
+
+wdt_tools = [
+    {"id": 1, "name": "Basic WDT", "short_form": "Basic WDT", "description": "Simple distribution tool", "needle_count": 8, "needle_diameter": 0.4, "handle_material": "wood", "brand": "Generic"},
+    {"id": 2, "name": "Decent WDT", "short_form": "Decent WDT", "description": "Precision distribution tool", "needle_count": 9, "needle_diameter": 0.35, "handle_material": "aluminum", "brand": "Decent"},
+    {"id": 3, "name": "Premium WDT", "short_form": "Premium WDT", "description": "High-end distribution tool", "needle_count": 10, "needle_diameter": 0.3, "handle_material": "titanium", "brand": "Levercraft"}
+]
+
+leveling_tools = [
+    {"id": 1, "name": "OCD 58mm", "short_form": "OCD", "description": "Ona Coffee Distributor", "size": "58mm", "adjustment_type": "adjustable", "depth_range": "3-12mm", "brand": "Ona Coffee"},
+    {"id": 2, "name": "Saint Anthony 58mm", "short_form": "Saint Anthony", "description": "Leveling and distribution tool", "size": "58mm", "adjustment_type": "adjustable", "depth_range": "2-10mm", "brand": "Saint Anthony Industries"},
+    {"id": 3, "name": "Basic Leveler", "short_form": "Basic Leveler", "description": "Simple leveling tool", "size": "58mm", "adjustment_type": "fixed", "depth_range": "8mm", "brand": "Generic"}
+]
+
 grinders = [
     {"id": 1, "name": "Hario Mini Mill", "short_form": "Mini Mill", "description": "Compact ceramic burr hand grinder"},
     {"id": 2, "name": "Baratza Encore", "short_form": "Encore", "description": "Entry-level electric burr grinder"},
@@ -311,6 +356,185 @@ def generate_brew_sessions():
 
 brew_sessions = generate_brew_sessions()
 
+def generate_shots():
+    """Generate realistic espresso shot data with proper ratios and extraction status"""
+    shots = []
+    
+    # Use products 1, 3, 4 (good espresso products) and batches 1, 3, 4
+    espresso_setups = [
+        {"product_id": 1, "product_batch_id": 1, "brewer_id": 2},  # Gaggia Classic Pro
+        {"product_id": 3, "product_batch_id": 3, "brewer_id": 3},  # Rancilio Silvia 
+        {"product_id": 4, "product_batch_id": 4, "brewer_id": 1},  # Breville Bambino
+    ]
+    
+    extraction_statuses = ["perfect", "under-extracted", "over-extracted", "channeling"]
+    
+    shot_id = 1
+    for i in range(20):  # Generate 20 shots
+        setup = random.choice(espresso_setups)
+        
+        # Realistic espresso parameters
+        dose_grams = round(random.uniform(17.0, 21.0), 1)
+        yield_grams = round(random.uniform(30.0, 45.0), 1)
+        dose_yield_ratio = round(yield_grams / dose_grams, 1)
+        
+        # Extraction time typically 25-35 seconds
+        extraction_time = random.randint(22, 38)
+        
+        # Water temperature for espresso
+        water_temp = random.randint(88, 94)
+        
+        # Equipment selection
+        portafilter_id = random.choice([1, 2, 4])  # 58mm portafilters
+        basket_id = random.choice([1, 2, 3]) if dose_grams >= 18 else 1
+        tamper_id = random.choice([1, 2, 3])
+        wdt_tool_id = random.choice([1, 2, None])
+        leveling_tool_id = random.choice([1, 2, None])
+        grinder_id = random.choice([2, 3, 4, 5, 7])  # Better grinders for espresso
+        
+        # Extraction status - bias toward good shots
+        extraction_status = random.choices(
+            extraction_statuses, 
+            weights=[50, 20, 20, 10]  # 50% perfect, 20% under/over, 10% channeling
+        )[0]
+        
+        # Tasting scores based on extraction status
+        if extraction_status == "perfect":
+            sweetness = random.randint(8, 10)
+            acidity = random.randint(6, 9)
+            body = random.randint(8, 10)
+            aroma = random.randint(7, 10)
+            bitterness = random.randint(1, 3)
+            overall_score = random.randint(8, 10)
+        elif extraction_status == "under-extracted":
+            sweetness = random.randint(4, 6)
+            acidity = random.randint(7, 10)
+            body = random.randint(3, 6)
+            aroma = random.randint(5, 7)
+            bitterness = random.randint(1, 2)
+            overall_score = random.randint(4, 6)
+        elif extraction_status == "over-extracted":
+            sweetness = random.randint(2, 5)
+            acidity = random.randint(2, 5)
+            body = random.randint(7, 9)
+            aroma = random.randint(4, 7)
+            bitterness = random.randint(7, 10)
+            overall_score = random.randint(3, 6)
+        else:  # channeling
+            sweetness = random.randint(3, 6)
+            acidity = random.randint(4, 8)
+            body = random.randint(2, 5)
+            aroma = random.randint(3, 6)
+            bitterness = random.randint(4, 8)
+            overall_score = random.randint(2, 5)
+        
+        # Random timestamp within last 30 days
+        days_ago = random.randint(0, 30)
+        hours_ago = random.randint(0, 23)
+        minutes_ago = random.randint(0, 59)
+        timestamp = datetime.now() - timedelta(days=days_ago, hours=hours_ago, minutes=minutes_ago)
+        
+        shot = {
+            "id": shot_id,
+            "product_id": setup["product_id"],
+            "product_batch_id": setup["product_batch_id"],
+            "brewer_id": setup["brewer_id"],
+            "shot_session_id": None,  # Will be assigned when sessions are created
+            "dose_grams": dose_grams,
+            "yield_grams": yield_grams,
+            "dose_yield_ratio": dose_yield_ratio,
+            "extraction_time_seconds": extraction_time,
+            "water_temperature_c": water_temp,
+            "portafilter_id": portafilter_id,
+            "basket_id": basket_id,
+            "tamper_id": tamper_id,
+            "wdt_tool_id": wdt_tool_id,
+            "leveling_tool_id": leveling_tool_id,
+            "grinder_id": grinder_id,
+            "grinder_setting": random.choice(["fine", "extra fine", "1", "2", "3", "4", "5"]),
+            "extraction_status": extraction_status,
+            "sweetness": sweetness,
+            "acidity": acidity,
+            "body": body,
+            "aroma": aroma,
+            "bitterness": bitterness,
+            "overall_score": overall_score,
+            "notes": random.choice([
+                "Good crema formation",
+                "Nice chocolate notes",
+                "Bright citrus finish",
+                "Smooth and balanced",
+                "Rich body with caramel sweetness",
+                "Clean finish",
+                "Slightly sour - adjust grind finer",
+                "Too bitter - try coarser grind",
+                "Perfect extraction today",
+                "Channeling visible in naked portafilter",
+                ""
+            ]),
+            "timestamp": timestamp.isoformat()
+        }
+        shots.append(shot)
+        shot_id += 1
+    
+    return shots
+
+def generate_shot_sessions(shots):
+    """Generate shot sessions and assign shots to them"""
+    sessions = []
+    session_id = 1
+    
+    # Create 4 shot sessions with varying numbers of shots
+    session_configs = [
+        {"name": "Morning Dialing Session", "product_id": 1, "product_batch_id": 1, "brewer_id": 2, "shots_count": 5},
+        {"name": "Weekend Practice", "product_id": 3, "product_batch_id": 3, "brewer_id": 3, "shots_count": 4},
+        {"name": "New Bean Exploration", "product_id": 4, "product_batch_id": 4, "brewer_id": 1, "shots_count": 3},
+        {"name": "Dialing Competition Shot", "product_id": 1, "product_batch_id": 1, "brewer_id": 4, "shots_count": 6}
+    ]
+    
+    shot_index = 0
+    
+    for config in session_configs:
+        # Create session
+        days_ago = random.randint(1, 15)
+        created_at = datetime.now() - timedelta(days=days_ago)
+        
+        session = {
+            "id": session_id,
+            "session_name": config["name"],
+            "product_id": config["product_id"],
+            "product_batch_id": config["product_batch_id"],
+            "brewer_id": config["brewer_id"],
+            "notes": random.choice([
+                "Working on dialing in this new batch",
+                "Experimenting with different dose ratios",
+                "Trying to reduce channeling issues",
+                "Perfecting extraction timing",
+                "Testing new tamping technique",
+                "Comparing different baskets"
+            ]),
+            "created_at": created_at.isoformat()
+        }
+        sessions.append(session)
+        
+        # Assign shots to this session
+        shots_to_assign = min(config["shots_count"], len(shots) - shot_index)
+        for i in range(shots_to_assign):
+            if shot_index < len(shots):
+                shots[shot_index]["shot_session_id"] = session_id
+                # Update shot timestamp to be within the session timeframe
+                shot_time = created_at + timedelta(minutes=random.randint(5, 120))
+                shots[shot_index]["timestamp"] = shot_time.isoformat()
+                shot_index += 1
+        
+        session_id += 1
+    
+    return sessions
+
+# Generate espresso data
+shots = generate_shots()
+shot_sessions = generate_shot_sessions(shots)
+
 # Write JSON files
 files_to_create = [
     ('roasters.json', roasters),
@@ -320,13 +544,21 @@ files_to_create = [
     ('brew_methods.json', brew_methods),
     ('recipes.json', recipes),
     ('decaf_methods.json', decaf_methods),
+    ('brewers.json', brewers),
+    ('portafilters.json', portafilters),
+    ('baskets.json', baskets),
+    ('tampers.json', tampers),
+    ('wdt_tools.json', wdt_tools),
+    ('leveling_tools.json', leveling_tools),
     ('grinders.json', grinders),
     ('filters.json', filters),
     ('kettles.json', kettles),
     ('scales.json', scales),
     ('products.json', products),
     ('batches.json', batches),
-    ('brew_sessions.json', brew_sessions)
+    ('brew_sessions.json', brew_sessions),
+    ('shots.json', shots),
+    ('shot_sessions.json', shot_sessions)
 ]
 
 for filename, data in files_to_create:
@@ -344,6 +576,12 @@ print(f"  - {len(regions)} regions")
 print(f"  - {len(brew_methods)} brew methods")
 print(f"  - {len(recipes)} recipes")
 print(f"  - {len(decaf_methods)} decaf methods")
+print(f"  - {len(brewers)} brewers (espresso machines & pour-over)")
+print(f"  - {len(portafilters)} portafilters")
+print(f"  - {len(baskets)} baskets")
+print(f"  - {len(tampers)} tampers")
+print(f"  - {len(wdt_tools)} WDT tools")
+print(f"  - {len(leveling_tools)} leveling tools")
 print(f"  - {len(grinders)} grinders")
 print(f"  - {len(filters)} filters")
 print(f"  - {len(kettles)} kettles")
@@ -351,3 +589,5 @@ print(f"  - {len(scales)} scales")
 print(f"  - {len(products)} products")
 print(f"  - {len(batches)} batches")
 print(f"  - {len(brew_sessions)} brew sessions")
+print(f"  - {len(shots)} shots (espresso)")
+print(f"  - {len(shot_sessions)} shot sessions")

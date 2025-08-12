@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "name": "Breville Bambino Plus",
+    "short_form": "Bambino+",
+    "description": "Entry-level espresso machine with automatic milk frother",
+    "type": "espresso",
+    "brand": "Breville",
+    "model": "Bambino Plus"
+  },
+  {
+    "id": 2,
+    "name": "Gaggia Classic Pro",
+    "short_form": "Classic Pro",
+    "description": "Traditional Italian espresso machine",
+    "type": "espresso",
+    "brand": "Gaggia",
+    "model": "Classic Pro"
+  },
+  {
+    "id": 3,
+    "name": "Rancilio Silvia",
+    "short_form": "Silvia",
+    "description": "Semi-professional home espresso machine",
+    "type": "espresso",
+    "brand": "Rancilio",
+    "model": "Silvia"
+  },
+  {
+    "id": 4,
+    "name": "La Marzocco Linea Mini",
+    "short_form": "Linea Mini",
+    "description": "Compact commercial-grade espresso machine",
+    "type": "espresso",
+    "brand": "La Marzocco",
+    "model": "Linea Mini"
+  },
+  {
+    "id": 5,
+    "name": "Rocket Appartamento",
+    "short_form": "Appartamento",
+    "description": "Heat exchanger espresso machine",
+    "type": "espresso",
+    "brand": "Rocket",
+    "model": "Appartamento"
+  },
+  {
+    "id": 6,
+    "name": "Hario V60",
+    "short_form": "V60",
+    "description": "Pour-over dripper",
+    "type": "pourover",
+    "brand": "Hario",
+    "model": "V60-02"
+  },
+  {
+    "id": 7,
+    "name": "Chemex 6-cup",
+    "short_form": "Chemex",
+    "description": "Glass pour-over brewer",
+    "type": "pourover",
+    "brand": "Chemex",
+    "model": "6-cup"
+  }
+]

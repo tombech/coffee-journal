@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function SettingsCard({ title, description, icon, linkTo, iconAlt = '' }) {
+  // Generate data-testid from title by converting to lowercase and replacing spaces with dashes
+  const testId = `settings-link-${title.toLowerCase().replace(/\s+/g, '-')}`;
+  
   return (
-    <Link to={linkTo} style={{ textDecoration: 'none' }}>
+    <Link to={linkTo} style={{ textDecoration: 'none' }} data-testid={testId}>
       <div style={{
         border: '1px solid #ddd',
         borderRadius: '8px',
@@ -38,7 +41,7 @@ function SettingsCard({ title, description, icon, linkTo, iconAlt = '' }) {
 
 function Settings() {
   return (
-    <div>
+    <div id="settings-page">
       <h2>Settings</h2>
       <p>Manage your coffee journal configuration and data.</p>
       
@@ -134,6 +137,54 @@ function Settings() {
           icon="/coffee-bean-white.png"
           iconAlt="Decaf Methods"
           linkTo="/settings/decaf-methods"
+        />
+        
+        <SettingsCard
+          title="Brewers"
+          description="Manage espresso machines and brew equipment"
+          icon="/coffee-beans.png"
+          iconAlt="Brewers"
+          linkTo="/settings/brewers"
+        />
+        
+        <SettingsCard
+          title="Portafilters"
+          description="Configure portafilter equipment"
+          icon="/coffee-bean-brown.png"
+          iconAlt="Portafilters"
+          linkTo="/settings/portafilters"
+        />
+        
+        <SettingsCard
+          title="Baskets"
+          description="Manage espresso baskets"
+          icon="/coffee-bean-white.png"
+          iconAlt="Baskets"
+          linkTo="/settings/baskets"
+        />
+        
+        <SettingsCard
+          title="Tampers"
+          description="Configure tamper equipment"
+          icon="/beanconqueror-scale-outline.svg"
+          iconAlt="Tampers"
+          linkTo="/settings/tampers"
+        />
+        
+        <SettingsCard
+          title="WDT Tools"
+          description="Manage Weiss Distribution Technique tools"
+          icon="/coffee-recipe.png"
+          iconAlt="WDT Tools"
+          linkTo="/settings/wdt-tools"
+        />
+        
+        <SettingsCard
+          title="Leveling Tools"
+          description="Configure coffee leveling tools"
+          icon="/kettle.png"
+          iconAlt="Leveling Tools"
+          linkTo="/settings/leveling-tools"
         />
       </div>
     </div>

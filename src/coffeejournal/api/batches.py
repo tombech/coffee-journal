@@ -1243,27 +1243,27 @@ def get_brew_session_defaults():
     scale_repo = factory.get_scale_repository(user_id)
     
     # Fetch smart defaults
-    brew_method_default = brew_method_repo.get_smart_default(factory)
+    brew_method_default = brew_method_repo.get_smart_default(factory, user_id)
     if brew_method_default:
         defaults['brew_method'] = brew_method_default
     
-    recipe_default = recipe_repo.get_smart_default(factory)
+    recipe_default = recipe_repo.get_smart_default(factory, user_id)
     if recipe_default:
         defaults['recipe'] = recipe_default
     
-    grinder_default = grinder_repo.get_smart_default(factory)
+    grinder_default = grinder_repo.get_smart_default(factory, user_id)
     if grinder_default:
         defaults['grinder'] = grinder_default
     
-    filter_default = filter_repo.get_smart_default(factory)
+    filter_default = filter_repo.get_smart_default(factory, user_id)
     if filter_default:
         defaults['filter'] = filter_default
     
-    kettle_default = kettle_repo.get_smart_default(factory)
+    kettle_default = kettle_repo.get_smart_default(factory, user_id)
     if kettle_default:
         defaults['kettle'] = kettle_default
     
-    scale_default = scale_repo.get_smart_default(factory)
+    scale_default = scale_repo.get_smart_default(factory, user_id)
     if scale_default:
         defaults['scale'] = scale_default
     

@@ -58,12 +58,5 @@
     "name": "Indonesia",
     "short_form": "Indonesia",
     "description": "Earthy, full-bodied coffees from island archipelago"
-  },
-  {
-    "name": "Test Country",
-    "short_form": "TC",
-    "id": 11,
-    "created_at": "2025-08-10T17:32:40.720188+00:00",
-    "updated_at": "2025-08-10T17:32:40.720188+00:00"
   }
 ]

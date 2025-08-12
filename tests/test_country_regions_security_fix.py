@@ -61,9 +61,7 @@ class TestCountryRegionsSecurityFix:
         
         # CRITICAL SECURITY TEST: user2 should NOT see user1's data
         response = client.get(f'/api/countries/{country_id}/regions?user_id=user2')
-        assert response.status_code == 200
-        user2_regions = response.get_json()
-        assert len(user2_regions) == 0  # Should be empty - user2 can't see user1's regions
+        assert response.status_code == 404  # Country doesn't exist for user2
         
         # User2 should NOT be able to create regions in user1's country
         response = client.post(f'/api/countries/{country_id}/regions?user_id=user2', json={

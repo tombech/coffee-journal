@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Hario V60 Buono",
+    "short_form": "Buono",
+    "description": "Classic gooseneck kettle for pour-over"
+  },
+  {
+    "id": 2,
+    "name": "Fellow Stagg EKG",
+    "short_form": "Stagg EKG",
+    "description": "Electric gooseneck with temperature control"
+  },
+  {
+    "id": 3,
+    "name": "Bonavita Variable Temperature",
+    "short_form": "Bonavita",
+    "description": "Electric kettle with precise temperature"
+  },
+  {
+    "id": 4,
+    "name": "Brewista Artisan",
+    "short_form": "Artisan",
+    "description": "Gooseneck kettle with built-in timer"
+  },
+  {
+    "id": 5,
+    "name": "Timemore Fish Kettle",
+    "short_form": "Fish",
+    "description": "Minimalist gooseneck kettle"
+  }
+]

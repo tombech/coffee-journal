@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Standard V60",
+    "short_form": "Std V60",
+    "description": "Classic V60 pouring technique"
+  },
+  {
+    "id": 2,
+    "name": "Tetsu Kasuya 4:6 Method",
+    "short_form": "4:6 Method",
+    "description": "Competition-winning V60 technique"
+  },
+  {
+    "id": 3,
+    "name": "Classic French Press",
+    "short_form": "Classic FP",
+    "description": "Traditional French press brewing"
+  },
+  {
+    "id": 4,
+    "name": "Inverted AeroPress",
+    "short_form": "Inverted AP",
+    "description": "Upside-down AeroPress method"
+  },
+  {
+    "id": 5,
+    "name": "Chemex Classic",
+    "short_form": "Classic Chemex",
+    "description": "Traditional Chemex technique"
+  },
+  {
+    "id": 6,
+    "name": "Osmotic Flow",
+    "short_form": "Osmotic",
+    "description": "Slow, controlled V60 pour technique"
+  },
+  {
+    "id": 7,
+    "name": "Rao Spin",
+    "short_form": "Rao Spin",
+    "description": "Scott Rao's stirring technique"
+  },
+  {
+    "id": 8,
+    "name": "Hoffman Method",
+    "short_form": "Hoffman",
+    "description": "James Hoffmann's V60 technique"
+  }
+]

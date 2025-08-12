@@ -84,7 +84,7 @@ test.describe('Home Page', () => {
   test('keyboard navigation works', async ({ page }) => {
     await page.goto('/');
     
-    // Should be able to tab through navigation
+    // Should be able to tab through navigation (complete sequence)
     await page.keyboard.press('Tab');
     
     const homeLink = page.getByRole('link', { name: /home/i });
@@ -93,6 +93,14 @@ test.describe('Home Page', () => {
     await page.keyboard.press('Tab');
     const brewSessionsLink = page.getByRole('link', { name: /brew.*sessions|all.*brews/i });
     await expect(brewSessionsLink).toBeFocused();
+    
+    await page.keyboard.press('Tab');
+    const shotsLink = page.getByRole('link', { name: /all.*shots/i });
+    await expect(shotsLink).toBeFocused();
+    
+    await page.keyboard.press('Tab');
+    const shotSessionsLink = page.getByRole('link', { name: /shot.*sessions/i });
+    await expect(shotSessionsLink).toBeFocused();
     
     await page.keyboard.press('Tab');
     const settingsLink = page.getByRole('link', { name: /settings/i });

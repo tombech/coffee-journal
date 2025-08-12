@@ -134,6 +134,7 @@ function UsageStatistics({
             onDelete={() => {}}
             onDuplicate={() => {}}
             onEdit={() => {}}
+            testId="top-brew-sessions-table"
           />
         </div>
       )}
@@ -153,6 +154,7 @@ function UsageStatistics({
             onDelete={() => {}}
             onDuplicate={() => {}}
             onEdit={() => {}}
+            testId="bottom-brew-sessions-table"
           />
         </div>
       )}
@@ -172,6 +174,7 @@ function UsageStatistics({
             onDelete={() => {}}
             onDuplicate={() => {}}
             onEdit={() => {}}
+            testId="recent-brew-sessions-table"
           />
         </div>
       )}

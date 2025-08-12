@@ -47,8 +47,9 @@ class JSONRepositoryBase(BaseRepository):
     
     def invalidate_cache(self):
         """Invalidate the in-memory cache, forcing a reload on next read."""
-        self._cache = None
-        self._cache_mtime = None
+        with self._thread_lock:
+            self._cache = None
+            self._cache_mtime = None
     
     def _ensure_file_exists(self):
         """Create file with empty list if it doesn't exist (cross-process safe)."""
@@ -70,33 +71,42 @@ class JSONRepositoryBase(BaseRepository):
     
     def _read_data(self) -> List[Dict[str, Any]]:
         """Read data from JSON file with cross-process locking and caching."""
-        # Check if we have a valid cache
-        if self._cache is not None and self.filepath.exists():
-            current_mtime = os.path.getmtime(self.filepath)
-            if self._cache_mtime == current_mtime:
-                # Cache is still valid, return cached data
-                return self._cache.copy()  # Return copy to prevent external modifications
+        # Check if we have a valid cache (thread-safe)
+        with self._thread_lock:
+            if self._cache is not None and self.filepath.exists():
+                try:
+                    current_mtime = os.path.getmtime(self.filepath)
+                    if self._cache_mtime == current_mtime:
+                        # Cache is still valid, return cached data
+                        return self._cache.copy()  # Return copy to prevent external modifications
+                except OSError:
+                    # File might have been deleted, continue to read from disk
+                    pass
         
         # Cache is invalid or doesn't exist, read from disk
         try:
             with self._get_lock(timeout=5.0):
                 if not self.filepath.exists():
-                    self._cache = []
-                    self._cache_mtime = None
+                    # Update cache and return empty list
+                    with self._thread_lock:
+                        self._cache = []
+                        self._cache_mtime = None
                     return []
                 
                 with open(self.filepath, 'r') as f:
                     data = json.load(f)
-                    # Update cache
-                    self._cache = data
-                    self._cache_mtime = os.path.getmtime(self.filepath)
+                    # Update cache (thread-safe)
+                    with self._thread_lock:
+                        self._cache = data
+                        self._cache_mtime = os.path.getmtime(self.filepath)
                     return data.copy()  # Return copy to prevent external modifications
         except Timeout:
             raise RuntimeError(f"Timeout waiting for read lock on {self.filepath}")
         except (FileNotFoundError, json.JSONDecodeError):
             # File was deleted or corrupted between existence check and read
-            self._cache = []
-            self._cache_mtime = None
+            with self._thread_lock:
+                self._cache = []
+                self._cache_mtime = None
             return []
     
     def _write_data(self, data: List[Dict[str, Any]]):
@@ -114,9 +124,10 @@ class JSONRepositoryBase(BaseRepository):
                     # Atomic rename - works on all platforms
                     temp_file.replace(self.filepath)
                     
-                    # Update cache with the new data
-                    self._cache = data.copy()
-                    self._cache_mtime = os.path.getmtime(self.filepath)
+                    # Update cache with the new data (thread-safe)
+                    with self._thread_lock:
+                        self._cache = data.copy()
+                        self._cache_mtime = os.path.getmtime(self.filepath)
                     
                     # Ensure directory entry is synced
                     try:
@@ -320,7 +331,7 @@ class JSONLookupRepository(JSONRepositoryBase, LookupRepository):
         self._write_data(all_data)
         return updated_item
     
-    def get_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def get_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Get smart default based on usage frequency and recency."""
         # First check if there's a manually set default
         manual_default = self.find_default()
@@ -328,9 +339,9 @@ class JSONLookupRepository(JSONRepositoryBase, LookupRepository):
             return manual_default
         
         # If no manual default, calculate smart default
-        return self._calculate_smart_default(factory)
+        return self._calculate_smart_default(factory, user_id)
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on usage patterns."""
         # This is the base implementation - subclasses should override for specific logic
         items = self.find_all()
@@ -344,7 +355,7 @@ class JSONLookupRepository(JSONRepositoryBase, LookupRepository):
         # Default fallback: return the first item
         return items[0]
     
-    def _calculate_equipment_smart_default(self, field_name: str, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_equipment_smart_default(self, field_name: str, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Generic smart default calculation for equipment based on brew session usage."""
         if factory is None:
             from .factory import get_repository_factory
@@ -357,8 +368,8 @@ class JSONLookupRepository(JSONRepositoryBase, LookupRepository):
         if len(items) == 1:
             return items[0]
         
-        # Get all brew sessions to calculate usage
-        sessions = factory.get_brew_session_repository().find_all()
+        # Get all brew sessions to calculate usage (user-specific if user_id provided)
+        sessions = factory.get_brew_session_repository(user_id).find_all()
         
         # Calculate frequency and recency scores
         from datetime import datetime, timezone
@@ -401,7 +412,7 @@ class RoasterRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'roasters.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on product usage patterns."""
         if factory is None:
             from .factory import get_repository_factory
@@ -497,9 +508,9 @@ class BrewMethodRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'brew_methods.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
-        return self._calculate_equipment_smart_default('brew_method_id', factory)
+        return self._calculate_equipment_smart_default('brew_method_id', factory, user_id)
 
 
 class RecipeRepository(JSONLookupRepository):
@@ -507,9 +518,9 @@ class RecipeRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'recipes.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
-        return self._calculate_equipment_smart_default('recipe_id', factory)
+        return self._calculate_equipment_smart_default('recipe_id', factory, user_id)
 
 
 class ProductRepository(JSONRepositoryBase):
@@ -632,7 +643,7 @@ class GrinderRepository(JSONLookupRepository):
             'total_kilos': round(total_with_offset / 1000, 2) if total_with_offset >= 1000 else 0
         }
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
         if factory is None:
             from .factory import get_repository_factory
@@ -646,7 +657,7 @@ class GrinderRepository(JSONLookupRepository):
             return grinders[0]
         
         # Get all brew sessions to calculate grinder usage
-        sessions = factory.get_brew_session_repository().find_all()
+        sessions = factory.get_brew_session_repository(user_id).find_all()
         
         # Calculate frequency and recency scores
         from datetime import datetime, timezone
@@ -695,9 +706,9 @@ class FilterRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'filters.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
-        return self._calculate_equipment_smart_default('filter_id', factory)
+        return self._calculate_equipment_smart_default('filter_id', factory, user_id)
 
 
 class KettleRepository(JSONLookupRepository):
@@ -705,9 +716,9 @@ class KettleRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'kettles.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
-        return self._calculate_equipment_smart_default('kettle_id', factory)
+        return self._calculate_equipment_smart_default('kettle_id', factory, user_id)
 
 
 class ScaleRepository(JSONLookupRepository):
@@ -715,6 +726,207 @@ class ScaleRepository(JSONLookupRepository):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'scales.json')
     
-    def _calculate_smart_default(self, factory=None) -> Optional[Dict[str, Any]]:
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
         """Calculate smart default based on brew session usage patterns."""
-        return self._calculate_equipment_smart_default('scale_id', factory)
+        return self._calculate_equipment_smart_default('scale_id', factory, user_id)
+
+
+class ShotRepository(JSONRepositoryBase):
+    """Repository for Shot entities (espresso shots)."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'shots.json')
+    
+    def create(self, shot: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new shot with calculated ratio."""
+        # Add timestamps if not provided
+        now = datetime.now(timezone.utc).isoformat()
+        if 'created_at' not in shot:
+            shot['created_at'] = now
+        if 'updated_at' not in shot:
+            shot['updated_at'] = now
+        if 'timestamp' not in shot:
+            shot['timestamp'] = now
+        
+        # Calculate ratio from dose and yield
+        if 'dose_grams' in shot and 'yield_grams' in shot:
+            dose = shot['dose_grams']
+            yield_grams = shot['yield_grams']
+            if dose > 0:
+                ratio = round(yield_grams / dose, 2)
+                shot['ratio'] = f"1:{ratio}"
+        
+        return super().create(shot)
+    
+    def update(self, shot_id: int, shot: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update a shot and recalculate ratio if needed."""
+        # Update timestamp
+        shot['updated_at'] = datetime.now(timezone.utc).isoformat()
+        
+        # Recalculate ratio if dose or yield changed
+        if 'dose_grams' in shot and 'yield_grams' in shot:
+            dose = shot['dose_grams']
+            yield_grams = shot['yield_grams']
+            if dose > 0:
+                ratio = round(yield_grams / dose, 2)
+                shot['ratio'] = f"1:{ratio}"
+        
+        return super().update(shot_id, shot)
+    
+    def find_by_session(self, session_id: int) -> List[Dict[str, Any]]:
+        """Find all shots in a particular shot session."""
+        all_shots = self.find_all()
+        return [s for s in all_shots if s.get('shot_session_id') == session_id]
+    
+    def find_by_product(self, product_id: int) -> List[Dict[str, Any]]:
+        """Find all shots for a particular product."""
+        all_shots = self.find_all()
+        return [s for s in all_shots if s.get('product_id') == product_id]
+    
+    def find_by_batch(self, batch_id: int) -> List[Dict[str, Any]]:
+        """Find all shots for a particular batch."""
+        all_shots = self.find_all()
+        return [s for s in all_shots if s.get('product_batch_id') == batch_id]
+    
+    def remove_from_session(self, shot_id: int) -> Optional[Dict[str, Any]]:
+        """Remove a shot from its session (set shot_session_id to null)."""
+        shot = self.find_by_id(shot_id)
+        if shot:
+            shot['shot_session_id'] = None
+            return self.update(shot_id, shot)
+        return None
+
+
+class ShotSessionRepository(JSONRepositoryBase):
+    """Repository for ShotSession entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'shot_sessions.json')
+    
+    def create(self, session: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a new shot session."""
+        # Add timestamps if not provided
+        now = datetime.now(timezone.utc).isoformat()
+        if 'created_at' not in session:
+            session['created_at'] = now
+        if 'updated_at' not in session:
+            session['updated_at'] = now
+        
+        return super().create(session)
+    
+    def update(self, session_id: int, session: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update a shot session."""
+        # Update timestamp
+        session['updated_at'] = datetime.now(timezone.utc).isoformat()
+        return super().update(session_id, session)
+    
+    def delete(self, session_id: int, factory=None) -> bool:
+        """Delete a shot session and remove references from associated shots."""
+        if factory is None:
+            from .factory import get_repository_factory
+            factory = get_repository_factory()
+        
+        # Find all shots in this session and remove the reference
+        shot_repo = factory.get_shot_repository()
+        shots_in_session = shot_repo.find_by_session(session_id)
+        
+        for shot in shots_in_session:
+            shot_repo.remove_from_session(shot['id'])
+        
+        # Now delete the session itself
+        return super().delete(session_id)
+
+
+class BrewerRepository(JSONLookupRepository):
+    """Repository for Brewer entities (espresso machines, V60, AeroPress, etc.)."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'brewers.json')
+    
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
+        """Calculate smart default based on brew session and shot usage patterns."""
+        if factory is None:
+            from .factory import get_repository_factory
+            factory = get_repository_factory()
+        
+        brewers = self.find_all()
+        if not brewers:
+            return None
+        
+        if len(brewers) == 1:
+            return brewers[0]
+        
+        # Check both brew sessions and shots for usage
+        brew_sessions = factory.get_brew_session_repository(user_id).find_all()
+        brewer_scores = {}
+        
+        # Score based on brew session usage
+        for brewer in brewers:
+            brewer_id = brewer['id']
+            sessions_with_brewer = [s for s in brew_sessions if s.get('brewer_id') == brewer_id]
+            
+            frequency_score = len(sessions_with_brewer) / max(len(brew_sessions), 1)
+            recency_score = 0
+            
+            if sessions_with_brewer:
+                sorted_sessions = sorted(sessions_with_brewer, 
+                                        key=lambda x: x.get('timestamp', ''), 
+                                        reverse=True)
+                recent_session = sorted_sessions[0]
+                try:
+                    session_date = datetime.fromisoformat(recent_session['timestamp'].replace('Z', '+00:00'))
+                    days_ago = (datetime.now(timezone.utc) - session_date).days
+                    recency_score = max(0, 1 - (days_ago / 365))
+                except:
+                    pass
+            
+            combined_score = (frequency_score * 0.6) + (recency_score * 0.4)
+            brewer_scores[brewer_id] = combined_score
+        
+        # Also check shots if available
+        try:
+            shots = factory.get_shot_repository().find_all()
+            for brewer in brewers:
+                brewer_id = brewer['id']
+                shots_with_brewer = [s for s in shots if s.get('brewer_id') == brewer_id]
+                
+                if shots_with_brewer:
+                    # Add shot usage to the score
+                    frequency_bonus = len(shots_with_brewer) / max(len(shots), 1)
+                    brewer_scores[brewer_id] = brewer_scores.get(brewer_id, 0) + (frequency_bonus * 0.3)
+        except:
+            pass  # Shots repository might not exist yet
+        
+        # Return the brewer with highest score
+        if brewer_scores and max(brewer_scores.values()) > 0:
+            best_brewer_id = max(brewer_scores.keys(), key=lambda x: brewer_scores[x])
+            return next(b for b in brewers if b['id'] == best_brewer_id)
+        
+        return brewers[0]
+
+
+class PortafilterRepository(JSONLookupRepository):
+    """Repository for Portafilter entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'portafilters.json')
+
+
+class BasketRepository(JSONLookupRepository):
+    """Repository for Basket entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'baskets.json')
+
+
+class TamperRepository(JSONLookupRepository):
+    """Repository for Tamper entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'tampers.json')
+
+
+class WDTToolRepository(JSONLookupRepository):
+    """Repository for WDT Tool entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'wdt_tools.json')
+
+
+class LevelingToolRepository(JSONLookupRepository):
+    """Repository for Leveling Tool entities."""
+    def __init__(self, data_dir: str):
+        super().__init__(data_dir, 'leveling_tools.json')

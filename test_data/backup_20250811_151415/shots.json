@@ -1,0 +1,18 @@
+[
+  {
+    "brew_time_seconds": 28,
+    "brewer_id": 1,
+    "dose_grams": 18.5,
+    "extraction_status": "perfect",
+    "notes": "Great balanced shot for testing",
+    "pressure_bars": 9.0,
+    "score": 8.5,
+    "temperature_c": 93,
+    "yield_grams": 37.0,
+    "created_at": "2025-08-11T13:13:29.690161+00:00",
+    "updated_at": "2025-08-11T13:13:29.690161+00:00",
+    "timestamp": "2025-08-11T13:13:29.689915+00:00",
+    "ratio": "1:2.0",
+    "id": 1
+  }
+]

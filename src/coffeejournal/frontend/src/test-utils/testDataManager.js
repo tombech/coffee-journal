@@ -337,6 +337,133 @@ class TestDataManager {
   }
 
   /**
+   * Create an espresso test scenario with all necessary equipment
+   */
+  async createEspressoTestScenario() {
+    console.log(`🏗️  Creating espresso test scenario for ${this.testId}`);
+    
+    // Create basic product and batch
+    const product = await this.createItem('products', {
+      product_name: `Test Espresso Product ${this.testId}`,
+      roaster: `Test Roaster ${this.testId}`,
+      bean_type: ['Arabica'],
+      country: 'Colombia',
+      region_id: []
+    });
+    
+    const batch = await this.createBatch(product.id, {
+      purchase_date: new Date().toISOString().split('T')[0],
+      roast_date: new Date().toISOString().split('T')[0], 
+      amount_grams: 250,
+      price: 18.99
+    });
+    
+    // Create espresso equipment
+    const brewer = await this.createItem('brewers', {
+      name: `Test Espresso Machine ${this.testId}`,
+      type: 'Semi-Automatic',
+      brand: 'Test Brand'
+    });
+    
+    const portafilter = await this.createItem('portafilters', {
+      name: `Test Portafilter ${this.testId}`,
+      size: '58mm',
+      material: 'Stainless Steel'
+    });
+    
+    const basket = await this.createItem('baskets', {
+      name: `Test Basket ${this.testId}`,
+      holes: 'Precision',
+      capacity: '18g'
+    });
+    
+    const tamper = await this.createItem('tampers', {
+      name: `Test Tamper ${this.testId}`,
+      size: '58mm',
+      material: 'Aluminum'
+    });
+    
+    // Create shot with equipment
+    const shot = await this.createShot({
+      product_id: product.id,
+      product_batch_id: batch.id,
+      brewer_id: brewer.id,
+      portafilter_id: portafilter.id,
+      basket_id: basket.id,
+      tamper_id: tamper.id,
+      dose_grams: 18.0,
+      yield_grams: 36.0,
+      dose_yield_ratio: 2.0,
+      extraction_time_seconds: 25,
+      water_temperature_c: 93,
+      extraction_status: 'perfect',
+      sweetness: 8,
+      acidity: 7,
+      body: 8,
+      aroma: 9,
+      bitterness: 2,
+      overall_score: 8,
+      notes: `Test espresso shot ${this.testId}`
+    });
+    
+    return {
+      product,
+      batch,
+      brewer,
+      portafilter,
+      basket,
+      tamper,
+      shot
+    };
+  }
+
+  /**
+   * Create a shot
+   */
+  async createShot(shotData) {
+    const url = this.addUserIdToUrl(`${this.apiBaseUrl}/shots`);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        ...shotData
+      })
+    });
+    
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Failed to create shot: ${response.status} ${response.statusText} - ${errorBody}`);
+    }
+    
+    return await response.json();
+  }
+
+  /**
+   * Create a shot session
+   */
+  async createShotSession(sessionData) {
+    const url = this.addUserIdToUrl(`${this.apiBaseUrl}/shot_sessions`);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        created_at: new Date().toISOString(),
+        ...sessionData
+      })
+    });
+    
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Failed to create shot session: ${response.status} ${response.statusText} - ${errorBody}`);
+    }
+    
+    return await response.json();
+  }
+
+  /**
    * Clean up existing data from previous runs (pre-test cleanup)
    */
   async cleanupExistingData() {

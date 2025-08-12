@@ -152,15 +152,14 @@ test.describe('Batch Management', () => {
     
     await page.goto(`/batches/${scenario.batch.id}`);
     
-    // Should show brew sessions section
-    await expect(page.getByRole('heading', { name: /brew.*sessions/i })).toBeVisible();
+    // Should show brew sessions section - target specific heading to avoid strict mode violations
+    await expect(page.getByRole('heading', { name: /last.*5.*brew.*sessions/i })).toBeVisible();
     
     // Should have add brew session button
     await expect(page.getByRole('button', { name: /add.*brew.*session/i })).toBeVisible({ timeout: 2000 });
     
     // Our test brew session should be visible using semantic approach
-    // Wait for brew sessions to load first
-    await expect(page.getByRole('heading', { name: /brew.*sessions/i })).toBeVisible({ timeout: 2000 });
+    // Wait for brew sessions to load first (already checked above)
     // Check for brew session data that's actually displayed in the table (coffee amount)
     await expect(page.locator('body')).toContainText('20g', { timeout: 2000 });
   });

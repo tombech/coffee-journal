@@ -28,11 +28,11 @@ test.describe('Standardized Icons Usage', () => {
     
     await page.goto(`/batches/${scenario.batch.id}`);
     
-    // Wait for table to load using semantic selector
-    await expect(page.getByRole('table')).toBeVisible({ timeout: 2000 });
+    // Wait for recent brew sessions table to load (most likely to have data)
+    await expect(page.getByTestId('recent-brew-sessions-table')).toBeVisible({ timeout: 2000 });
     
     // Wait for brew session data to load - look for any brew session row
-    const brewSessionRows = page.getByRole('table').locator('tbody tr');
+    const brewSessionRows = page.getByTestId('recent-brew-sessions-table').locator('tbody tr');
     await expect(brewSessionRows).toHaveCount(1, { timeout: 5000 });
     
     // Check for standardized icons in the brew session table - use the first row since we know there's one

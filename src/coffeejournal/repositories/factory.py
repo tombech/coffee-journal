@@ -9,7 +9,9 @@ from .json_repository import (
     BrewMethodRepository, RecipeRepository, ProductRepository,
     BatchRepository, BrewSessionRepository, GrinderRepository,
     DecafMethodRepository, FilterRepository, KettleRepository,
-    ScaleRepository
+    ScaleRepository, ShotRepository, ShotSessionRepository,
+    BrewerRepository, PortafilterRepository, BasketRepository,
+    TamperRepository, WDTToolRepository, LevelingToolRepository
 )
 
 
@@ -20,7 +22,7 @@ class RepositoryFactory:
         self.storage_type = storage_type
         self.config = kwargs
         self._repositories = {}
-        self._user_lock = threading.Lock()
+        # Thread lock removed - file locks are sufficient for cross-process safety
     
     def _validate_user_id(self, user_id: str) -> None:
         """Validate user_id for filesystem safety."""
@@ -62,8 +64,8 @@ class RepositoryFactory:
         
         for attempt in range(max_retries):
             try:
-                with self._user_lock:
-                    dir_path.mkdir(parents=True, exist_ok=True)
+                # No thread lock needed - file locks handle cross-process safety
+                dir_path.mkdir(parents=True, exist_ok=True)
                     
                 # Verify directory was created successfully
                 if dir_path.exists() and dir_path.is_dir():
@@ -97,14 +99,13 @@ class RepositoryFactory:
         test_data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'test_data')
         user_dir = self._get_data_dir(user_id)
         
-        with self._user_lock:
-            # Copy all JSON files from test_data to user directory
-            if os.path.exists(test_data_dir):
-                for file in os.listdir(test_data_dir):
-                    if file.endswith('.json'):
-                        src = os.path.join(test_data_dir, file)
-                        dst = os.path.join(user_dir, file)
-                        shutil.copy2(src, dst)
+        # Copy all JSON files from test_data to user directory (no thread lock needed)
+        if os.path.exists(test_data_dir):
+            for file in os.listdir(test_data_dir):
+                if file.endswith('.json'):
+                    src = os.path.join(test_data_dir, file)
+                    dst = os.path.join(user_dir, file)
+                    shutil.copy2(src, dst)
     
     def delete_user(self, user_id: str) -> None:
         """Delete a user and all their data."""
@@ -116,15 +117,36 @@ class RepositoryFactory:
         base_dir = self.config.get('data_dir', 'data')
         user_dir = os.path.join(base_dir, 'users', user_id)
         
-        with self._user_lock:
-            # Remove from cache
-            keys_to_remove = [k for k in self._repositories.keys() if k.startswith(f"{user_id}:")]
-            for key in keys_to_remove:
-                del self._repositories[key]
-            
-            # Remove directory
-            if os.path.exists(user_dir):
-                shutil.rmtree(user_dir)
+        # Remove from cache (no thread lock needed)
+        keys_to_remove = [k for k in self._repositories.keys() if k.startswith(f"{user_id}:")]
+        for key in keys_to_remove:
+            del self._repositories[key]
+        
+        # Remove directory with retry logic for file lock issues
+        if os.path.exists(user_dir):
+            import time
+            max_attempts = 3
+            for attempt in range(max_attempts):
+                try:
+                    # First try to remove read-only attributes if on Windows
+                    import stat
+                    def remove_readonly(func, path, _):
+                        """Clear the readonly bit and reattempt the removal."""
+                        os.chmod(path, stat.S_IWRITE | stat.S_IREAD | stat.S_IEXEC)
+                        func(path)
+                    
+                    shutil.rmtree(user_dir, onerror=remove_readonly)
+                    break  # Success, exit retry loop
+                except OSError as e:
+                    if attempt < max_attempts - 1:
+                        # Wait a bit for file locks to release
+                        time.sleep(0.5 * (attempt + 1))
+                        # Try to forcefully close any open file handles
+                        import gc
+                        gc.collect()
+                    else:
+                        # Last attempt failed, raise the error
+                        raise e
     
     def cleanup_test_users(self) -> int:
         """Remove all test user directories. Returns count of removed users."""
@@ -135,14 +157,40 @@ class RepositoryFactory:
         if not os.path.exists(users_dir):
             return count
         
-        with self._user_lock:
-            for user_folder in os.listdir(users_dir):
-                if user_folder.startswith('test_'):
-                    user_path = os.path.join(users_dir, user_folder)
-                    if os.path.isdir(user_path):
-                        shutil.rmtree(user_path)
+        # No thread lock needed - file locks handle cross-process safety
+        for user_folder in os.listdir(users_dir):
+            if user_folder.startswith('test_'):
+                user_path = os.path.join(users_dir, user_folder)
+                if os.path.isdir(user_path):
+                    # Use same retry logic as delete_user
+                    import time
+                    max_attempts = 3
+                    removed = False
+                    for attempt in range(max_attempts):
+                        try:
+                            # First try to remove read-only attributes if on Windows
+                            import stat
+                            def remove_readonly(func, path, _):
+                                """Clear the readonly bit and reattempt the removal."""
+                                os.chmod(path, stat.S_IWRITE | stat.S_IREAD | stat.S_IEXEC)
+                                func(path)
+                            
+                            shutil.rmtree(user_path, onerror=remove_readonly)
+                            removed = True
+                            break  # Success, exit retry loop
+                        except OSError as e:
+                            if attempt < max_attempts - 1:
+                                # Wait a bit for file locks to release
+                                time.sleep(0.5 * (attempt + 1))
+                                # Try to forcefully close any open file handles
+                                import gc
+                                gc.collect()
+                            else:
+                                # Last attempt failed, log error but continue with other users
+                                print(f"Warning: Failed to remove test user directory {user_folder}: {e}")
+                    
+                    if removed:
                         count += 1
-                        
                         # Remove from cache
                         keys_to_remove = [k for k in self._repositories.keys() if k.startswith(f"{user_folder}:")]
                         for key in keys_to_remove:
@@ -291,6 +339,86 @@ class RepositoryFactory:
         if key not in self._repositories:
             if self.storage_type == 'json':
                 self._repositories[key] = ScaleRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_shot_repository(self, user_id: Optional[str] = None) -> ShotRepository:
+        """Get or create shot repository for a specific user."""
+        key = self._get_repository_key('shot', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = ShotRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_shot_session_repository(self, user_id: Optional[str] = None) -> ShotSessionRepository:
+        """Get or create shot session repository for a specific user."""
+        key = self._get_repository_key('shot_session', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = ShotSessionRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_brewer_repository(self, user_id: Optional[str] = None) -> BrewerRepository:
+        """Get or create brewer repository for a specific user."""
+        key = self._get_repository_key('brewer', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = BrewerRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_portafilter_repository(self, user_id: Optional[str] = None) -> PortafilterRepository:
+        """Get or create portafilter repository for a specific user."""
+        key = self._get_repository_key('portafilter', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = PortafilterRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_basket_repository(self, user_id: Optional[str] = None) -> BasketRepository:
+        """Get or create basket repository for a specific user."""
+        key = self._get_repository_key('basket', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = BasketRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_tamper_repository(self, user_id: Optional[str] = None) -> TamperRepository:
+        """Get or create tamper repository for a specific user."""
+        key = self._get_repository_key('tamper', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = TamperRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_wdt_tool_repository(self, user_id: Optional[str] = None) -> WDTToolRepository:
+        """Get or create WDT tool repository for a specific user."""
+        key = self._get_repository_key('wdt_tool', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = WDTToolRepository(self._get_data_dir(user_id))
+            else:
+                raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
+        return self._repositories[key]
+    
+    def get_leveling_tool_repository(self, user_id: Optional[str] = None) -> LevelingToolRepository:
+        """Get or create leveling tool repository for a specific user."""
+        key = self._get_repository_key('leveling_tool', user_id)
+        if key not in self._repositories:
+            if self.storage_type == 'json':
+                self._repositories[key] = LevelingToolRepository(self._get_data_dir(user_id))
             else:
                 raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
         return self._repositories[key]

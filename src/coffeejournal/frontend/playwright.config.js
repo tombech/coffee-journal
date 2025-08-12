@@ -41,7 +41,7 @@ export default defineConfig({
   // Run both backend and frontend servers
   webServer: [
     {
-      command: 'cd ../../.. && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi',
+      command: 'cd ../../.. && PYTHONPATH=src uv run gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 --timeout 120 coffeejournal.wsgi:app',
       url: 'http://localhost:5000/api/countries',
       reuseExistingServer: !process.env.CI,
       timeout: 30 * 1000,  // Shorter backend startup timeout

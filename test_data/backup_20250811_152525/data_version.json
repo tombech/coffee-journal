@@ -1,0 +1,7 @@
+{
+  "version": "1.3",
+  "migrated_date": "2025-07-23",
+  "description": "Separated regions into own lookup table, fixed lookup update_references bugs, removed denormalized name fields",
+  "schema_version": "1.3",
+  "migration_date": "2025-07-23T21:45:00.000000+00:00"
+}

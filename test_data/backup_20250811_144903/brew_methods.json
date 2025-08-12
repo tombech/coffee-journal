@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "V60",
+    "short_form": "V60",
+    "description": "Hario V60 pour-over dripper with spiral ridges"
+  },
+  {
+    "id": 2,
+    "name": "Chemex",
+    "short_form": "Chemex",
+    "description": "Glass pour-over with thick paper filters"
+  },
+  {
+    "id": 3,
+    "name": "French Press",
+    "short_form": "French Press",
+    "description": "Immersion brewing with metal mesh filter"
+  },
+  {
+    "id": 4,
+    "name": "AeroPress",
+    "short_form": "AeroPress",
+    "description": "Pressure-assisted immersion brewing device"
+  },
+  {
+    "id": 5,
+    "name": "Espresso",
+    "short_form": "Espresso",
+    "description": "High-pressure brewing method"
+  },
+  {
+    "id": 6,
+    "name": "Pour Over",
+    "short_form": "Pour Over",
+    "description": "General pour-over brewing method"
+  },
+  {
+    "id": 7,
+    "name": "Cold Brew",
+    "short_form": "Cold Brew",
+    "description": "Cold water extraction over 12+ hours"
+  },
+  {
+    "id": 8,
+    "name": "Moka Pot",
+    "short_form": "Moka",
+    "description": "Stovetop espresso maker"
+  },
+  {
+    "id": 9,
+    "name": "Kalita Wave",
+    "short_form": "Kalita",
+    "description": "Flat-bottom pour-over dripper"
+  },
+  {
+    "id": 10,
+    "name": "Siphon",
+    "short_form": "Siphon",
+    "description": "Vacuum brewing method with glass chambers"
+  },
+  {
+    "name": "Method 0",
+    "id": 11,
+    "created_at": "2025-08-05T22:34:14.391533+00:00",
+    "updated_at": "2025-08-05T22:34:14.391533+00:00"
+  },
+  {
+    "name": "Method 1",
+    "id": 12,
+    "created_at": "2025-08-05T22:34:14.403434+00:00",
+    "updated_at": "2025-08-05T22:34:14.403434+00:00"
+  },
+  {
+    "name": "Method 2",
+    "id": 13,
+    "created_at": "2025-08-05T22:34:14.415551+00:00",
+    "updated_at": "2025-08-05T22:34:14.415551+00:00"
+  },
+  {
+    "name": "Method 3",
+    "id": 14,
+    "created_at": "2025-08-05T22:34:14.427552+00:00",
+    "updated_at": "2025-08-05T22:34:14.427552+00:00"
+  },
+  {
+    "name": "Method 4",
+    "id": 15,
+    "created_at": "2025-08-05T22:34:14.439485+00:00",
+    "updated_at": "2025-08-05T22:34:14.439485+00:00"
+  },
+  {
+    "name": "Method 5",
+    "id": 16,
+    "created_at": "2025-08-05T22:34:14.451099+00:00",
+    "updated_at": "2025-08-05T22:34:14.451099+00:00"
+  },
+  {
+    "name": "Method 6",
+    "id": 17,
+    "created_at": "2025-08-05T22:34:14.463108+00:00",
+    "updated_at": "2025-08-05T22:34:14.463108+00:00"
+  },
+  {
+    "name": "Method 7",
+    "id": 18,
+    "created_at": "2025-08-05T22:34:14.475352+00:00",
+    "updated_at": "2025-08-05T22:34:14.475352+00:00"
+  }
+]

@@ -219,8 +219,35 @@ module.exports = defineConfig({
       workers: getWorkerCount(4),
       retries: 2,
     },
+    // Group 2D: Shot Management (4 workers)
+    {
+      name: 'shot-management',
+      testMatch: [
+        '**/shot-management.test.js'
+      ],
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+      workers: getWorkerCount(4),
+      retries: 2,
+    },
 
-    // Group 2D: Session Duplication (2 workers)
+    // Group 2E: Shot Session Management (4 workers)
+    {
+      name: 'shot-session-management',
+      testMatch: [
+        '**/shot-session-management.test.js'
+      ],
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+      workers: getWorkerCount(4),
+      retries: 2,
+    },
+
+    // Group 2F: Session Duplication (2 workers)
     {
       name: 'session-duplication',
       testMatch: [
@@ -289,8 +316,8 @@ module.exports = defineConfig({
   webServer: [
     {
       command: process.env.CI 
-        ? 'cd ../../.. && PYTHONPATH="$(pwd)/src" DATA_DIR="$(pwd)/test_data" uv run python3 -m coffeejournal.wsgi'
-        : 'cd ../../../ && PYTHONPATH=src uv run python3 -m coffeejournal.wsgi',
+        ? 'cd ../../.. && PYTHONPATH="$(pwd)/src" DATA_DIR="$(pwd)/test_data" uv run gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 --timeout 120 coffeejournal.wsgi:app'
+        : 'cd ../../../ && PYTHONPATH=src uv run gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 --timeout 120 coffeejournal.wsgi:app',
       port: 5000,
       reuseExistingServer: !process.env.CI,
       timeout: process.env.CI ? 240 * 1000 : 120 * 1000, // Even longer startup timeout in CI

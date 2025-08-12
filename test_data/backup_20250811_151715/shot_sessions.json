@@ -1,0 +1,18 @@
+[
+  {
+    "description": "Testing shot session creation",
+    "target_notes": "Balanced espresso",
+    "title": "Test Dialing Session",
+    "created_at": "2025-08-11T13:00:21.804409+00:00",
+    "updated_at": "2025-08-11T13:00:21.804409+00:00",
+    "id": 1
+  },
+  {
+    "description": "Testing shot session creation with new brewer",
+    "target_notes": "Balanced espresso with Test ESM",
+    "title": "Test Dialing Session",
+    "created_at": "2025-08-11T13:13:29.693894+00:00",
+    "updated_at": "2025-08-11T13:13:29.693894+00:00",
+    "id": 2
+  }
+]

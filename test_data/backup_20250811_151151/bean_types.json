@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Arabica",
+    "short_form": "Arabica",
+    "description": "High-quality coffee species with complex flavors"
+  },
+  {
+    "id": 2,
+    "name": "Robusta",
+    "short_form": "Robusta",
+    "description": "Hardy coffee species with higher caffeine content"
+  },
+  {
+    "id": 3,
+    "name": "Liberica",
+    "short_form": "Liberica",
+    "description": "Rare coffee species with unique woody flavor"
+  },
+  {
+    "id": 4,
+    "name": "Excelsa",
+    "short_form": "Excelsa",
+    "description": "Coffee variety known for tart, fruity flavors"
+  }
+]

@@ -16,6 +16,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
     product_id: '',
     brew_method: '',
     recipe: '',
+    brewer: '',
     grinder: '',
     grinder_setting: '',
     filter: '',
@@ -45,6 +46,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
   // State for dynamic dropdown options
   const [brewMethods, setBrewMethods] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [brewers, setBrewers] = useState([]);
   const [grinders, setGrinders] = useState([]);
   const [filters, setFilters] = useState([]);
   const [kettles, setKettles] = useState([]);
@@ -57,9 +59,10 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
       setInitialLoading(true);
       try {
         // First, fetch all lookup data and smart defaults
-        const [brewMethodsRes, recipesRes, grindersRes, filtersRes, kettlesRes, scalesRes, productsRes, defaultsRes] = await Promise.all([
+        const [brewMethodsRes, recipesRes, brewersRes, grindersRes, filtersRes, kettlesRes, scalesRes, productsRes, defaultsRes] = await Promise.all([
           apiFetch('/brew_methods'),
           apiFetch('/recipes'),
+          apiFetch('/brewers'),
           apiFetch('/grinders'),
           apiFetch('/filters'),
           apiFetch('/kettles'),
@@ -69,6 +72,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
         ]);
         setBrewMethods(await brewMethodsRes.json());
         setRecipes(await recipesRes.json());
+        setBrewers(await brewersRes.json());
         setGrinders(await grindersRes.json());
         setFilters(await filtersRes.json());
         setKettles(await kettlesRes.json());
@@ -91,6 +95,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
               // Extract names from lookup objects
               brew_method: session.brew_method?.name || '',
               recipe: session.recipe?.name || '',
+              brewer: session.brewer?.name || '',
               grinder: session.grinder?.name || '',
               filter: session.filter?.name || '',
               kettle: session.kettle?.name || '',
@@ -411,6 +416,24 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
             <option value="">Select recipe</option>
             {recipes.map((r) => (
               <option key={r.id} value={r.name}>{r.name}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="brewer" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Brewer/Machine
+          </label>
+          <select
+            id="brewer"
+            name="brewer"
+            value={formData.brewer}
+            onChange={handleChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select brewer</option>
+            {brewers.map((b) => (
+              <option key={b.id} value={b.name}>{b.name}</option>
             ))}
           </select>
         </div>

@@ -29,7 +29,7 @@ test.describe('Settings Page', () => {
     await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
     await expect(page.locator('body')).toContainText('Manage your coffee journal configuration and data.');
     
-    // Check that all main setting categories are present using semantic link roles
+    // Check that all main setting categories are present using data-testid for reliability
     const expectedSettings = [
       'Products',
       'Brew Methods', 
@@ -41,11 +41,19 @@ test.describe('Settings Page', () => {
       'Filters', 
       'Kettles',
       'Scales',
-      'Decaf Methods'
+      'Decaf Methods',
+      'Brewers',
+      'Portafilters',
+      'Baskets',
+      'Tampers',
+      'WDT Tools',
+      'Leveling Tools'
     ];
     
     for (const setting of expectedSettings) {
-      await expect(page.getByRole('link', { name: new RegExp(setting, 'i') })).toBeVisible();
+      // Convert to testid format: lowercase, replace spaces with dashes
+      const testId = `settings-link-${setting.toLowerCase().replace(/\s+/g, '-')}`;
+      await expect(page.getByTestId(testId)).toBeVisible();
     }
   });
 

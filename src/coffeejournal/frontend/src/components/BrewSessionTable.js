@@ -31,7 +31,8 @@ function BrewSessionTable({
   setSortDirection: externalSetSortDirection = null,
   onFiltersChange = null,  // Callback to pass filter changes to parent
   filterOptions = null,    // Pre-computed filter options from API
-  filters: externalFilters = null  // Filters from parent component
+  filters: externalFilters = null,  // Filters from parent component
+  testId = "brew-session-table"  // Allow customizing test ID to avoid conflicts
 }) {
   
   // Use backend calculated score instead of computing locally
@@ -443,7 +444,7 @@ function BrewSessionTable({
 
       {/* Table */}
       <div>
-        <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
+        <table data-testid={testId} style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
           <thead>
             <tr style={{ backgroundColor: '#e9ecef' }}>
               {showActions && (

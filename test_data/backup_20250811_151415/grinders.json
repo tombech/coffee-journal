@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Test Grinder Rounding",
+    "short_form": "Mini Mill",
+    "description": "Compact ceramic burr hand grinder",
+    "brand": "Wilfa",
+    "burr_material": "Steel",
+    "grinder_type": "Flat Burr",
+    "manually_ground_grams": 125.75,
+    "created_at": "2025-08-10T08:58:38.378371+00:00",
+    "updated_at": "2025-08-10T09:52:17.005064+00:00"
+  },
+  {
+    "id": 2,
+    "name": "Baratza Encore",
+    "short_form": "Encore",
+    "description": "Entry-level electric burr grinder"
+  },
+  {
+    "id": 3,
+    "name": "Fellow Ode",
+    "short_form": "Ode",
+    "description": "Flat burr grinder optimized for filter coffee"
+  },
+  {
+    "id": 4,
+    "name": "Comandante C40",
+    "short_form": "C40",
+    "description": "Premium conical burr hand grinder"
+  },
+  {
+    "id": 5,
+    "name": "Wilfa Uniform",
+    "short_form": "Uniform",
+    "description": "Nordic-designed electric grinder"
+  },
+  {
+    "id": 6,
+    "name": "Timemore Chestnut C2",
+    "short_form": "C2",
+    "description": "Portable hand grinder with steel burrs"
+  },
+  {
+    "id": 7,
+    "name": "Baratza Virtuoso+",
+    "short_form": "Virtuoso+",
+    "description": "Mid-range conical burr grinder"
+  },
+  {
+    "manually_ground_grams": 50.5,
+    "name": "Test Grinder",
+    "is_default": false,
+    "id": 8,
+    "created_at": "2025-08-10T13:03:27.463671+00:00",
+    "updated_at": "2025-08-10T13:03:27.463671+00:00"
+  },
+  {
+    "manually_ground_grams": 100.0,
+    "name": "Test Grinder 2",
+    "is_default": false,
+    "id": 9,
+    "created_at": "2025-08-10T13:03:27.487276+00:00",
+    "updated_at": "2025-08-10T13:03:27.487276+00:00"
+  },
+  {
+    "manually_ground_grams": 75.5,
+    "name": "Update Test Grinder",
+    "is_default": false,
+    "id": 10,
+    "created_at": "2025-08-10T13:03:40.813679+00:00",
+    "updated_at": "2025-08-10T13:03:40.840544+00:00"
+  },
+  {
+    "grinder_type": "Burr",
+    "name": "Test Grinder default_checkbox_test_1754847041",
+    "short_form": "TG",
+    "id": 11,
+    "created_at": "2025-08-10T17:32:02.732566+00:00",
+    "updated_at": "2025-08-10T17:32:02.732566+00:00",
+    "is_default": true
+  },
+  {
+    "manually_ground_grams": null,
+    "name": "Test Grinder Backend",
+    "short_form": "TGB",
+    "is_default": false,
+    "id": 12,
+    "created_at": "2025-08-10T17:37:49.358541+00:00",
+    "updated_at": "2025-08-10T17:37:49.358541+00:00"
+  }
+]

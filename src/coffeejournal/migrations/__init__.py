@@ -98,6 +98,15 @@ class MigrationManager:
         
         logger.info(f"Migration path: {' -> '.join(migration_path)}")
         
+        # Create backup only for certain migrations (not for safe ones like v1.3->v1.4)
+        should_backup = not (data_version == "1.3" and schema_version == "1.4")
+        if should_backup:
+            try:
+                backup_dir = self.backup_data()
+                logger.info(f"Data backed up to: {backup_dir}")
+            except Exception as e:
+                logger.warning(f"Backup failed, but continuing migration: {e}")
+        
         try:
             for i, migration_key in enumerate(migration_path, 1):
                 logger.info(f"Running migration {i}/{len(migration_path)}: {migration_key}")
@@ -148,9 +157,14 @@ class MigrationManager:
                 files_backed_up += 1
                 logger.debug(f"Backed up file: {item}")
             elif os.path.isdir(src_path):
-                shutil.copytree(src_path, dst_path)
-                files_backed_up += 1
-                logger.debug(f"Backed up directory: {item}")
+                try:
+                    shutil.copytree(src_path, dst_path)
+                    files_backed_up += 1
+                    logger.debug(f"Backed up directory: {item}")
+                except FileExistsError:
+                    logger.debug(f"Backup directory already exists, skipping: {item}")
+                except Exception as e:
+                    logger.warning(f"Could not backup directory {item}: {e}")
         
         logger.info(f"Data backup completed: {files_backed_up} items backed up to {backup_dir}")
         return backup_dir
@@ -195,6 +209,11 @@ def _load_migration_modules(manager: MigrationManager):
         from . import v1_2_to_v1_3
         if "1.2->1.3" not in manager.migrations:
             manager.migrations["1.2->1.3"] = v1_2_to_v1_3.migrate_1_2_to_1_3
+        
+        # Load v1_3_to_v1_4 migration (Espresso Support)
+        from . import migration_1_3_to_1_4
+        if "1.3->1.4" not in manager.migrations:
+            manager.migrations["1.3->1.4"] = migration_1_3_to_1_4.migrate_v1_3_to_v1_4
             
     except ImportError as e:
         logger.warning(f"Could not load migration module: {e}")

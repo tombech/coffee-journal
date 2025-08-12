@@ -327,7 +327,7 @@ function LookupManager({
   if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <div>
+    <div id="manager-page">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <h2>{title}</h2>
         <div>
@@ -373,10 +373,13 @@ function LookupManager({
           borderRadius: '8px',
           backgroundColor: '#f9f9f9'
         }}>
-          <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '600', color: '#495057' }}>
+          <h3 
+            data-testid={editingItem ? "edit-form-heading" : "add-form-heading"}
+            style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '600', color: '#495057' }}
+          >
             {editingItem ? `Edit ${singularName}` : `Add New ${singularName}`}
           </h3>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} data-testid="lookup-form">
             {/* Basic Information Section */}
             <div style={{
               backgroundColor: '#f8f9fa',

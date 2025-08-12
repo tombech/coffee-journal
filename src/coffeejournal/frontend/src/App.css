@@ -56,6 +56,12 @@ body {
   background-color: #a1887f; /* Lighter brown */
 }
 
+.App-header nav a:focus {
+  background-color: #a1887f; /* Lighter brown */
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 /* Main Content Area */
 .App-main {
   background-color: white;

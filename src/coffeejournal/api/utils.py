@@ -373,3 +373,46 @@ def enrich_brew_session_with_lookups(session, factory, user_id=None):
     session['calculated_score'] = calculate_total_score(session)
     
     return session
+
+def check_required_fields(data, required_fields):
+    """Check if required fields are present in data."""
+    missing_fields = []
+    for field in required_fields:
+        if field not in data or data[field] is None or data[field] == '':
+            missing_fields.append(field)
+    return missing_fields
+
+
+def validate_score_fields(data, score_fields):
+    """Validate that score fields are integers between 1 and 10."""
+    errors = []
+    for field in score_fields:
+        if field in data and data[field] is not None:
+            try:
+                score = int(data[field])
+                if score < 1 or score > 10:
+                    errors.append(f'{field} must be between 1 and 10')
+                data[field] = score
+            except (ValueError, TypeError):
+                errors.append(f'{field} must be an integer')
+    return errors
+
+
+def enrich_with_lookups(item, factory, user_id):
+    """General function to enrich an item with lookup data."""
+    if not item:
+        return item
+    
+    # This is a simplified version of the product enrichment
+    if 'roaster_id' in item and item['roaster_id']:
+        roaster = factory.get_roaster_repository(user_id).find_by_id(item['roaster_id'])
+        if roaster:
+            item['roaster'] = roaster
+    
+    if 'country_id' in item and item['country_id']:
+        country = factory.get_country_repository(user_id).find_by_id(item['country_id'])
+        if country:
+            item['country'] = country
+    
+    # Add more lookup enrichments as needed
+    return item
