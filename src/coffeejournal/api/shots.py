@@ -263,6 +263,14 @@ def create_shot():
             if data['extraction_status'] not in valid_statuses:
                 return jsonify({'error': f'extraction_status must be one of: {", ".join(valid_statuses)}'}), 400
         
+        # Convert ID fields to integers to ensure consistent data types
+        id_fields = ['product_id', 'product_batch_id', 'brewer_id', 'shot_session_id', 
+                     'grinder_id', 'portafilter_id', 'basket_id', 'tamper_id', 
+                     'scale_id', 'recipe_id']
+        for field in id_fields:
+            if field in data and data[field] is not None:
+                data[field] = int(data[field])
+        
         # Create the shot
         factory = get_repository_factory()
         shot = factory.get_shot_repository(user_id).create(data)
@@ -304,6 +312,14 @@ def update_shot(shot_id):
             valid_statuses = ['channeling', 'over-extracted', 'under-extracted', 'perfect']
             if data['extraction_status'] not in valid_statuses:
                 return jsonify({'error': f'extraction_status must be one of: {", ".join(valid_statuses)}'}), 400
+        
+        # Convert ID fields to integers to ensure consistent data types
+        id_fields = ['product_id', 'product_batch_id', 'brewer_id', 'shot_session_id', 
+                     'grinder_id', 'portafilter_id', 'basket_id', 'tamper_id', 
+                     'scale_id', 'recipe_id']
+        for field in id_fields:
+            if field in data and data[field] is not None:
+                data[field] = int(data[field])
         
         # Update the shot
         factory = get_repository_factory()

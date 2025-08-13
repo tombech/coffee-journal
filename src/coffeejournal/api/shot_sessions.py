@@ -271,6 +271,14 @@ def create_shot_session():
         if missing_fields:
             return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
         
+        # Convert ID fields to integers to ensure consistent data types
+        if 'product_id' in data and data['product_id'] is not None:
+            data['product_id'] = int(data['product_id'])
+        if 'product_batch_id' in data and data['product_batch_id'] is not None:
+            data['product_batch_id'] = int(data['product_batch_id'])
+        if 'brewer_id' in data and data['brewer_id'] is not None:
+            data['brewer_id'] = int(data['brewer_id'])
+        
         # Create the session
         factory = get_repository_factory()
         session = factory.get_shot_session_repository(user_id).create(data)
@@ -295,6 +303,14 @@ def update_shot_session(session_id):
             return jsonify({'error': error_msg}), 400
         
         data = request.get_json()
+        
+        # Convert ID fields to integers to ensure consistent data types
+        if 'product_id' in data and data['product_id'] is not None:
+            data['product_id'] = int(data['product_id'])
+        if 'product_batch_id' in data and data['product_batch_id'] is not None:
+            data['product_batch_id'] = int(data['product_batch_id'])
+        if 'brewer_id' in data and data['brewer_id'] is not None:
+            data['brewer_id'] = int(data['brewer_id'])
         
         # Update the session
         factory = get_repository_factory()
@@ -387,6 +403,9 @@ def add_shot_to_session(session_id):
         
         if not shot_id:
             return jsonify({'error': 'shot_id is required'}), 400
+        
+        # Convert shot_id to integer to ensure consistent data types
+        shot_id = int(shot_id)
         
         factory = get_repository_factory()
         
