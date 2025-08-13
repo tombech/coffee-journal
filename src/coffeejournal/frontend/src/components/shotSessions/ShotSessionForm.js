@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '../Toast';
 import { apiFetch } from '../../config';
 
 function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { addToast } = useToast();
   const [formData, setFormData] = useState({
     title: '',
@@ -15,35 +18,82 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
   const [batches, setBatches] = useState([]);
   const [brewers, setBrewers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
-  // Initialize form data
+  // Initialize form data and fetch lookups
   useEffect(() => {
-    if (initialData) {
-      setFormData({
-        title: initialData.title || '',
-        product_id: initialData.product_id || '',
-        product_batch_id: initialData.product_batch_id || '',
-        brewer_id: initialData.brewer_id || '',
-        notes: initialData.notes || ''
-      });
-    }
-  }, [initialData]);
+    const initializeForm = async () => {
+      setInitialLoading(true);
+      try {
+        // First fetch all lookups
+        await Promise.all([
+          fetchProducts(),
+          fetchBrewers()
+        ]);
 
-  // Fetch lookups on component mount
-  useEffect(() => {
-    Promise.all([
-      fetchProducts(),
-      fetchBrewers()
-    ]);
-  }, []);
+        // If we have an id parameter but no initialData, this is edit mode from URL
+        if (id && !initialData) {
+          console.log('ShotSessionForm: Edit mode detected via URL, fetching shot session:', id);
+          const response = await apiFetch(`/shot_sessions/${id}`);
+          if (response.ok) {
+            const shotSessionData = await response.json();
+            console.log('ShotSessionForm: Fetched shot session data:', shotSessionData);
+            setIsEditMode(true);
+            setFormData({
+              title: shotSessionData.title || '',
+              product_id: shotSessionData.product_id || '',
+              product_batch_id: shotSessionData.product_batch_id || '',
+              brewer_id: shotSessionData.brewer_id || '',
+              notes: shotSessionData.notes || ''
+            });
+            console.log('ShotSessionForm: Set form data from API with product_batch_id:', shotSessionData.product_batch_id);
+            
+            // Fetch batches for the product if we have product_id
+            if (shotSessionData.product_id) {
+              await fetchBatches(shotSessionData.product_id);
+            }
+          } else {
+            setError(`Failed to fetch shot session: ${response.status}`);
+          }
+        } else if (initialData) {
+          // Edit mode with provided data (inline editing)
+          console.log('ShotSessionForm: Initializing with provided data:', initialData);
+          setIsEditMode(true);
+          setFormData({
+            title: initialData.title || '',
+            product_id: initialData.product_id || '',
+            product_batch_id: initialData.product_batch_id || '',
+            brewer_id: initialData.brewer_id || '',
+            notes: initialData.notes || ''
+          });
+          console.log('ShotSessionForm: Set form data with product_batch_id:', initialData.product_batch_id);
+          
+          // Fetch batches for the product if we have product_id
+          if (initialData.product_id) {
+            await fetchBatches(initialData.product_id);
+          }
+        }
+      } catch (err) {
+        console.error('Error initializing form:', err);
+        setError('Failed to initialize form: ' + err.message);
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+
+    initializeForm();
+  }, [id, initialData]);
 
   // Fetch batches when product changes
   useEffect(() => {
+    console.log('ShotSessionForm: Product ID changed to:', formData.product_id);
     if (formData.product_id) {
       fetchBatches(formData.product_id);
     } else {
       setBatches([]);
+      console.log('ShotSessionForm: Clearing product_batch_id due to no product_id');
       setFormData(prev => ({ ...prev, product_batch_id: '' }));
     }
   }, [formData.product_id]);
@@ -61,9 +111,11 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
 
   const fetchBatches = async (productId) => {
     try {
+      console.log('ShotSessionForm: Fetching batches for product:', productId);
       const response = await apiFetch(`/products/${productId}/batches`);
       if (!response.ok) throw new Error('Failed to fetch batches');
       const data = await response.json();
+      console.log('ShotSessionForm: Fetched batches:', data);
       setBatches(data);
     } catch (err) {
       console.error('Error fetching batches:', err);
@@ -101,8 +153,9 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
         throw new Error('Session name is required');
       }
 
-      const method = initialData ? 'PUT' : 'POST';
-      const url = initialData ? `/shot_sessions/${initialData.id}` : '/shot_sessions';
+      console.log('ShotSessionForm: Submitting form data:', formData);
+      const method = (initialData || id) ? 'PUT' : 'POST';
+      const url = (initialData || id) ? `/shot_sessions/${initialData?.id || id}` : '/shot_sessions';
       
       const response = await apiFetch(url, {
         method: method,
@@ -111,6 +164,8 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
         },
         body: JSON.stringify(formData),
       });
+      
+      console.log('ShotSessionForm: API response status:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -119,12 +174,15 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
 
       const result = await response.json();
       addToast(
-        initialData ? 'Shot session updated successfully!' : 'Shot session created successfully!', 
+        (initialData || id) ? 'Shot session updated successfully!' : 'Shot session created successfully!', 
         'success'
       );
       
       if (onShotSessionSubmitted) {
         onShotSessionSubmitted(result);
+      } else if (id && !initialData) {
+        // URL-based editing - navigate back to detail page
+        navigate(`/shot-sessions/${id}`);
       }
     } catch (err) {
       setError(err.message);
@@ -134,9 +192,13 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
     }
   };
 
+  if (initialLoading) {
+    return <p className="loading-message">Loading shot session form...</p>;
+  }
+
   return (
     <div>
-      <h3>{initialData ? 'Edit Shot Session' : 'Create New Shot Session'}</h3>
+      <h3>{(initialData || isEditMode) ? 'Edit Shot Session' : 'Create New Shot Session'}</h3>
       
       {error && (
         <div style={{ 
@@ -312,7 +374,7 @@ function ShotSessionForm({ initialData, onShotSessionSubmitted, onCancel }) {
               cursor: loading ? 'not-allowed' : 'pointer'
             }}
           >
-            {loading ? 'Saving...' : (initialData ? 'Update Session' : 'Create Session')}
+            {loading ? 'Saving...' : ((initialData || isEditMode) ? 'Update Session' : 'Create Session')}
           </button>
         </div>
       </form>

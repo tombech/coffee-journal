@@ -7,6 +7,7 @@ including parameter validation, response format, sorting, and edge cases.
 
 import pytest
 from datetime import datetime, timezone
+import uuid
 from src.coffeejournal import create_app
 from src.coffeejournal.repositories.factory import init_repository_factory
 
@@ -31,12 +32,17 @@ class TestBrewSessionsPagination:
     def client(self, app):
         """Create test client."""
         return app.test_client()
+    
+    @pytest.fixture
+    def test_user_id(self):
+        """Generate unique user ID for test isolation."""
+        return f'test_pagination_{uuid.uuid4().hex[:8]}'
 
     @pytest.fixture
-    def sample_data(self, client):
+    def sample_data(self, client, test_user_id):
         """Create sample data for pagination testing."""
         # Create a product first
-        product_response = client.post('/api/products', json={
+        product_response = client.post(f'/api/products?user_id={test_user_id}', json={
             'product_name': 'Test Coffee',
             'roaster': 'Test Roaster',
             'bean_type': ['Arabica']
@@ -44,7 +50,7 @@ class TestBrewSessionsPagination:
         product_id = product_response.get_json()['id']
         
         # Create a batch
-        batch_response = client.post('/api/products/' + str(product_id) + '/batches', json={
+        batch_response = client.post(f'/api/products/{product_id}/batches?user_id={test_user_id}', json={
             'roast_date': '2024-01-01',
             'amount_grams': 500,
             'price': 25.00
@@ -57,7 +63,7 @@ class TestBrewSessionsPagination:
         
         for i in range(8):  # Create 8 sessions for pagination testing
             timestamp = base_time.replace(hour=10 + i)  # Different hours
-            session_response = client.post(f'/api/batches/{batch_id}/brew_sessions', json={
+            session_response = client.post(f'/api/batches/{batch_id}/brew_sessions?user_id={test_user_id}', json={
                 'timestamp': timestamp.isoformat(),
                 'amount_coffee_grams': 15 + i,
                 'amount_water_grams': 250 + (i * 10),
@@ -66,15 +72,26 @@ class TestBrewSessionsPagination:
             })
             session_ids.append(session_response.get_json()['id'])
         
-        return {
+        data = {
             'product_id': product_id,
             'batch_id': batch_id,
-            'session_ids': session_ids
+            'session_ids': session_ids,
+            'user_id': test_user_id
         }
+        
+        yield data
+        
+        # Cleanup: Delete all test data
+        try:
+            # Cleanup API endpoint handles complete user data deletion
+            client.delete(f'/api/test/cleanup/{test_user_id}')
+        except:
+            pass  # Ignore cleanup errors
 
     def test_pagination_response_format(self, client, sample_data):
         """Test that pagination response follows REST API standards."""
-        response = client.get('/api/brew_sessions?page=1&page_size=3')
+        user_id = sample_data['user_id']
+        response = client.get(f'/api/brew_sessions?page=1&page_size=3&user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -94,7 +111,8 @@ class TestBrewSessionsPagination:
 
     def test_pagination_default_parameters(self, client, sample_data):
         """Test default pagination parameters."""
-        response = client.get('/api/brew_sessions')
+        user_id = sample_data['user_id']
+        response = client.get(f'/api/brew_sessions?user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -107,8 +125,9 @@ class TestBrewSessionsPagination:
         
     def test_pagination_with_page_size_3(self, client, sample_data):
         """Test pagination with page size 3."""
+        user_id = sample_data['user_id']
         # Test first page
-        response = client.get('/api/brew_sessions?page=1&page_size=3')
+        response = client.get(f'/api/brew_sessions?page=1&page_size=3&user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -127,7 +146,8 @@ class TestBrewSessionsPagination:
 
     def test_pagination_middle_page(self, client, sample_data):
         """Test pagination middle page."""
-        response = client.get('/api/brew_sessions?page=2&page_size=3')
+        user_id = sample_data['user_id']
+        response = client.get(f'/api/brew_sessions?page=2&page_size=3&user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -238,18 +258,24 @@ class TestBrewSessionsPagination:
 
     def test_pagination_consistency_across_pages(self, client, sample_data):
         """Test that pagination is consistent - no duplicate or missing items."""
+        user_id = sample_data['user_id']
         # Get all sessions across multiple pages
         all_session_ids = set()
         page = 1
         page_size = 3
+        max_pages = 10  # Reduced since we only have 8 sessions in isolated test data
         
-        while True:
-            response = client.get(f'/api/brew_sessions?page={page}&page_size={page_size}')
+        while page <= max_pages:
+            response = client.get(f'/api/brew_sessions?page={page}&page_size={page_size}&user_id={user_id}')
             assert response.status_code == 200
             
             result = response.get_json()
             sessions = result['data']
             pagination = result['pagination']
+            
+            # If no sessions on this page, we're done
+            if not sessions:
+                break
             
             # Collect session IDs
             for session in sessions:
@@ -261,13 +287,17 @@ class TestBrewSessionsPagination:
                 break
             page += 1
         
-        # Verify we got at least our test data
-        assert len(all_session_ids) >= 8
+        # Verify we didn't hit the safety limit
+        assert page <= max_pages, f"Hit safety limit of {max_pages} pages - possible infinite loop"
+        
+        # Verify we got exactly our test data
+        assert len(all_session_ids) == 8, f"Expected exactly 8 sessions, got {len(all_session_ids)}"
 
     def test_pagination_empty_result_set(self, client):
         """Test pagination behavior with empty result set."""
         # Use a user with no data
-        response = client.get('/api/brew_sessions?user_id=empty_user&page=1&page_size=10')
+        empty_user_id = f'empty_test_{uuid.uuid4().hex[:8]}'
+        response = client.get(f'/api/brew_sessions?user_id={empty_user_id}&page=1&page_size=10')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -357,15 +387,16 @@ class TestBrewSessionsPagination:
 
     def test_server_side_sorting_by_brew_method(self, client, sample_data):
         """Test server-side sorting by brew_method (enriched field)."""
+        user_id = sample_data['user_id']
         # Create sessions with different brew methods
-        product_response = client.post('/api/products', json={
+        product_response = client.post(f'/api/products?user_id={user_id}', json={
             'product_name': 'Sorting Test Coffee',
             'roaster': 'Test Roaster',
             'bean_type': ['Arabica']
         })
         product_id = product_response.get_json()['id']
         
-        batch_response = client.post('/api/products/' + str(product_id) + '/batches', json={
+        batch_response = client.post(f'/api/products/{product_id}/batches?user_id={user_id}', json={
             'roast_date': '2024-01-15',
             'amount_grams': 500
         })
@@ -374,14 +405,14 @@ class TestBrewSessionsPagination:
         # Create sessions with different methods
         methods = ['V60', 'Chemex', 'AeroPress', 'French Press']
         for i, method in enumerate(methods):
-            client.post(f'/api/batches/{batch_id}/brew_sessions', json={
+            client.post(f'/api/batches/{batch_id}/brew_sessions?user_id={user_id}', json={
                 'brew_method': method,
                 'timestamp': f'2024-01-15T{10+i}:00:00Z',
                 'notes': f'Method test {i}'
             })
         
         # Test ascending sort by brew method with larger page size to ensure we capture all test methods
-        response = client.get('/api/brew_sessions?page=1&page_size=100&sort=brew_method&sort_direction=asc')
+        response = client.get(f'/api/brew_sessions?page=1&page_size=100&sort=brew_method&sort_direction=asc&user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -407,14 +438,15 @@ class TestBrewSessionsPagination:
 
     def test_server_side_sorting_by_score(self, client, sample_data):
         """Test server-side sorting by score field."""
+        user_id = sample_data['user_id']
         # Create sessions with different scores
-        product_response = client.post('/api/products', json={
+        product_response = client.post(f'/api/products?user_id={user_id}', json={
             'product_name': 'Score Test Coffee',
             'roaster': 'Test Roaster'
         })
         product_id = product_response.get_json()['id']
         
-        batch_response = client.post('/api/products/' + str(product_id) + '/batches', json={
+        batch_response = client.post(f'/api/products/{product_id}/batches?user_id={user_id}', json={
             'roast_date': '2024-01-16'
         })
         batch_id = batch_response.get_json()['id']
@@ -422,14 +454,14 @@ class TestBrewSessionsPagination:
         # Create sessions with different scores
         scores = [8.5, 6.2, 9.1, 7.0]
         for i, score in enumerate(scores):
-            client.post(f'/api/batches/{batch_id}/brew_sessions', json={
+            client.post(f'/api/batches/{batch_id}/brew_sessions?user_id={user_id}', json={
                 'score': score,
                 'timestamp': f'2024-01-16T{10+i}:00:00Z',
                 'notes': f'Score test {score}'
             })
         
         # Test descending sort by score (highest first)
-        response = client.get('/api/brew_sessions?page=1&page_size=10&sort=score&sort_direction=desc')
+        response = client.get(f'/api/brew_sessions?page=1&page_size=10&sort=score&sort_direction=desc&user_id={user_id}')
         assert response.status_code == 200
         
         result = response.get_json()
@@ -448,24 +480,33 @@ class TestBrewSessionsPagination:
 
     def test_server_side_sorting_with_pagination(self, client, sample_data):
         """Test that server-side sorting works correctly across pagination boundaries."""
+        user_id = sample_data['user_id']
         # Get all sessions sorted by timestamp ascending
         all_sessions = []
         page = 1
         page_size = 3
+        max_pages = 10  # Reduced since we only have 8 sessions in isolated test data
         
-        while True:
-            response = client.get(f'/api/brew_sessions?page={page}&page_size={page_size}&sort=timestamp&sort_direction=asc')
+        while page <= max_pages:
+            response = client.get(f'/api/brew_sessions?page={page}&page_size={page_size}&sort=timestamp&sort_direction=asc&user_id={user_id}')
             assert response.status_code == 200
             
             result = response.get_json()
             sessions = result['data']
             pagination = result['pagination']
             
+            # If no sessions on this page, we're done
+            if not sessions:
+                break
+                
             all_sessions.extend(sessions)
             
             if not pagination['has_next']:
                 break
             page += 1
+        
+        # Verify we didn't hit the safety limit
+        assert page <= max_pages, f"Hit safety limit of {max_pages} pages - possible infinite loop"
         
         # Verify all sessions are in ascending timestamp order
         timestamps = [session['timestamp'] for session in all_sessions]
@@ -475,6 +516,9 @@ class TestBrewSessionsPagination:
         # Verify no duplicate sessions across pages
         session_ids = [session['id'] for session in all_sessions]
         assert len(session_ids) == len(set(session_ids)), "Duplicate sessions found across pages"
+        
+        # Verify we got exactly our test data
+        assert len(all_sessions) == 8, f"Expected exactly 8 sessions, got {len(all_sessions)}"
 
     def test_server_side_sorting_invalid_parameters(self, client, sample_data):
         """Test server-side sorting with invalid parameters."""

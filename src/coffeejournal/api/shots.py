@@ -7,11 +7,26 @@ from ..repositories.factory import get_repository_factory
 from ..api.utils import (
     get_user_id_from_request, validate_user_id,
     check_required_fields, validate_score_fields,
-    enrich_product_with_lookups, calculate_coffee_age
+    enrich_product_with_lookups, calculate_coffee_age,
+    calculate_total_score
 )
 from datetime import datetime, timezone
 
 shots_bp = Blueprint('shots', __name__, url_prefix='/shots')
+
+
+def calculate_dose_yield_ratio(dose_grams, yield_grams):
+    """Calculate dose to yield ratio for espresso shots."""
+    if dose_grams and yield_grams:
+        try:
+            dose_float = float(dose_grams)
+            yield_float = float(yield_grams)
+            if dose_float > 0:
+                ratio = yield_float / dose_float
+                return round(ratio, 1)
+        except (ValueError, TypeError, ZeroDivisionError):
+            return None
+    return None
 
 
 def enrich_shot(shot, factory, user_id):
@@ -97,6 +112,12 @@ def enrich_shot(shot, factory, user_id):
         if session:
             shot['shot_session'] = session
             shot['shot_session_title'] = session.get('title', 'Unknown')
+    
+    # Calculate dose-yield ratio
+    shot['dose_yield_ratio'] = calculate_dose_yield_ratio(shot.get('dose_grams'), shot.get('yield_grams'))
+    
+    # Calculate overall score
+    shot['calculated_score'] = calculate_total_score(shot)
     
     return shot
 

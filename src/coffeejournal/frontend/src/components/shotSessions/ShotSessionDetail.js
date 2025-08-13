@@ -24,11 +24,16 @@ function ShotSessionDetail() {
 
   const fetchShotSession = async () => {
     try {
+      console.log('ShotSessionDetail: Fetching shot session with ID:', id);
       const response = await apiFetch(`/shot_sessions/${id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log('ShotSessionDetail: Received shot session data:', data);
+      console.log('ShotSessionDetail: Product object:', data.product);
+      console.log('ShotSessionDetail: Product batch object:', data.product_batch);
+      console.log('ShotSessionDetail: Brewer object:', data.brewer);
       setShotSession(data);
     } catch (err) {
       setError("Failed to fetch shot session: " + err.message);

@@ -61,5 +61,12 @@
     "type": "pourover",
     "brand": "Chemex",
     "model": "6-cup"
+  },
+  {
+    "name": "Test Brewer",
+    "type": "Semi-automatic",
+    "id": 8,
+    "created_at": "2025-08-13T20:14:11.561664+00:00",
+    "updated_at": "2025-08-13T20:14:11.561664+00:00"
   }
 ]

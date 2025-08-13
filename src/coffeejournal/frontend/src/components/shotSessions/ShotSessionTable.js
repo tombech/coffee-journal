@@ -191,51 +191,73 @@ function ShotSessionTable({
       {/* Filter Controls - Match ShotTable style */}
       <div className="filter-controls" style={{ marginBottom: '15px', padding: '8px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-          <input
-            type="text"
-            placeholder="Session name..."
-            value={filters.title}
-            onChange={(e) => handleFilterChange('title', e.target.value)}
-            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
-          />
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>Session Name</span>
+            <input
+              type="text"
+              placeholder="Session name..."
+              value={filters.title}
+              onChange={(e) => handleFilterChange('title', e.target.value)}
+              style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+              aria-label="Filter by session name"
+            />
+          </label>
           
-          <select
-            value={filters.product_id}
-            onChange={(e) => handleFilterChange('product_id', e.target.value)}
-            style={{ width: '130px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
-          >
-            <option value="">All Products</option>
-            {filterOptions?.products?.map(product => (
-              <option key={product.id} value={product.id}>{product.product_name}</option>
-            ))}
-          </select>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>Product</span>
+            <select
+              value={filters.product_id}
+              onChange={(e) => handleFilterChange('product_id', e.target.value)}
+              style={{ width: '130px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+              aria-label="Filter by product"
+              data-testid="shot-session-product-filter"
+            >
+              <option value="">All Products</option>
+              {filterOptions?.products?.map(product => (
+                <option key={product.id} value={product.id}>{product.product_name}</option>
+              ))}
+            </select>
+          </label>
 
-          <select
-            value={filters.brewer_id}
-            onChange={(e) => handleFilterChange('brewer_id', e.target.value)}
-            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
-          >
-            <option value="">All Brewers</option>
-            {filterOptions?.brewers?.map(brewer => (
-              <option key={brewer.id} value={brewer.id}>{brewer.name}</option>
-            ))}
-          </select>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>Brewer</span>
+            <select
+              value={filters.brewer_id}
+              onChange={(e) => handleFilterChange('brewer_id', e.target.value)}
+              style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+              aria-label="Filter by brewer"
+              data-testid="shot-session-brewer-filter"
+            >
+              <option value="">All Brewers</option>
+              {filterOptions?.brewers?.map(brewer => (
+                <option key={brewer.id} value={brewer.id}>{brewer.name}</option>
+              ))}
+            </select>
+          </label>
 
-          <input
-            type="number"
-            placeholder="Min shots"
-            value={filters.min_shots}
-            onChange={(e) => handleFilterChange('min_shots', e.target.value)}
-            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
-          />
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>Min Shots</span>
+            <input
+              type="number"
+              placeholder="Min shots"
+              value={filters.min_shots}
+              onChange={(e) => handleFilterChange('min_shots', e.target.value)}
+              style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+              aria-label="Filter by minimum number of shots"
+            />
+          </label>
 
-          <input
-            type="number"
-            placeholder="Max shots"
-            value={filters.max_shots}
-            onChange={(e) => handleFilterChange('max_shots', e.target.value)}
-            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
-          />
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>Max Shots</span>
+            <input
+              type="number"
+              placeholder="Max shots"
+              value={filters.max_shots}
+              onChange={(e) => handleFilterChange('max_shots', e.target.value)}
+              style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+              aria-label="Filter by maximum number of shots"
+            />
+          </label>
 
           <button
             onClick={() => setShowMobileSearch(true)}

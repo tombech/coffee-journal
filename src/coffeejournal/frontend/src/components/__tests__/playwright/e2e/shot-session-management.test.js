@@ -62,7 +62,7 @@ test.describe('Shot Session Management', () => {
     
     // Fill in required fields
     const sessionName = `Test Session ${testData.testId}`;
-    await page.getByLabel(/session.*name/i).fill(sessionName);
+    await page.getByLabel('Session Name *').fill(sessionName);
     
     // Wait for product dropdown to be populated
     await expect(async () => {
@@ -115,7 +115,7 @@ test.describe('Shot Session Management', () => {
     const updatedName = `Updated Session ${testData.testId}`;
     const updatedNotes = `Updated notes ${testData.testId} - much better!`;
     
-    await page.getByLabel(/session.*name/i).fill(updatedName);
+    await page.getByLabel('Session Name *').fill(updatedName);
     await page.getByLabel(/notes/i).fill(updatedNotes);
     
     // Save changes
@@ -199,6 +199,92 @@ test.describe('Shot Session Management', () => {
     await expect(page.locator('body')).toContainText(/batch:/i);
   });
 
+  test('shot session detail shows actual values not N/A', async ({ page }) => {
+    // Create test scenario first
+    const scenario = await testData.createEspressoTestScenario();
+    const shotSession = await testData.createShotSession({
+      title: `Bug Test Session ${testData.testId}`,
+      product_id: scenario.product.id,
+      product_batch_id: scenario.batch.id,
+      brewer_id: scenario.brewer.id,
+      notes: `Bug test session notes ${testData.testId}`
+    });
+    
+    await page.goto('/shot-sessions');
+    await expect(page.getByRole('table')).toBeVisible();
+    
+    // Click on our test session link to view details
+    await page.getByTestId(`view-shot-session-${shotSession.id}`).click();
+    
+    // Wait for navigation to detail page
+    await page.waitForURL(`**/shot-sessions/${shotSession.id}`, { timeout: 5000 });
+    
+    // Should show session details
+    await expect(page.locator('#shot-session-detail-page')).toBeVisible();
+    
+    // CRITICAL: Verify actual values are shown, not "N/A"
+    // Product should show the actual product name, not "N/A"
+    await expect(page.locator('body')).toContainText(scenario.product.product_name);
+    await expect(page.locator('body')).not.toContainText('Product: N/A');
+    
+    // Batch should show the actual batch info, not "N/A"
+    await expect(page.locator('body')).toContainText(`Batch #${scenario.batch.id}`);
+    await expect(page.locator('body')).toContainText(scenario.batch.roast_date);
+    await expect(page.locator('body')).not.toContainText('Batch: N/A');
+    
+    // Brewer should show the actual brewer name, not "N/A"
+    await expect(page.locator('body')).toContainText(scenario.brewer.name);
+    await expect(page.locator('body')).not.toContainText('Brewer: N/A');
+  });
+
+  test('edit button routing behaviors work correctly', async ({ page }) => {
+    // Create test scenario first
+    const scenario = await testData.createEspressoTestScenario();
+    const shotSession = await testData.createShotSession({
+      title: `Edit Routing Test ${testData.testId}`,
+      product_id: scenario.product.id,
+      product_batch_id: scenario.batch.id,
+      brewer_id: scenario.brewer.id,
+      notes: `Testing edit routing ${testData.testId}`
+    });
+    
+    await page.goto('/shot-sessions');
+    await expect(page.getByRole('table')).toBeVisible();
+    
+    // Test 1: Table edit button should show inline edit form
+    await page.getByTestId(`edit-shot-session-${shotSession.id}`).click();
+    
+    // Should show inline edit form on the same page
+    await expect(page.locator('.edit-shot-session-form')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Session Name *')).toBeVisible();
+    
+    // Cancel the edit
+    await page.getByRole('button', { name: /cancel/i }).click();
+    await expect(page.locator('.edit-shot-session-form')).not.toBeVisible();
+    
+    // Test 2: Detail page edit button should navigate to edit route
+    await page.getByTestId(`view-shot-session-${shotSession.id}`).click();
+    
+    // Wait for navigation to detail page
+    await page.waitForURL(`**/shot-sessions/${shotSession.id}`, { timeout: 5000 });
+    await expect(page.locator('#shot-session-detail-page')).toBeVisible();
+    
+    // Click the detail page edit button (pencil icon)
+    await page.getByTitle('Edit Shot Session').click();
+    
+    // Should navigate to edit route
+    await page.waitForURL(`**/shot-sessions/${shotSession.id}/edit`, { timeout: 5000 });
+    
+    // Should show the edit form on a separate page
+    await expect(page.getByLabel('Session Name *')).toBeVisible();
+    await expect(page.getByLabel(/product/i)).toBeVisible();
+    await expect(page.getByLabel(/batch/i)).toBeVisible();
+    await expect(page.getByLabel(/brewer/i)).toBeVisible();
+    
+    // Form should be pre-populated with existing data
+    await expect(page.getByLabel('Session Name *')).toHaveValue(shotSession.title);
+  });
+
   test('can duplicate shot session', async ({ page }) => {
     // Create test scenario
     const scenario = await testData.createEspressoTestScenario();
@@ -279,8 +365,8 @@ test.describe('Shot Session Management', () => {
     await expect(page.locator('body')).toContainText(session1.title);
     await expect(page.locator('body')).toContainText(session2.title);
     
-    // Filter by first product - target by placeholder text since there's no label
-    await page.locator('select').filter({ hasText: 'All Products...' }).selectOption(scenario1.product.id.toString());
+    // Filter by first product - use semantic selector via test ID
+    await page.getByTestId('shot-session-product-filter').selectOption(scenario1.product.id.toString());
     
     // Wait for filter to take effect
     await expect(page.locator('body')).toContainText(session1.title);
@@ -308,6 +394,6 @@ test.describe('Shot Session Management', () => {
     await page.waitForTimeout(1000);
     
     // Verify we're still on the form (not redirected) by checking the form is still visible
-    await expect(page.getByLabel(/session.*name/i)).toBeVisible();
+    await expect(page.getByLabel('Session Name *')).toBeVisible();
   });
 });
