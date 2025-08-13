@@ -66,6 +66,7 @@ function App() {
               <Route path="/brew-sessions/:id" element={<BrewSessionDetail />} />
               <Route path="/brew-sessions/:id/edit" element={<BrewSessionForm />} />
               <Route path="/shots" element={<ShotList />} />
+              <Route path="/shots/new" element={<ShotForm />} />
               <Route path="/shots/:id" element={<ShotDetail />} />
               <Route path="/shots/:id/edit" element={<ShotForm />} />
               <Route path="/shot-sessions" element={<ShotSessionList />} />

@@ -37,9 +37,20 @@ function ShotSessionTable({
   };
 
   const getSortIcon = (column) => {
-    if (sortColumn !== column) return '';
-    return sortDirection === 'asc' ? ' ↑' : ' ↓';
+    if (sortColumn !== column) return ' ↕';
+    return sortDirection === 'desc' ? ' ↓' : ' ↑';
   };
+
+  // Function to create header with icon and hover text
+  const createIconHeader = (icon, title, column, onClick) => (
+    <span 
+      style={{ cursor: 'pointer', userSelect: 'none', display: 'flex', alignItems: 'center', gap: '2px' }}
+      title={title}
+      onClick={onClick}
+    >
+      {icon}{getSortIcon(column)}
+    </span>
+  );
 
   const handleFilterChange = (filterName, value) => {
     const newFilters = {
@@ -71,129 +82,171 @@ function ShotSessionTable({
   };
 
   const renderPaginationControls = () => {
-    if (!pagination) return null;
+    if (!pagination || pagination.total_count === 0) return null;
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap', gap: '10px' }}>
-        <div style={{ fontSize: '14px', color: '#666' }}>
+      <div style={{ 
+        marginTop: '15px',
+        display: 'flex', 
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        fontSize: '13px',
+        color: '#6c757d',
+        borderTop: '1px solid #eee',
+        paddingTop: '12px'
+      }}>
+        {/* Left side: Showing info */}
+        <span>
           {getPaginationInfo()}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            style={{ padding: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-          >
-            <option value={15}>15 per page</option>
-            <option value={30}>30 per page</option>
-            <option value={50}>50 per page</option>
-            <option value={100}>100 per page</option>
-          </select>
+        </span>
+
+        {/* Right side: Page size selector + pagination controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Page size selector */}
+          {setPageSize && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <label htmlFor="page-size-select">Show:</label>
+              <select
+                id="page-size-select"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  if (setCurrentPage) setCurrentPage(1); // Reset to first page when changing page size
+                }}
+                style={{
+                  padding: '3px 6px',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  fontSize: '13px',
+                  background: 'white'
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={20}>20</option>
+                <option value={30}>30</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <span>per page</span>
+            </div>
+          )}
           
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={!pagination.has_previous}
-            style={{
-              padding: '8px 12px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              backgroundColor: pagination.has_previous ? 'white' : '#f5f5f5',
-              cursor: pagination.has_previous ? 'pointer' : 'not-allowed'
-            }}
-          >
-            Previous
-          </button>
-          
-          <span style={{ padding: '8px 12px', fontWeight: 'bold' }}>
-            Page {pagination.page} of {pagination.total_pages}
-          </span>
-          
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={!pagination.has_next}
-            style={{
-              padding: '8px 12px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              backgroundColor: pagination.has_next ? 'white' : '#f5f5f5',
-              cursor: pagination.has_next ? 'pointer' : 'not-allowed'
-            }}
-          >
-            Next
-          </button>
+          {/* Pagination controls - only show if more than one page */}
+          {pagination.total_pages > 1 && setCurrentPage && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>
+                Page {pagination.page} of {pagination.total_pages}
+              </span>
+              
+              <button
+                onClick={() => setCurrentPage(pagination.previous_page)}
+                disabled={!pagination.has_previous}
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  cursor: pagination.has_previous ? 'pointer' : 'not-allowed',
+                  color: pagination.has_previous ? '#495057' : '#ccc',
+                  fontSize: '16px',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  opacity: pagination.has_previous ? 1 : 0.5
+                }}
+                title="Previous page"
+                aria-label="Previous page"
+              >
+                ◀
+              </button>
+              
+              <button
+                onClick={() => setCurrentPage(pagination.next_page)}
+                disabled={!pagination.has_next}
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  cursor: pagination.has_next ? 'pointer' : 'not-allowed',
+                  color: pagination.has_next ? '#495057' : '#ccc',
+                  fontSize: '16px',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  opacity: pagination.has_next ? 1 : 0.5
+                }}
+                title="Next page"
+                aria-label="Next page"
+              >
+                ▶
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   };
 
   return (
-    <div>
-      {/* Controls and filters */}
-      <div style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-        <button
-          onClick={() => setShowMobileSearch(true)}
-          style={{
-            padding: '10px 15px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            display: 'block'
-          }}
-          className="mobile-search-btn"
-        >
-          🔍 Filter Sessions
-        </button>
-      </div>
+    <div style={{ width: '100%', overflowX: 'auto' }}>
+      {/* Filter Controls - Match ShotTable style */}
+      <div className="filter-controls" style={{ marginBottom: '15px', padding: '8px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <input
+            type="text"
+            placeholder="Session name..."
+            value={filters.title}
+            onChange={(e) => handleFilterChange('title', e.target.value)}
+            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          />
+          
+          <select
+            value={filters.product_id}
+            onChange={(e) => handleFilterChange('product_id', e.target.value)}
+            style={{ width: '130px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
+            <option value="">All Products</option>
+            {filterOptions?.products?.map(product => (
+              <option key={product.id} value={product.id}>{product.product_name}</option>
+            ))}
+          </select>
 
-      {/* Filters (Desktop) */}
-      <div className="desktop-filters" style={{ marginBottom: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-        <input
-          type="text"
-          placeholder="Session name..."
-          value={filters.title}
-          onChange={(e) => handleFilterChange('title', e.target.value)}
-          style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-        />
-        
-        <select
-          value={filters.product_id}
-          onChange={(e) => handleFilterChange('product_id', e.target.value)}
-          style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-        >
-          <option value="">All Products...</option>
-          {filterOptions?.products?.map(product => (
-            <option key={product.id} value={product.id}>{product.product_name}</option>
-          ))}
-        </select>
+          <select
+            value={filters.brewer_id}
+            onChange={(e) => handleFilterChange('brewer_id', e.target.value)}
+            style={{ width: '120px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          >
+            <option value="">All Brewers</option>
+            {filterOptions?.brewers?.map(brewer => (
+              <option key={brewer.id} value={brewer.id}>{brewer.name}</option>
+            ))}
+          </select>
 
-        <select
-          value={filters.brewer_id}
-          onChange={(e) => handleFilterChange('brewer_id', e.target.value)}
-          style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-        >
-          <option value="">All Brewers...</option>
-          {filterOptions?.brewers?.map(brewer => (
-            <option key={brewer.id} value={brewer.id}>{brewer.name}</option>
-          ))}
-        </select>
+          <input
+            type="number"
+            placeholder="Min shots"
+            value={filters.min_shots}
+            onChange={(e) => handleFilterChange('min_shots', e.target.value)}
+            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          />
 
-        <input
-          type="number"
-          placeholder="Min shots..."
-          value={filters.min_shots}
-          onChange={(e) => handleFilterChange('min_shots', e.target.value)}
-          style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-        />
+          <input
+            type="number"
+            placeholder="Max shots"
+            value={filters.max_shots}
+            onChange={(e) => handleFilterChange('max_shots', e.target.value)}
+            style={{ width: '80px', padding: '4px 6px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+          />
 
-        <input
-          type="number"
-          placeholder="Max shots..."
-          value={filters.max_shots}
-          onChange={(e) => handleFilterChange('max_shots', e.target.value)}
-          style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-        />
+          <button
+            onClick={() => setShowMobileSearch(true)}
+            style={{ padding: '6px 8px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '14px' }}
+            className="mobile-search-btn"
+            title="Filter Sessions"
+            aria-label="Filter Sessions"
+          >
+            {ICONS.FILTER}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Search Modal */}
@@ -207,129 +260,111 @@ function ShotSessionTable({
         />
       )}
 
-      {/* Table */}
-      <div className="table-container" style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }} role="table">
-          <thead>
-            <tr style={{ backgroundColor: '#f8f9fa' }}>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6', cursor: 'pointer' }}
-                  onClick={() => handleSort('title')}>
-                Session Name{getSortIcon('title')}
-              </th>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6', cursor: 'pointer' }}
-                  onClick={() => handleSort('product_name')}>
-                Product{getSortIcon('product_name')}
-              </th>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6', cursor: 'pointer' }}
-                  onClick={() => handleSort('brewer_name')}>
-                Brewer{getSortIcon('brewer_name')}
-              </th>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6', cursor: 'pointer' }}
-                  onClick={() => handleSort('shot_count')}>
-                Shot Count{getSortIcon('shot_count')}
-              </th>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6', cursor: 'pointer' }}
-                  onClick={() => handleSort('created_at')}>
-                Created{getSortIcon('created_at')}
-              </th>
-              <th style={{ padding: '12px', textAlign: 'center', borderBottom: '2px solid #dee2e6', width: '150px' }}>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {shotSessions.map((session) => (
-              <tr key={session.id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                <td style={{ padding: '12px' }}>
-                  <Link
-                    to={`/shot-sessions/${session.id}`}
-                    data-testid={`view-shot-session-${session.id}`}
-                    style={{ 
-                      textDecoration: 'none', 
-                      color: '#007bff', 
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {session.title || `Session ${session.id}`}
+      <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#e9ecef' }}>
+            <th style={{ padding: '4px', border: '1px solid #ddd', width: '110px', fontSize: '12px', textAlign: 'left' }}>Actions</th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('📋', 'Session Name', 'title', () => handleSort('title'))}
+            </th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('🫘', 'Product', 'product_name', () => handleSort('product_name'))}
+            </th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('☕', 'Brewer', 'brewer_name', () => handleSort('brewer_name'))}
+            </th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('#️⃣', 'Shot Count', 'shot_count', () => handleSort('shot_count'))}
+            </th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('📅', 'Created', 'created_at', () => handleSort('created_at'))}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {shotSessions.map((session) => (
+            <tr key={session.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
+              <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '110px', whiteSpace: 'nowrap' }}>
+                <button 
+                  onClick={() => onEdit(session)}
+                  title="Edit"
+                  aria-label="Edit shot session"
+                  data-testid={`edit-shot-session-${session.id}`}
+                  style={{ padding: '2px 4px', margin: '0 1px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px' }}
+                >
+                  ✏️
+                </button>
+                <button 
+                  onClick={() => onDuplicate(session.id)}
+                  title="Duplicate"
+                  aria-label="Duplicate shot session"
+                  data-testid={`duplicate-shot-session-${session.id}`}
+                  style={{ padding: '2px 4px', margin: '0 1px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px' }}
+                >
+                  {ICONS.DUPLICATE}
+                </button>
+                <button 
+                  onClick={() => onDelete(session.id)}
+                  title="Delete"
+                  aria-label="Delete shot session"
+                  data-testid={`delete-shot-session-${session.id}`}
+                  style={{ padding: '2px 4px', margin: '0 1px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px' }}
+                >
+                  {ICONS.DELETE}
+                </button>
+              </td>
+              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top' }}>
+                <Link
+                  to={`/shot-sessions/${session.id}`}
+                  data-testid={`view-shot-session-${session.id}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  aria-label={`View details for session ${session.title || session.id}`}
+                >
+                  {session.title || `Session ${session.id}`}
+                </Link>
+              </td>
+              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                {session.product ? (
+                  <Link to={`/products/${session.product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {session.product.product_name || '-'}
                   </Link>
-                </td>
-                <td style={{ padding: '12px' }}>
-                  {session.product?.product_name || 'N/A'}
-                </td>
-                <td style={{ padding: '12px' }}>
-                  {session.brewer?.name || 'N/A'}
-                </td>
-                <td style={{ padding: '12px' }}>
-                  <span style={{ 
-                    padding: '4px 8px', 
-                    backgroundColor: '#e9ecef', 
-                    borderRadius: '12px', 
-                    fontSize: '12px',
-                    fontWeight: 'bold'
-                  }}>
-                    {formatShotCount(session.shot_count || 0)}
-                  </span>
-                </td>
-                <td style={{ padding: '12px', fontSize: '14px', color: '#666' }}>
-                  {formatDate(session.created_at)}
-                </td>
-                <td style={{ padding: '12px', textAlign: 'center' }}>
-                  <div style={{ display: 'flex', gap: '5px', justifyContent: 'center' }}>
-                    <button
-                      onClick={() => onEdit(session)}
-                      data-testid={`edit-shot-session-${session.id}`}
-                      style={{
-                        padding: '4px 8px',
-                        backgroundColor: '#ffc107',
-                        color: 'black',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                      title="Edit session"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => onDuplicate(session.id)}
-                      data-testid={`duplicate-shot-session-${session.id}`}
-                      style={{
-                        padding: '4px 8px',
-                        backgroundColor: '#17a2b8',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                      title="Duplicate session"
-                    >
-                      Duplicate
-                    </button>
-                    <button
-                      onClick={() => onDelete(session.id)}
-                      data-testid={`delete-shot-session-${session.id}`}
-                      style={{
-                        padding: '4px 8px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
-                      }}
-                      title="Delete session"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                ) : (
+                  'N/A'
+                )}
+              </td>
+              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                {session.brewer ? (
+                  <Link to={`/brewers/${session.brewer.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {session.brewer.name || '-'}
+                  </Link>
+                ) : (
+                  'N/A'
+                )}
+              </td>
+              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                <span style={{ 
+                  padding: '2px 6px', 
+                  backgroundColor: '#e9ecef', 
+                  borderRadius: '8px', 
+                  fontSize: '11px',
+                  fontWeight: 'bold'
+                }}>
+                  {formatShotCount(session.shot_count || 0)}
+                </span>
+              </td>
+              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                {formatDate(session.created_at)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {shotSessions.length === 0 && (
+        <p style={{ textAlign: 'center', marginTop: '20px', color: '#666' }}>
+          No shot sessions match your current filters.
+        </p>
+      )}
 
       {renderPaginationControls()}
     </div>

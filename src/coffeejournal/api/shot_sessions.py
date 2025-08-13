@@ -4,7 +4,7 @@ API endpoints for shot session management (grouping shots for dialing-in workflo
 
 from flask import Blueprint, request, jsonify
 from ..repositories.factory import get_repository_factory
-from ..api.utils import get_user_id_from_request, validate_user_id, check_required_fields
+from ..api.utils import get_user_id_from_request, validate_user_id, check_required_fields, calculate_coffee_age
 from datetime import datetime, timezone
 
 shot_sessions_bp = Blueprint('shot_sessions', __name__, url_prefix='/shot_sessions')
@@ -34,6 +34,39 @@ def enrich_shot_session_with_shots(session, factory, user_id):
     
     session['shots'] = shots
     session['shot_count'] = len(shots)
+    
+    # Add session-level product and brewer information
+    if session.get('product_id'):
+        product = factory.get_product_repository(user_id).find_by_id(session['product_id'])
+        if product:
+            session['product'] = {
+                'id': product['id'],
+                'product_name': product.get('product_name', 'Unknown')
+            }
+    
+    if session.get('product_batch_id'):
+        batch = factory.get_batch_repository(user_id).find_by_id(session['product_batch_id'])
+        if batch:
+            session['product_batch'] = {
+                'id': batch['id'],
+                'roast_date': batch.get('roast_date', 'Unknown')
+            }
+            
+            # Calculate coffee age from roast date to session creation date
+            if batch.get('roast_date') and session.get('created_at'):
+                session['coffee_age'] = calculate_coffee_age(batch['roast_date'], session['created_at'])
+            else:
+                session['coffee_age'] = None
+    else:
+        session['coffee_age'] = None
+    
+    if session.get('brewer_id'):
+        brewer = factory.get_brewer_repository(user_id).find_by_id(session['brewer_id'])
+        if brewer:
+            session['brewer'] = {
+                'id': brewer['id'],
+                'name': brewer.get('name', 'Unknown')
+            }
     
     # Calculate aggregate statistics
     if shots:
@@ -150,6 +183,25 @@ def get_all_shot_sessions():
                             'id': product['id'],
                             'product_name': product.get('product_name', 'Unknown')
                         }
+                
+                # Add batch information
+                if session.get('product_batch_id'):
+                    batch = factory.get_batch_repository(user_id).find_by_id(session['product_batch_id'])
+                    if batch:
+                        session['product_batch'] = {
+                            'id': batch['id'],
+                            'roast_date': batch.get('roast_date', 'Unknown')
+                        }
+                        
+                        # Calculate coffee age from roast date to session creation date
+                        if batch.get('roast_date') and session.get('created_at'):
+                            session['coffee_age'] = calculate_coffee_age(batch['roast_date'], session['created_at'])
+                        else:
+                            session['coffee_age'] = None
+                    else:
+                        session['coffee_age'] = None
+                else:
+                    session['coffee_age'] = None
                 
                 # Add brewer information  
                 if session.get('brewer_id'):

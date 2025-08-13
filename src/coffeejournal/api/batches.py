@@ -19,6 +19,7 @@ from ..repositories.factory import get_repository_factory
 from .utils import (
     calculate_brew_ratio,
     calculate_total_score,
+    calculate_coffee_age,
     enrich_product_with_lookups,
     safe_float,
     safe_int,
@@ -653,6 +654,12 @@ def get_all_brew_sessions():
         
         # Calculate brew ratio using consistent field names
         session['brew_ratio'] = calculate_brew_ratio(session.get('amount_coffee_grams'), session.get('amount_water_grams'))
+        
+        # Calculate coffee age from roast date to brew date
+        if batch and batch.get('roast_date') and session.get('timestamp'):
+            session['coffee_age'] = calculate_coffee_age(batch['roast_date'], session['timestamp'])
+        else:
+            session['coffee_age'] = None
     
     # Apply filters to enriched sessions
     filtered_sessions = []
@@ -852,6 +859,12 @@ def get_brew_session(session_id):
     # Get product details
     product = product_repo.find_by_id(session['product_id'])
     batch = batch_repo.find_by_id(session['product_batch_id'])
+    
+    # Calculate coffee age from roast date to brew date
+    if batch and batch.get('roast_date') and session.get('timestamp'):
+        session['coffee_age'] = calculate_coffee_age(batch['roast_date'], session['timestamp'])
+    else:
+        session['coffee_age'] = None
     
     if product:
         # Use consistent product enrichment

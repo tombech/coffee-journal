@@ -577,3 +577,4 @@ class TestShotSessionShotRelationship:
         else:
             # Session deletion prevented due to associated shots
             assert delete_response.status_code in [400, 409]
+    

@@ -6,6 +6,7 @@ including validation, data enrichment, and calculation utilities.
 """
 
 from datetime import datetime
+from dateutil.parser import parse as parse_datetime
 from flask import request
 from ..repositories.factory import get_repository_factory
 
@@ -396,6 +397,69 @@ def validate_score_fields(data, score_fields):
             except (ValueError, TypeError):
                 errors.append(f'{field} must be an integer')
     return errors
+
+
+def calculate_coffee_age(roast_date, brew_date):
+    """
+    Calculate coffee age from roast date to brew date.
+    
+    Args:
+        roast_date: String date in ISO format (e.g., "2023-12-15") or datetime object
+        brew_date: String datetime in ISO format (e.g., "2023-12-22T10:30:00") or datetime object
+        
+    Returns:
+        String in human-readable format: "5 days", "3 weeks", etc.
+        Returns None if either date is missing or invalid.
+    """
+    if not roast_date or not brew_date:
+        return None
+    
+    try:
+        # Parse roast date (date only)
+        if isinstance(roast_date, str):
+            roast_dt = parse_datetime(roast_date)
+            if 'T' not in roast_date:
+                # If it's just a date, treat as start of day
+                roast_dt = roast_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        else:
+            roast_dt = roast_date
+            
+        # Parse brew date (datetime)
+        if isinstance(brew_date, str):
+            brew_dt = parse_datetime(brew_date)
+        else:
+            brew_dt = brew_date
+            
+        # Handle timezone mismatch: make both naive for comparison
+        if roast_dt.tzinfo is None and brew_dt.tzinfo is not None:
+            # Roast date is naive, brew date is aware - convert brew to naive UTC
+            brew_dt = brew_dt.replace(tzinfo=None)
+        elif roast_dt.tzinfo is not None and brew_dt.tzinfo is None:
+            # Roast date is aware, brew date is naive - convert roast to naive
+            roast_dt = roast_dt.replace(tzinfo=None)
+            
+        # Calculate difference in days
+        delta = brew_dt - roast_dt
+        days = delta.days
+        
+        if days < 0:
+            return None  # Invalid: brew date before roast date
+        elif days == 0:
+            return "same day"
+        elif days == 1:
+            return "1 day"
+        elif days < 7:
+            return f"{days} days"
+        else:
+            # Convert to weeks and round to nearest week
+            weeks = round(days / 7)
+            if weeks == 1:
+                return "1 week"
+            else:
+                return f"{weeks} weeks"
+                
+    except (ValueError, TypeError, AttributeError):
+        return None
 
 
 def enrich_with_lookups(item, factory, user_id):

@@ -340,9 +340,29 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
             ))}
           </select>
         </div>
+        
+        <div>
+          <label htmlFor="shot_session_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Shot Session
+          </label>
+          <select
+            id="shot_session_id"
+            name="shot_session_id"
+            value={formData.shot_session_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">No session (standalone)</option>
+            {shotSessions.map((session) => (
+              <option key={session.id} value={session.id}>
+                Session {session.id} - {session.title}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Equipment Section */}
+      {/* Most Relevant Equipment Section */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
@@ -463,26 +483,6 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
             {scales.map((scale) => (
               <option key={scale.id} value={scale.id}>
                 {scale.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        
-        <div>
-          <label htmlFor="shot_session_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-            Shot Session
-          </label>
-          <select
-            id="shot_session_id"
-            name="shot_session_id"
-            value={formData.shot_session_id}
-            onChange={handleInputChange}
-            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
-          >
-            <option value="">No session (standalone)</option>
-            {shotSessions.map((session) => (
-              <option key={session.id} value={session.id}>
-                Session {session.id} - {session.title}
               </option>
             ))}
           </select>

@@ -274,6 +274,9 @@ function ShotTable({
             <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
               {createIconHeader('📅', 'Date', 'timestamp', () => handleSort('timestamp'))}
             </th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+              {createIconHeader('🕒', 'Coffee Age', 'coffee_age', () => handleSort('coffee_age'))}
+            </th>
             {showProduct && (
             <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
               {createIconHeader('🫘', 'Product', 'product_name', () => handleSort('product_name'))}
@@ -355,6 +358,13 @@ function ShotTable({
                 >
                   {new Date(shot.timestamp).toLocaleDateString('nb-NO')}
                 </Link>
+              </td>
+              <td 
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap', textAlign: 'center' }}
+                title={`Coffee age: ${shot.coffee_age || 'Unknown'}`}
+                data-testid="shot-coffee-age"
+              >
+                {shot.coffee_age || '-'}
               </td>
               {showProduct && (
               <td 

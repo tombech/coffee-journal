@@ -34,5 +34,154 @@
     "brewer_id": 4,
     "notes": "Perfecting extraction timing",
     "created_at": "2025-07-29T15:47:26.495482"
+  },
+  {
+    "title": "Test Session",
+    "created_at": "2025-08-13T05:44:15.597604+00:00",
+    "updated_at": "2025-08-13T05:44:15.597604+00:00",
+    "id": 5,
+    "shots": [],
+    "shot_count": 0
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Test notes",
+    "product_id": 1,
+    "title": "Full Test Session",
+    "created_at": "2025-08-13T05:44:15.614878+00:00",
+    "updated_at": "2025-08-13T05:44:15.614878+00:00",
+    "id": 6
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Test with real IDs",
+    "product_id": 1,
+    "title": "Test Session with Data",
+    "created_at": "2025-08-13T05:44:42.561917+00:00",
+    "updated_at": "2025-08-13T05:44:42.561917+00:00",
+    "id": 7
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Testing enrichment",
+    "product_id": 1,
+    "title": "Debug Test Session",
+    "created_at": "2025-08-13T05:53:03.721868+00:00",
+    "updated_at": "2025-08-13T05:53:03.721868+00:00",
+    "id": 8
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Testing batch persistence",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "Session with Batch Test",
+    "created_at": "2025-08-13T05:54:44.609030+00:00",
+    "updated_at": "2025-08-13T05:54:44.609030+00:00",
+    "id": 9
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Updated notes",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "Updated Test Session",
+    "created_at": "2025-08-13T05:59:08.675609+00:00",
+    "updated_at": "2025-08-13T05:59:08.700247+00:00",
+    "id": 10,
+    "shots": [],
+    "shot_count": 0,
+    "product": {
+      "id": 1,
+      "product_name": "Yirgacheffe Single Origin"
+    },
+    "product_batch": {
+      "id": 1,
+      "roast_date": "2024-12-15"
+    },
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus"
+    }
+  },
+  {
+    "title": "Minimal Session",
+    "created_at": "2025-08-13T05:59:08.705469+00:00",
+    "updated_at": "2025-08-13T05:59:08.705469+00:00",
+    "id": 11,
+    "shots": [],
+    "shot_count": 0
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Testing enrichment functionality",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "Enrichment Test Session",
+    "created_at": "2025-08-13T06:05:17.254162+00:00",
+    "updated_at": "2025-08-13T06:05:17.254162+00:00",
+    "id": 12,
+    "shots": [],
+    "shot_count": 0,
+    "product": {
+      "id": 1,
+      "product_name": "Yirgacheffe Single Origin"
+    },
+    "product_batch": {
+      "id": 1,
+      "roast_date": "2024-12-15"
+    },
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus"
+    }
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Debug test",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "Debug Enrichment Test",
+    "created_at": "2025-08-13T06:06:24.525951+00:00",
+    "updated_at": "2025-08-13T06:06:24.525951+00:00",
+    "id": 13,
+    "shots": [],
+    "shot_count": 0,
+    "product": {
+      "id": 1,
+      "product_name": "Yirgacheffe Single Origin"
+    },
+    "product_batch": {
+      "id": 1,
+      "roast_date": "2024-12-15"
+    },
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus"
+    }
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Updated notes",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "Updated Final Session",
+    "created_at": "2025-08-13T06:17:17.625629+00:00",
+    "updated_at": "2025-08-13T06:17:17.655740+00:00",
+    "id": 14,
+    "shots": [],
+    "shot_count": 0,
+    "product": {
+      "id": 1,
+      "product_name": "Yirgacheffe Single Origin"
+    },
+    "product_batch": {
+      "id": 1,
+      "roast_date": "2024-12-15"
+    },
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus"
+    }
   }
 ]

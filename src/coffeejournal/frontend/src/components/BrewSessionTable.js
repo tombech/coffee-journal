@@ -459,6 +459,9 @@ function BrewSessionTable({
                 {createIconHeader('📅', 'Date', 'timestamp', () => handleSort('timestamp'))}
               </th>
               <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                {createIconHeader('🕒', 'Coffee Age', 'coffee_age', () => handleSort('coffee_age'))}
+              </th>
+              <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
                 {createIconHeader('☕', 'Method', 'brew_method', () => handleSort('brew_method'))}
               </th>
               <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
@@ -584,6 +587,13 @@ function BrewSessionTable({
                   >
                     {formatDateNorwegian(session.timestamp)}
                   </Link>
+                </td>
+                <td 
+                  style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap', textAlign: 'center' }}
+                  title={`Coffee age: ${session.coffee_age || 'Unknown'}`}
+                  data-testid="session-coffee-age"
+                >
+                  {session.coffee_age || '-'}
                 </td>
                 <td 
                   style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }} 

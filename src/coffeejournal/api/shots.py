@@ -7,7 +7,7 @@ from ..repositories.factory import get_repository_factory
 from ..api.utils import (
     get_user_id_from_request, validate_user_id,
     check_required_fields, validate_score_fields,
-    enrich_with_lookups
+    enrich_product_with_lookups, calculate_coffee_age
 )
 from datetime import datetime, timezone
 
@@ -24,7 +24,7 @@ def enrich_shot(shot, factory, user_id):
         product = factory.get_product_repository(user_id).find_by_id(shot['product_id'])
         if product:
             # Enrich product with its lookups
-            product = enrich_with_lookups(product, factory, user_id)
+            product = enrich_product_with_lookups(product, factory, user_id)
             shot['product'] = product
             shot['product_name'] = product.get('product_name', 'Unknown')
     
@@ -33,6 +33,14 @@ def enrich_shot(shot, factory, user_id):
         batch = factory.get_batch_repository(user_id).find_by_id(shot['product_batch_id'])
         if batch:
             shot['batch'] = batch
+            
+            # Calculate coffee age from roast date to shot timestamp
+            if batch.get('roast_date') and shot.get('timestamp'):
+                shot['coffee_age'] = calculate_coffee_age(batch['roast_date'], shot['timestamp'])
+            else:
+                shot['coffee_age'] = None
+    else:
+        shot['coffee_age'] = None
     
     # Enrich brewer
     if shot.get('brewer_id'):
