@@ -180,31 +180,32 @@ function ShotSessionList() {
         <button
           onClick={() => setShowNewForm(!showNewForm)}
           style={{
-            padding: '10px 20px',
-            backgroundColor: showNewForm ? '#dc3545' : '#007bff',
-            color: 'white',
+            padding: '6px 8px',
             border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
+            background: 'none',
+            cursor: 'pointer',
+            fontSize: '16px'
           }}
           data-testid="new-shot-session-btn"
+          title={showNewForm ? 'Cancel new shot session' : 'Add new shot session'}
           aria-label={showNewForm ? 'Cancel new shot session' : 'Add new shot session'}
         >
-          {showNewForm ? 'Cancel' : '+ New Shot Session'}
+          {showNewForm ? ICONS.CANCEL : ICONS.CREATE}
         </button>
 
         <button
           onClick={() => fetchShotSessions(currentPage)}
           style={{
-            padding: '10px 15px',
-            backgroundColor: '#28a745',
-            color: 'white',
+            padding: '6px 8px',
             border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
+            background: 'none',
+            cursor: 'pointer',
+            fontSize: '16px'
           }}
+          title="Refresh shot sessions"
+          aria-label="Refresh shot sessions"
         >
-          Refresh
+          {ICONS.REFRESH}
         </button>
       </div>
 

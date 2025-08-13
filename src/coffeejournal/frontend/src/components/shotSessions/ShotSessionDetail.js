@@ -119,21 +119,23 @@ function ShotSessionDetail() {
         <span style={{ color: '#6c757d', fontSize: '14px', marginRight: 'auto', marginLeft: '10px' }}>
           Created on {formatDate(shotSession.created_at)}
         </span>
-        <button 
-          onClick={() => navigate(`/shot-sessions/${id}/edit`)}
+        <Link 
+          to={`/shot-sessions/${id}/edit`}
           style={{ 
             padding: '6px 8px', 
             border: 'none', 
             background: 'none', 
             cursor: 'pointer', 
             fontSize: '16px',
-            marginRight: '5px'
+            marginRight: '5px',
+            color: 'inherit',
+            textDecoration: 'none'
           }}
           title="Edit Shot Session"
           aria-label="Edit Shot Session"
         >
           {ICONS.EDIT}
-        </button>
+        </Link>
         <button 
           onClick={handleDuplicateSession}
           style={{ 

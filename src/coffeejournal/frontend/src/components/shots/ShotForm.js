@@ -254,509 +254,610 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
   if (initialLoading) return <p className="loading-message">Loading shot form...</p>;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        
-        {error && (
-          <div style={{ 
-            color: '#dc3545', 
-            backgroundColor: '#f8d7da', 
-            border: '1px solid #f5c6cb', 
-            borderRadius: '4px', 
-            padding: '10px',
-            marginBottom: '15px' 
-          }}>
-            {error}
-          </div>
-        )}
-
-        {/* Basic Information */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="product_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              {ICONS.COFFEE} Product *
-            </label>
-            <select
-              id="product_id"
-              name="product_id"
-              value={formData.product_id}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a product</option>
-              {products.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.product_name} ({product.roaster?.name || 'Unknown roaster'})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="product_batch_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              📦 Batch *
-            </label>
-            <select
-              id="product_batch_id"
-              name="product_batch_id"
-              value={formData.product_batch_id}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a batch</option>
-              {batches.map((batch) => (
-                <option key={batch.id} value={batch.id}>
-                  Batch {batch.id} - {new Date(batch.roast_date).toLocaleDateString()}
-                </option>
-              ))}
-            </select>
-          </div>
+    <form 
+      onSubmit={handleSubmit} 
+      style={{ maxWidth: '1200px' }} 
+      data-testid="shot-form"
+    >
+      <h4>{isEditMode ? 'Edit Shot' : 'Add New Shot'}</h4>
+      
+      {error && (
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#f8d7da',
+          border: '1px solid #f5c6cb',
+          borderRadius: '4px',
+          color: '#721c24',
+          marginBottom: '16px'
+        }}>
+          {error}
         </div>
+      )}
 
-        {/* Equipment */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="brewer_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ☕ Brewer *
-            </label>
-            <select
-              id="brewer_id"
-              name="brewer_id"
-              value={formData.brewer_id}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a brewer</option>
-              {brewers.map((brewer) => (
-                <option key={brewer.id} value={brewer.id}>
-                  {brewer.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="grinder_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ⚙️ Grinder
-            </label>
-            <select
-              id="grinder_id"
-              name="grinder_id"
-              value={formData.grinder_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a grinder</option>
-              {grinders.map((grinder) => (
-                <option key={grinder.id} value={grinder.id}>
-                  {grinder.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="grinder_setting" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🎛️ Grinder Setting
-            </label>
-            <input
-              type="text"
-              id="grinder_setting"
-              name="grinder_setting"
-              value={formData.grinder_setting}
-              onChange={handleInputChange}
-              placeholder="e.g., 15, fine, medium"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-        </div>
-
-        {/* Espresso-specific Equipment */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="portafilter_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🔧 Portafilter
-            </label>
-            <select
-              id="portafilter_id"
-              name="portafilter_id"
-              value={formData.portafilter_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a portafilter</option>
-              {portafilters.map((portafilter) => (
-                <option key={portafilter.id} value={portafilter.id}>
-                  {portafilter.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="basket_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🗂️ Basket
-            </label>
-            <select
-              id="basket_id"
-              name="basket_id"
-              value={formData.basket_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a basket</option>
-              {baskets.map((basket) => (
-                <option key={basket.id} value={basket.id}>
-                  {basket.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="scale_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ⚖️ Scale
-            </label>
-            <select
-              id="scale_id"
-              name="scale_id"
-              value={formData.scale_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a scale</option>
-              {scales.map((scale) => (
-                <option key={scale.id} value={scale.id}>
-                  {scale.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Shot Parameters */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="dose_grams" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ⚖️ Dose (g) *
-            </label>
-            <input
-              type="number"
-              id="dose_grams"
-              name="dose_grams"
-              value={formData.dose_grams}
-              onChange={handleInputChange}
-              step="0.1"
-              min="0"
-              required
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="yield_grams" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ☕ Yield (g) *
-            </label>
-            <input
-              type="number"
-              id="yield_grams"
-              name="yield_grams"
-              value={formData.yield_grams}
-              onChange={handleInputChange}
-              step="0.1"
-              min="0"
-              required
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="extraction_time_seconds" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ⏱️ Extraction Time (s)
-            </label>
-            <input
-              type="number"
-              id="extraction_time_seconds"
-              name="extraction_time_seconds"
-              value={formData.extraction_time_seconds}
-              onChange={handleInputChange}
-              min="0"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="water_temperature_c" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🌡️ Water Temperature (°C)
-            </label>
-            <input
-              type="number"
-              id="water_temperature_c"
-              name="water_temperature_c"
-              value={formData.water_temperature_c}
-              onChange={handleInputChange}
-              min="0"
-              max="100"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-        </div>
-
-        {/* Advanced Parameters */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="preinfusion_seconds" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              💧 Preinfusion (s)
-            </label>
-            <input
-              type="number"
-              id="preinfusion_seconds"
-              name="preinfusion_seconds"
-              value={formData.preinfusion_seconds}
-              onChange={handleInputChange}
-              min="0"
-              step="0.1"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="pressure_bars" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              📊 Pressure (bars)
-            </label>
-            <input
-              type="number"
-              id="pressure_bars"
-              name="pressure_bars"
-              value={formData.pressure_bars}
-              onChange={handleInputChange}
-              min="0"
-              step="0.1"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-        </div>
-
-        {/* Tasting Notes */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '10px' }}>
-          {[
-            { field: 'sweetness', label: '🍯 Sweetness', icon: '🍯' },
-            { field: 'acidity', label: '🍋 Acidity', icon: '🍋' },
-            { field: 'body', label: '🥛 Body', icon: '🥛' },
-            { field: 'aroma', label: '👃 Aroma', icon: '👃' },
-            { field: 'crema', label: '☁️ Crema', icon: '☁️' }
-          ].map(({ field, label, icon }) => (
-            <div key={field}>
-              <label htmlFor={field} style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '12px' }}>
-                {label}
-              </label>
-              <input
-                type="number"
-                id={field}
-                name={field}
-                value={formData[field]}
-                onChange={handleInputChange}
-                min="0"
-                max="10"
-                step="0.1"
-                style={{ width: '100%', padding: '6px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '12px' }}
-              />
-            </div>
-          ))}
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="bitterness" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🥀 Bitterness (0-10)
-            </label>
-            <input
-              type="number"
-              id="bitterness"
-              name="bitterness"
-              value={formData.bitterness}
-              onChange={handleInputChange}
-              min="0"
-              max="10"
-              step="0.1"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="flavor_profile_match" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🎯 Flavor Profile Match (0-10)
-            </label>
-            <input
-              type="number"
-              id="flavor_profile_match"
-              name="flavor_profile_match"
-              value={formData.flavor_profile_match}
-              onChange={handleInputChange}
-              min="0"
-              max="10"
-              step="0.1"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-        </div>
-
-        {/* Extraction Status and Overall Score */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="extraction_status" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              🎯 Extraction Status
-            </label>
-            <select
-              id="extraction_status"
-              name="extraction_status"
-              value={formData.extraction_status}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select status</option>
-              <option value="perfect">Perfect</option>
-              <option value="channeling">Channeling</option>
-              <option value="over-extracted">Over-extracted</option>
-              <option value="under-extracted">Under-extracted</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="overall_score" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              ⭐ Overall Score (0-10)
-            </label>
-            <input
-              type="number"
-              id="overall_score"
-              name="overall_score"
-              value={formData.overall_score}
-              onChange={handleInputChange}
-              min="0"
-              max="10"
-              step="0.1"
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
-          </div>
-        </div>
-
-        {/* Session and Recipe */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <div>
-            <label htmlFor="shot_session_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              📋 Shot Session
-            </label>
-            <select
-              id="shot_session_id"
-              name="shot_session_id"
-              value={formData.shot_session_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">No session (standalone shot)</option>
-              {shotSessions.map((session) => (
-                <option key={session.id} value={session.id}>
-                  Session {session.id} - {session.title || 'Untitled'}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="recipe_id" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              📖 Recipe
-            </label>
-            <select
-              id="recipe_id"
-              name="recipe_id"
-              value={formData.recipe_id}
-              onChange={handleInputChange}
-              style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-            >
-              <option value="">Select a recipe</option>
-              {recipes.map((recipe) => (
-                <option key={recipe.id} value={recipe.id}>
-                  {recipe.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Timestamp */}
+      {/* Basic Info Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
         <div>
-          <label htmlFor="timestamp" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            🕒 Shot Time
+          <label style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Timestamp
           </label>
           <DateTimeInput
-            id="timestamp"
             name="timestamp"
             value={formData.timestamp}
             onChange={(value) => setFormData(prev => ({ ...prev, timestamp: value }))}
+            required
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
           />
         </div>
-
-        {/* Notes */}
+        
         <div>
-          <label htmlFor="notes" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            📝 Notes
+          <label htmlFor="product_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Product
           </label>
-          <textarea
-            id="notes"
-            name="notes"
-            value={formData.notes}
+          <select
+            id="product_id"
+            name="product_id"
+            value={formData.product_id}
             onChange={handleInputChange}
-            rows="4"
-            placeholder="Additional notes about this shot..."
-            style={{ 
-              width: '100%', 
-              padding: '8px', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px', 
-              resize: 'vertical' 
-            }}
+            required
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select a product</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.product_name} ({
+                  typeof product.roaster === 'object' 
+                    ? product.roaster?.name || 'Unknown'
+                    : product.roaster || 'Unknown'
+                })
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="product_batch_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Batch
+          </label>
+          <select
+            id="product_batch_id"
+            name="product_batch_id"
+            value={formData.product_batch_id}
+            onChange={handleInputChange}
+            required
+            disabled={!formData.product_id}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select a batch</option>
+            {batches.map((batch) => (
+              <option key={batch.id} value={batch.id}>
+                Batch #{batch.id} - {new Date(batch.roast_date).toLocaleDateString()}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Equipment Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '8px',
+        marginBottom: '16px',
+        padding: '12px',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '4px'
+      }}>
+        <div>
+          <label htmlFor="brewer_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Brewer *
+          </label>
+          <select
+            id="brewer_id"
+            name="brewer_id"
+            value={formData.brewer_id}
+            onChange={handleInputChange}
+            required
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select brewer</option>
+            {brewers.map((brewer) => (
+              <option key={brewer.id} value={brewer.id}>
+                {brewer.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="grinder_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Grinder
+          </label>
+          <select
+            id="grinder_id"
+            name="grinder_id"
+            value={formData.grinder_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select grinder</option>
+            {grinders.map((grinder) => (
+              <option key={grinder.id} value={grinder.id}>
+                {grinder.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="grinder_setting" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Grind Size
+          </label>
+          <input 
+            type="text" 
+            id="grinder_setting"
+            name="grinder_setting" 
+            value={formData.grinder_setting} 
+            onChange={handleInputChange}
+            placeholder="e.g., 15, fine"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
           />
         </div>
-
-        {/* Form Actions */}
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-          {onCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#6c757d',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              {ICONS.CANCEL} Cancel
-            </button>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            data-testid="submit-shot"
-            style={{
-              padding: '10px 20px',
-              backgroundColor: loading ? '#6c757d' : '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
+        
+        <div>
+          <label htmlFor="portafilter_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Portafilter
+          </label>
+          <select
+            id="portafilter_id"
+            name="portafilter_id"
+            value={formData.portafilter_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
           >
-            {loading ? 'Saving...' : (isEditMode ? `${ICONS.SAVE} Update Shot` : `${ICONS.SAVE} Create Shot`)}
-          </button>
+            <option value="">Select portafilter</option>
+            {portafilters.map((portafilter) => (
+              <option key={portafilter.id} value={portafilter.id}>
+                {portafilter.name}
+              </option>
+            ))}
+          </select>
         </div>
-      </form>
-    </div>
+        
+        <div>
+          <label htmlFor="basket_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Basket
+          </label>
+          <select
+            id="basket_id"
+            name="basket_id"
+            value={formData.basket_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select basket</option>
+            {baskets.map((basket) => (
+              <option key={basket.id} value={basket.id}>
+                {basket.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="scale_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Scale
+          </label>
+          <select
+            id="scale_id"
+            name="scale_id"
+            value={formData.scale_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select scale</option>
+            {scales.map((scale) => (
+              <option key={scale.id} value={scale.id}>
+                {scale.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="shot_session_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Shot Session
+          </label>
+          <select
+            id="shot_session_id"
+            name="shot_session_id"
+            value={formData.shot_session_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">No session (standalone)</option>
+            {shotSessions.map((session) => (
+              <option key={session.id} value={session.id}>
+                Session {session.id} - {session.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="recipe_id" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Recipe
+          </label>
+          <select
+            id="recipe_id"
+            name="recipe_id"
+            value={formData.recipe_id}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select recipe</option>
+            {recipes.map((recipe) => (
+              <option key={recipe.id} value={recipe.id}>
+                {recipe.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Shot Parameters Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+        gap: '8px',
+        marginBottom: '16px',
+        padding: '12px',
+        backgroundColor: '#e8f4f8',
+        borderRadius: '4px'
+      }}>
+        <div>
+          <label htmlFor="dose_grams" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Dose Grams *
+          </label>
+          <input 
+            type="number" 
+            id="dose_grams"
+            name="dose_grams" 
+            value={formData.dose_grams} 
+            onChange={handleInputChange} 
+            step="0.1" 
+            min="0"
+            required
+            placeholder="18"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="yield_grams" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Yield Grams *
+          </label>
+          <input 
+            type="number" 
+            id="yield_grams"
+            name="yield_grams" 
+            value={formData.yield_grams} 
+            onChange={handleInputChange} 
+            step="0.1" 
+            min="0"
+            required
+            placeholder="36"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="extraction_time_seconds" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Extraction Time
+          </label>
+          <input 
+            type="number" 
+            id="extraction_time_seconds"
+            name="extraction_time_seconds" 
+            value={formData.extraction_time_seconds} 
+            onChange={handleInputChange} 
+            min="0"
+            placeholder="25"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="water_temperature_c" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Temperature
+          </label>
+          <input 
+            type="number" 
+            id="water_temperature_c"
+            name="water_temperature_c" 
+            value={formData.water_temperature_c} 
+            onChange={handleInputChange} 
+            step="0.1"
+            min="0"
+            max="100"
+            placeholder="93"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="preinfusion_seconds" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Preinfusion
+          </label>
+          <input 
+            type="number" 
+            id="preinfusion_seconds"
+            name="preinfusion_seconds" 
+            value={formData.preinfusion_seconds} 
+            onChange={handleInputChange} 
+            min="0"
+            step="0.1"
+            placeholder="3"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="pressure_bars" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Pressure Bars
+          </label>
+          <input 
+            type="number" 
+            id="pressure_bars"
+            name="pressure_bars" 
+            value={formData.pressure_bars} 
+            onChange={handleInputChange} 
+            min="0"
+            step="0.1"
+            placeholder="9"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="extraction_status" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Status
+          </label>
+          <select
+            id="extraction_status"
+            name="extraction_status"
+            value={formData.extraction_status}
+            onChange={handleInputChange}
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          >
+            <option value="">Select status</option>
+            <option value="perfect">Perfect</option>
+            <option value="channeling">Channeling</option>
+            <option value="over-extracted">Over-extracted</option>
+            <option value="under-extracted">Under-extracted</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Tasting Notes Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+        gap: '8px',
+        marginBottom: '16px',
+        padding: '12px',
+        backgroundColor: '#fff3cd',
+        borderRadius: '4px'
+      }}>
+        <div>
+          <label htmlFor="sweetness" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Sweetness
+          </label>
+          <input 
+            type="number" 
+            id="sweetness"
+            name="sweetness" 
+            value={formData.sweetness} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="acidity" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Acidity
+          </label>
+          <input 
+            type="number" 
+            id="acidity"
+            name="acidity" 
+            value={formData.acidity} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="bitterness" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Bitterness
+          </label>
+          <input 
+            type="number" 
+            id="bitterness"
+            name="bitterness" 
+            value={formData.bitterness} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="body" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Body
+          </label>
+          <input 
+            type="number" 
+            id="body"
+            name="body" 
+            value={formData.body} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="aroma" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Aroma
+          </label>
+          <input 
+            type="number" 
+            id="aroma"
+            name="aroma" 
+            value={formData.aroma} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="crema" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Crema
+          </label>
+          <input 
+            type="number" 
+            id="crema"
+            name="crema" 
+            value={formData.crema} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="flavor_profile_match" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Profile Match
+          </label>
+          <input 
+            type="number" 
+            id="flavor_profile_match"
+            name="flavor_profile_match" 
+            value={formData.flavor_profile_match} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="overall_score" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+            Overall Score
+          </label>
+          <input 
+            type="number" 
+            id="overall_score"
+            name="overall_score" 
+            value={formData.overall_score} 
+            onChange={handleInputChange} 
+            min="0" 
+            max="10" 
+            step="0.5"
+            placeholder="0-10"
+            style={{ width: '100%', fontSize: '14px', padding: '6px', height: '32px', boxSizing: 'border-box' }}
+          />
+        </div>
+      </div>
+
+      {/* Notes Section */}
+      <div style={{ marginBottom: '16px' }}>
+        <label htmlFor="notes" style={{ fontSize: '12px', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+          Notes
+        </label>
+        <textarea 
+          id="notes"
+          name="notes" 
+          value={formData.notes} 
+          onChange={handleInputChange} 
+          rows="3"
+          style={{ width: '100%', fontSize: '14px', padding: '8px', resize: 'vertical' }}
+          placeholder="Shot observations, taste notes, adjustments for next time..."
+        />
+      </div>
+
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <button 
+          type="button" 
+          disabled={loading}
+          data-testid="submit-shot"
+          aria-label={loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
+          style={{ 
+            padding: '10px 15px', 
+            border: 'none', 
+            background: 'none', 
+            cursor: loading ? 'default' : 'pointer', 
+            fontSize: '20px',
+            opacity: loading ? 0.5 : 1
+          }}
+          title={loading ? 'Saving...' : (isEditMode ? 'Update Shot' : 'Create Shot')}
+          onClick={async (e) => {
+            e.preventDefault();
+            await handleSubmit(e);
+          }}
+        >
+          {loading ? ICONS.LOADING : ICONS.SAVE}
+        </button>
+        
+        {(onCancel || isEditMode) && (
+          <button 
+            type="button" 
+            onClick={onCancel || (() => navigate(`/shots/${id}`))} 
+            disabled={loading}
+            style={{ 
+              padding: '10px 15px', 
+              border: 'none', 
+              background: 'none', 
+              cursor: loading ? 'default' : 'pointer', 
+              fontSize: '20px',
+              opacity: loading ? 0.5 : 1
+            }}
+            title="Cancel"
+            aria-label="Cancel"
+          >
+            {ICONS.CANCEL}
+          </button>
+        )}
+      </div>
+    </form>
   );
 }
 

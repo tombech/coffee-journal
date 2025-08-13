@@ -87,7 +87,7 @@ test.describe('Shot Management', () => {
     }
     
     // Wait specifically for the dose field which should be present in a loaded form
-    await expect(page.getByLabel(/dose.*\(g\)/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/dose.*grams/i)).toBeVisible({ timeout: 5000 });
     
     // Debug: Log what we're looking for and what's available
     console.log('Looking for product:', scenario.product.product_name);
@@ -109,8 +109,8 @@ test.describe('Shot Management', () => {
     await page.getByLabel(/brewer/i).selectOption({ label: scenario.brewer.name });
     
     // Fill required espresso-specific fields  
-    await page.getByLabel(/dose.*\(g\)/i).fill('18.5');
-    await page.getByLabel(/yield.*\(g\)/i).fill('37.0');
+    await page.getByLabel(/dose.*grams/i).fill('18.5');
+    await page.getByLabel(/yield.*grams/i).fill('37.0');
     await page.getByLabel(/overall.*score/i).fill('8');
     
     // Add notes to verify shot was created
@@ -150,7 +150,7 @@ test.describe('Shot Management', () => {
     }
     
     // Wait specifically for the dose field which should be present in a loaded form
-    await expect(page.getByLabel(/dose.*\(g\)/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/dose.*grams/i)).toBeVisible({ timeout: 5000 });
     
     // Update fields
     const updatedNotes = `Updated shot notes ${testData.testId} - much better extraction!`;
@@ -285,7 +285,7 @@ test.describe('Shot Management', () => {
     }
     
     // Wait specifically for the dose field which should be present in a loaded form
-    await expect(page.getByLabel(/dose.*\(g\)/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/dose.*grams/i)).toBeVisible({ timeout: 5000 });
     
     // Wait for the product dropdown to be populated by checking that it has more than just the placeholder option
     await expect(async () => {
@@ -303,8 +303,8 @@ test.describe('Shot Management', () => {
     await page.getByLabel(/session/i).selectOption({ label: `Session ${shotSession.id} - ${shotSession.title}` });
     
     // Fill other required fields
-    await page.getByLabel(/dose.*\(g\)/i).fill('18.0');
-    await page.getByLabel(/yield.*\(g\)/i).fill('36.0');
+    await page.getByLabel(/dose.*grams/i).fill('18.0');
+    await page.getByLabel(/yield.*grams/i).fill('36.0');
     await page.getByLabel(/overall.*score/i).fill('8');
     
     // Submit form
@@ -439,7 +439,7 @@ test.describe('Shot Management', () => {
     }
     
     // Wait specifically for the dose field which should be present in a loaded form
-    await expect(page.getByLabel(/dose.*\(g\)/i)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/dose.*grams/i)).toBeVisible({ timeout: 5000 });
     
     // Try to submit empty form (don't fill any required fields)
     await page.getByTestId('submit-shot').click();
@@ -449,6 +449,6 @@ test.describe('Shot Management', () => {
     await page.waitForTimeout(1000);
     
     // Verify we're still on the form (not redirected) by checking the form is still visible
-    await expect(page.getByLabel(/dose.*\(g\)/i)).toBeVisible();
+    await expect(page.getByLabel(/dose.*grams/i)).toBeVisible();
   });
 });
