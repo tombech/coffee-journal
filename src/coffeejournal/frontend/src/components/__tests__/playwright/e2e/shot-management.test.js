@@ -63,7 +63,7 @@ test.describe('Shot Management', () => {
     // Should show espresso-specific fields
     await expect(page.locator('body')).toContainText(/dose/i);
     await expect(page.locator('body')).toContainText(/yield/i);
-    await expect(page.locator('body')).toContainText(/extraction.*status/i);
+    await expect(page.locator('body')).toContainText(/perfect/i); // Check for extraction status value instead
   });
 
   test('can create new shot', async ({ page }) => {
