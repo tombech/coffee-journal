@@ -399,6 +399,7 @@ class TestDataManager {
       dose_yield_ratio: 2.0,
       extraction_time_seconds: 25,
       water_temperature_c: 93,
+      grinder_setting: 'fine',
       extraction_status: 'perfect',
       sweetness: 8,
       acidity: 7,

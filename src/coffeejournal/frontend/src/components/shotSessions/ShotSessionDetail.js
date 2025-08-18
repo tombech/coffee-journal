@@ -295,6 +295,9 @@ function ShotSessionDetail() {
                     Ratio
                   </th>
                   <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
+                    Flow Rate
+                  </th>
+                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
                     Extraction Time
                   </th>
                   <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
@@ -304,7 +307,7 @@ function ShotSessionDetail() {
                     Score
                   </th>
                   <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Time
+                    Time Gap
                   </th>
                 </tr>
               </thead>
@@ -320,7 +323,7 @@ function ShotSessionDetail() {
                           fontWeight: 'bold'
                         }}
                       >
-                        Shot #{shot.id}
+                        #{shot.session_shot_number || shot.id}
                       </Link>
                     </td>
                     <td style={{ padding: '12px', fontFamily: 'monospace' }}>
@@ -328,6 +331,9 @@ function ShotSessionDetail() {
                     </td>
                     <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
                       1:{shot.dose_yield_ratio || 'N/A'}
+                    </td>
+                    <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
+                      {shot.flow_rate ? `${shot.flow_rate}g/s` : 'N/A'}
                     </td>
                     <td style={{ padding: '12px' }}>
                       {shot.extraction_time_seconds ? `${shot.extraction_time_seconds}s` : 'N/A'}
@@ -353,7 +359,7 @@ function ShotSessionDetail() {
                       ) : 'Not rated'}
                     </td>
                     <td style={{ padding: '12px', fontSize: '12px', color: '#666' }}>
-                      {formatDate(shot.timestamp)}
+                      {shot.time_since_previous || '-'}
                     </td>
                   </tr>
                 ))}

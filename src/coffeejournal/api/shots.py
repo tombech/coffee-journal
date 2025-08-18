@@ -29,6 +29,20 @@ def calculate_dose_yield_ratio(dose_grams, yield_grams):
     return None
 
 
+def calculate_flow_rate(yield_grams, extraction_time_seconds):
+    """Calculate flow rate for espresso shots (grams/second)."""
+    if yield_grams and extraction_time_seconds:
+        try:
+            yield_float = float(yield_grams)
+            time_float = float(extraction_time_seconds)
+            if time_float > 0:
+                flow_rate = yield_float / time_float
+                return round(flow_rate, 1)
+        except (ValueError, TypeError, ZeroDivisionError):
+            return None
+    return None
+
+
 def enrich_shot(shot, factory, user_id):
     """Enrich a shot with lookup data."""
     if not shot:
@@ -115,6 +129,9 @@ def enrich_shot(shot, factory, user_id):
     
     # Calculate dose-yield ratio
     shot['dose_yield_ratio'] = calculate_dose_yield_ratio(shot.get('dose_grams'), shot.get('yield_grams'))
+    
+    # Calculate flow rate (grams/second)
+    shot['flow_rate'] = calculate_flow_rate(shot.get('yield_grams'), shot.get('extraction_time_seconds'))
     
     # Calculate overall score
     shot['calculated_score'] = calculate_total_score(shot)

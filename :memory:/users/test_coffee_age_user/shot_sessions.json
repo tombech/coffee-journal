@@ -1348,5 +1348,275 @@
     "created_at": "2025-08-18T16:58:03.297295+00:00",
     "updated_at": "2025-08-18T16:58:03.297295+00:00",
     "id": 150
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 151,
+    "product_batch_id": 304,
+    "brewer_id": 151,
+    "created_at": "2025-08-18T18:25:52.156161+00:00",
+    "updated_at": "2025-08-18T18:25:52.156161+00:00",
+    "id": 151
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 152,
+    "product_batch_id": 305,
+    "brewer_id": 152,
+    "created_at": "2025-08-18T18:25:52.271707+00:00",
+    "updated_at": "2025-08-18T18:25:52.271707+00:00",
+    "id": 152
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 153,
+    "product_batch_id": 306,
+    "brewer_id": 153,
+    "created_at": "2025-08-18T18:25:52.422090+00:00",
+    "updated_at": "2025-08-18T18:25:52.422090+00:00",
+    "id": 153
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 154,
+    "product_batch_id": 307,
+    "brewer_id": 154,
+    "created_at": "2025-08-18T18:25:52.537356+00:00",
+    "updated_at": "2025-08-18T18:25:52.537356+00:00",
+    "id": 154
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 155,
+    "product_batch_id": 308,
+    "brewer_id": 155,
+    "created_at": "2025-08-18T18:25:52.667834+00:00",
+    "updated_at": "2025-08-18T18:25:52.667834+00:00",
+    "id": 155
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 156,
+    "product_batch_id": 309,
+    "brewer_id": 156,
+    "created_at": "2025-08-18T18:25:52.794834+00:00",
+    "updated_at": "2025-08-18T18:25:52.794834+00:00",
+    "id": 156
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 157,
+    "product_batch_id": 316,
+    "brewer_id": 157,
+    "created_at": "2025-08-18T18:29:32.888468+00:00",
+    "updated_at": "2025-08-18T18:29:32.888468+00:00",
+    "id": 157
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 158,
+    "product_batch_id": 317,
+    "brewer_id": 158,
+    "created_at": "2025-08-18T18:29:33.003595+00:00",
+    "updated_at": "2025-08-18T18:29:33.003595+00:00",
+    "id": 158
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 159,
+    "product_batch_id": 318,
+    "brewer_id": 159,
+    "created_at": "2025-08-18T18:29:33.124295+00:00",
+    "updated_at": "2025-08-18T18:29:33.124295+00:00",
+    "id": 159
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 160,
+    "product_batch_id": 319,
+    "brewer_id": 160,
+    "created_at": "2025-08-18T18:29:33.224940+00:00",
+    "updated_at": "2025-08-18T18:29:33.224940+00:00",
+    "id": 160
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 161,
+    "product_batch_id": 320,
+    "brewer_id": 161,
+    "created_at": "2025-08-18T18:29:33.345671+00:00",
+    "updated_at": "2025-08-18T18:29:33.345671+00:00",
+    "id": 161
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 162,
+    "product_batch_id": 321,
+    "brewer_id": 162,
+    "created_at": "2025-08-18T18:29:33.447097+00:00",
+    "updated_at": "2025-08-18T18:29:33.447097+00:00",
+    "id": 162
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 163,
+    "product_batch_id": 328,
+    "brewer_id": 163,
+    "created_at": "2025-08-18T18:37:35.207264+00:00",
+    "updated_at": "2025-08-18T18:37:35.207264+00:00",
+    "id": 163
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 164,
+    "product_batch_id": 329,
+    "brewer_id": 164,
+    "created_at": "2025-08-18T18:37:35.319750+00:00",
+    "updated_at": "2025-08-18T18:37:35.319750+00:00",
+    "id": 164
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 165,
+    "product_batch_id": 330,
+    "brewer_id": 165,
+    "created_at": "2025-08-18T18:37:35.438720+00:00",
+    "updated_at": "2025-08-18T18:37:35.438720+00:00",
+    "id": 165
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 166,
+    "product_batch_id": 331,
+    "brewer_id": 166,
+    "created_at": "2025-08-18T18:37:35.536174+00:00",
+    "updated_at": "2025-08-18T18:37:35.536174+00:00",
+    "id": 166
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 167,
+    "product_batch_id": 332,
+    "brewer_id": 167,
+    "created_at": "2025-08-18T18:37:35.652445+00:00",
+    "updated_at": "2025-08-18T18:37:35.652445+00:00",
+    "id": 167
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 168,
+    "product_batch_id": 333,
+    "brewer_id": 168,
+    "created_at": "2025-08-18T18:37:35.750597+00:00",
+    "updated_at": "2025-08-18T18:37:35.750597+00:00",
+    "id": 168
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 169,
+    "product_batch_id": 340,
+    "brewer_id": 169,
+    "created_at": "2025-08-18T18:39:35.193427+00:00",
+    "updated_at": "2025-08-18T18:39:35.193427+00:00",
+    "id": 169
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 170,
+    "product_batch_id": 341,
+    "brewer_id": 170,
+    "created_at": "2025-08-18T18:39:35.306719+00:00",
+    "updated_at": "2025-08-18T18:39:35.306719+00:00",
+    "id": 170
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 171,
+    "product_batch_id": 342,
+    "brewer_id": 171,
+    "created_at": "2025-08-18T18:39:35.450504+00:00",
+    "updated_at": "2025-08-18T18:39:35.450504+00:00",
+    "id": 171
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 172,
+    "product_batch_id": 343,
+    "brewer_id": 172,
+    "created_at": "2025-08-18T18:39:35.548492+00:00",
+    "updated_at": "2025-08-18T18:39:35.548492+00:00",
+    "id": 172
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 173,
+    "product_batch_id": 344,
+    "brewer_id": 173,
+    "created_at": "2025-08-18T18:39:35.676296+00:00",
+    "updated_at": "2025-08-18T18:39:35.676296+00:00",
+    "id": 173
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 174,
+    "product_batch_id": 345,
+    "brewer_id": 174,
+    "created_at": "2025-08-18T18:39:35.774761+00:00",
+    "updated_at": "2025-08-18T18:39:35.774761+00:00",
+    "id": 174
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 175,
+    "product_batch_id": 352,
+    "brewer_id": 175,
+    "created_at": "2025-08-18T18:54:08.356072+00:00",
+    "updated_at": "2025-08-18T18:54:08.356072+00:00",
+    "id": 175
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 176,
+    "product_batch_id": 353,
+    "brewer_id": 176,
+    "created_at": "2025-08-18T18:54:08.478719+00:00",
+    "updated_at": "2025-08-18T18:54:08.478719+00:00",
+    "id": 176
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 177,
+    "product_batch_id": 354,
+    "brewer_id": 177,
+    "created_at": "2025-08-18T18:54:08.607555+00:00",
+    "updated_at": "2025-08-18T18:54:08.607555+00:00",
+    "id": 177
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 178,
+    "product_batch_id": 355,
+    "brewer_id": 178,
+    "created_at": "2025-08-18T18:54:08.706658+00:00",
+    "updated_at": "2025-08-18T18:54:08.706658+00:00",
+    "id": 178
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 179,
+    "product_batch_id": 356,
+    "brewer_id": 179,
+    "created_at": "2025-08-18T18:54:08.826171+00:00",
+    "updated_at": "2025-08-18T18:54:08.826171+00:00",
+    "id": 179
+  },
+  {
+    "title": "Test Session for Coffee Age",
+    "product_id": 180,
+    "product_batch_id": 357,
+    "brewer_id": 180,
+    "created_at": "2025-08-18T18:54:08.925344+00:00",
+    "updated_at": "2025-08-18T18:54:08.925344+00:00",
+    "id": 180
   }
 ]

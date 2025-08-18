@@ -18,8 +18,56 @@ def enrich_shot_session_with_shots(session, factory, user_id):
     # Get all shots for this session
     shots = factory.get_shot_repository(user_id).find_by_session(session['id'])
     
+    # Sort shots by timestamp for consistent ordering
+    shots.sort(key=lambda x: x.get('timestamp', ''))
+    
     # Basic enrichment for shots (simplified to avoid circular dependencies)
-    for shot in shots:
+    for i, shot in enumerate(shots):
+        # Add session-relative shot number (1-based)
+        shot['session_shot_number'] = i + 1
+        
+        # Calculate time since previous shot
+        if i > 0:
+            previous_shot = shots[i-1]
+            if shot.get('timestamp') and previous_shot.get('timestamp'):
+                try:
+                    from dateutil.parser import parse as parse_datetime
+                    current_time = parse_datetime(shot['timestamp'])
+                    previous_time = parse_datetime(previous_shot['timestamp'])
+                    time_diff = current_time - previous_time
+                    
+                    # Format time difference
+                    total_seconds = int(time_diff.total_seconds())
+                    if total_seconds < 60:
+                        shot['time_since_previous'] = f'{total_seconds}s'
+                    elif total_seconds < 3600:
+                        minutes = total_seconds // 60
+                        seconds = total_seconds % 60
+                        if seconds > 0:
+                            shot['time_since_previous'] = f'{minutes}m {seconds}s'
+                        else:
+                            shot['time_since_previous'] = f'{minutes}m'
+                    elif total_seconds < 86400:
+                        hours = total_seconds // 3600
+                        minutes = (total_seconds % 3600) // 60
+                        if minutes > 0:
+                            shot['time_since_previous'] = f'{hours}h {minutes}m'
+                        else:
+                            shot['time_since_previous'] = f'{hours}h'
+                    else:
+                        days = total_seconds // 86400
+                        hours = (total_seconds % 86400) // 3600
+                        if hours > 0:
+                            shot['time_since_previous'] = f'{days}d {hours}h'
+                        else:
+                            shot['time_since_previous'] = f'{days}d'
+                except:
+                    shot['time_since_previous'] = None
+            else:
+                shot['time_since_previous'] = None
+        else:
+            shot['time_since_previous'] = 'first'
+        
         # Add product name
         if shot.get('product_id'):
             product = factory.get_product_repository(user_id).find_by_id(shot['product_id'])
@@ -479,6 +527,62 @@ def duplicate_shot_session(session_id):
             'message': 'Shot session duplicated successfully',
             'original_shot_session': original_session,
             'new_shot_session': new_session
+        }), 201
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@shot_sessions_bp.route('/<int:session_id>/duplicate_newest_shot', methods=['POST'])
+def duplicate_newest_shot_in_session(session_id):
+    """Duplicate the newest shot in a session for iterative dialing-in."""
+    try:
+        # Get and validate user_id
+        user_id = get_user_id_from_request()
+        is_valid, error_msg = validate_user_id(user_id)
+        if not is_valid:
+            return jsonify({'error': error_msg}), 400
+        
+        factory = get_repository_factory()
+        
+        # Check if session exists
+        session = factory.get_shot_session_repository(user_id).find_by_id(session_id)
+        if not session:
+            return jsonify({'error': 'Shot session not found'}), 404
+        
+        # Get all shots for this session
+        shots = factory.get_shot_repository(user_id).find_by_session(session_id)
+        
+        if not shots:
+            return jsonify({'error': 'No shots found in this session to duplicate'}), 404
+        
+        # Find the newest shot (sort by timestamp, then by ID)
+        shots.sort(key=lambda x: (x.get('timestamp', ''), x.get('id', 0)), reverse=True)
+        newest_shot = shots[0]
+        
+        # Create duplicate shot data
+        duplicate_data = newest_shot.copy()
+        duplicate_data.pop('id', None)  # Remove ID so a new one is generated
+        duplicate_data.pop('timestamp', None)  # Remove timestamp so a new one is generated
+        duplicate_data.pop('created_at', None)
+        duplicate_data.pop('updated_at', None)
+        
+        # Clear fields that typically change between shots
+        duplicate_data.pop('overall_score', None)
+        duplicate_data.pop('notes', None)
+        duplicate_data.pop('extraction_status', None)
+        
+        # Keep the session reference
+        duplicate_data['shot_session_id'] = session_id
+        
+        # Create the duplicate shot
+        new_shot = factory.get_shot_repository(user_id).create(duplicate_data)
+        
+        return jsonify({
+            'message': 'Newest shot duplicated successfully',
+            'original_shot': newest_shot,
+            'new_shot': new_shot,
+            'session_id': session_id
         }), 201
         
     except Exception as e:

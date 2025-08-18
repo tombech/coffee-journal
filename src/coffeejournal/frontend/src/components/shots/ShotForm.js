@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link, useSearchParams } from 'react-router-dom';
 import { useToast } from '../Toast';
 import { apiFetch } from '../../config';
 import { ICONS } from '../../config/icons';
@@ -8,6 +8,7 @@ import DateTimeInput from '../DateTimeInput';
 function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null, onCancel }) {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const { addToast } = useToast();
   const [formData, setFormData] = useState({
     product_batch_id: product_batch_id,
@@ -53,6 +54,7 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
   const [products, setProducts] = useState([]);
   const [batches, setBatches] = useState([]);
   const [shotSessions, setShotSessions] = useState([]);
+  const [currentSession, setCurrentSession] = useState(null);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -129,6 +131,15 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
             }
           }
         }
+        
+        // Handle session_id URL parameter (e.g., /shots/new?session_id=5)
+        const sessionIdParam = searchParams.get('session_id');
+        if (sessionIdParam && !id && !initialData) {
+          setFormData(prev => ({
+            ...prev,
+            shot_session_id: sessionIdParam
+          }));
+        }
       } catch (err) {
         setError("Failed to load form data: " + err.message);
         console.error("Error loading form data:", err);
@@ -138,7 +149,7 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
     };
 
     fetchAllData();
-  }, [id, initialData, product_batch_id]);
+  }, [id, initialData, product_batch_id, searchParams]);
 
   // Fetch batches when product changes
   useEffect(() => {
@@ -158,6 +169,43 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
       setBatches([]);
     }
   }, [formData.product_id]);
+
+  // Track current session for breadcrumb and auto-populate equipment
+  useEffect(() => {
+    if (formData.shot_session_id && shotSessions.length > 0) {
+      const session = shotSessions.find(s => s.id.toString() === formData.shot_session_id.toString());
+      setCurrentSession(session || null);
+      
+      // Auto-populate equipment from session if fields are empty
+      if (session && !isEditMode) {
+        const equipmentFields = {
+          brewer_id: session.brewer_id,
+          grinder_id: session.grinder_id,
+          portafilter_id: session.portafilter_id,
+          basket_id: session.basket_id,
+          scale_id: session.scale_id,
+          recipe_id: session.recipe_id
+        };
+        
+        // Only populate fields that are currently empty to avoid overriding user selections
+        const updates = {};
+        Object.entries(equipmentFields).forEach(([field, sessionValue]) => {
+          if (sessionValue && (!formData[field] || formData[field] === '')) {
+            updates[field] = sessionValue;
+          }
+        });
+        
+        if (Object.keys(updates).length > 0) {
+          setFormData(prev => ({
+            ...prev,
+            ...updates
+          }));
+        }
+      }
+    } else {
+      setCurrentSession(null);
+    }
+  }, [formData.shot_session_id, shotSessions, isEditMode]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -260,6 +308,31 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
       data-testid="shot-form"
     >
       <h4>{isEditMode ? 'Edit Shot' : 'Add New Shot'}</h4>
+      
+      {/* Session Context Breadcrumb */}
+      {currentSession && (
+        <div style={{
+          marginBottom: '16px',
+          padding: '8px 12px',
+          backgroundColor: '#e9ecef',
+          borderRadius: '4px',
+          borderLeft: '4px solid #007bff',
+          fontSize: '14px'
+        }}>
+          <span style={{ color: '#6c757d' }}>Part of session:</span>
+          {' '}
+          <Link 
+            to={`/shot-sessions/${currentSession.id}`}
+            style={{ 
+              color: '#007bff', 
+              textDecoration: 'none',
+              fontWeight: 'bold'
+            }}
+          >
+            ← {currentSession.title || `Session ${currentSession.id}`}
+          </Link>
+        </div>
+      )}
       
       {error && (
         <div style={{

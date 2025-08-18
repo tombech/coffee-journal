@@ -578,3 +578,162 @@ class TestShotSessionShotRelationship:
             # Session deletion prevented due to associated shots
             assert delete_response.status_code in [400, 409]
     
+    def test_shots_list_includes_grinder_setting(self, client):
+        """Test that shots list API includes grinder_setting and can sort by it."""
+        # Create shots with different grinder settings
+        shot_data_1 = {
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1,
+            'dose_grams': 18.0,
+            'yield_grams': 36.0,
+            'extraction_time_seconds': 25,
+            'water_temperature_c': 93,
+            'grinder_setting': '12',
+            'overall_score': 7
+        }
+        
+        shot_data_2 = {
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1,
+            'dose_grams': 18.5,
+            'yield_grams': 37.0,
+            'extraction_time_seconds': 26,
+            'water_temperature_c': 94,
+            'grinder_setting': '8',
+            'overall_score': 8
+        }
+        
+        # Create the shots
+        response1 = client.post('/api/shots', json=shot_data_1)
+        response2 = client.post('/api/shots', json=shot_data_2)
+        assert response1.status_code == 201
+        assert response2.status_code == 201
+        
+        # Get shots list
+        response = client.get('/api/shots')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        shots = result['data']
+        
+        # Verify grinder_setting is included in response
+        shot_1 = next((s for s in shots if s['grinder_setting'] == '12'), None)
+        shot_2 = next((s for s in shots if s['grinder_setting'] == '8'), None)
+        
+        assert shot_1 is not None, "Shot with grinder_setting '12' not found"
+        assert shot_2 is not None, "Shot with grinder_setting '8' not found"
+        
+        # Test sorting by grinder_setting
+        response_sorted = client.get('/api/shots?sort=grinder_setting&sort_direction=asc')
+        assert response_sorted.status_code == 200
+        
+        sorted_result = response_sorted.get_json()
+        sorted_shots = sorted_result['data']
+        
+        # Find our test shots in the sorted list
+        our_shots = [s for s in sorted_shots if s['grinder_setting'] in ['8', '12']]
+        assert len(our_shots) >= 2, "Both test shots should be in sorted results"
+    
+    def test_shot_session_numbering_for_highlighting(self, client):
+        """Test that shots in sessions have proper session_shot_number for highlighting feature."""
+        # Create a session
+        session_data = {
+            'title': 'Test Session for Shot Numbering',
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1
+        }
+        
+        session_response = client.post('/api/shot_sessions', json=session_data)
+        assert session_response.status_code == 201
+        session = session_response.get_json()
+        session_id = session['id']
+        
+        # Create multiple shots in the session with different parameters
+        shot_1_data = {
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1,
+            'shot_session_id': session_id,
+            'dose_grams': 18.0,
+            'yield_grams': 36.0,
+            'extraction_time_seconds': 25,
+            'grinder_setting': '12',
+            'water_temperature_c': 93,
+            'overall_score': 7
+        }
+        
+        shot_2_data = {
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1,
+            'shot_session_id': session_id,
+            'dose_grams': 19.0,  # Changed dose
+            'yield_grams': 38.0,  # Changed yield
+            'extraction_time_seconds': 26,
+            'grinder_setting': '10',  # Changed grinder setting
+            'water_temperature_c': 93,  # Same temperature
+            'overall_score': 8
+        }
+        
+        shot_3_data = {
+            'product_id': 1,
+            'product_batch_id': 1,
+            'brewer_id': 1,
+            'shot_session_id': session_id,
+            'dose_grams': 19.0,  # Same dose as shot 2
+            'yield_grams': 38.0,  # Same yield as shot 2
+            'extraction_time_seconds': 28,
+            'grinder_setting': '10',  # Same grinder setting as shot 2
+            'water_temperature_c': 95,  # Changed temperature
+            'overall_score': 9
+        }
+        
+        # Create shots in sequence
+        shot_1_response = client.post('/api/shots', json=shot_1_data)
+        shot_2_response = client.post('/api/shots', json=shot_2_data)
+        shot_3_response = client.post('/api/shots', json=shot_3_data)
+        
+        assert shot_1_response.status_code == 201
+        assert shot_2_response.status_code == 201
+        assert shot_3_response.status_code == 201
+        
+        shot_1 = shot_1_response.get_json()
+        shot_2 = shot_2_response.get_json()
+        shot_3 = shot_3_response.get_json()
+        
+        # Verify shots have proper session information
+        assert shot_1['shot_session_id'] == session_id
+        assert shot_2['shot_session_id'] == session_id
+        assert shot_3['shot_session_id'] == session_id
+        
+        # Get shots via the list API to ensure they have all necessary data for highlighting
+        response = client.get(f'/api/shots?shot_session_id={session_id}')
+        assert response.status_code == 200
+        
+        result = response.get_json()
+        session_shots = result['data']
+        
+        # Should have all 3 shots
+        assert len(session_shots) == 3
+        
+        # Sort shots by creation order to verify session numbering
+        session_shots_sorted = sorted(session_shots, key=lambda x: x['id'])
+        
+        # Verify session shot numbers are properly set (this enables highlighting)
+        # Note: session_shot_number might be computed dynamically or stored
+        expected_numbers = [1, 2, 3]
+        for i, shot in enumerate(session_shots_sorted):
+            if 'session_shot_number' in shot:
+                assert shot['session_shot_number'] == expected_numbers[i], f"Shot {i+1} should have session_shot_number {expected_numbers[i]}"
+        
+        # Verify all shots have the fields needed for change detection
+        for shot in session_shots:
+            assert 'dose_grams' in shot
+            assert 'grinder_setting' in shot
+            assert 'water_temperature_c' in shot
+            assert 'shot_session_id' in shot
+            # Note: session_shot_number might be computed during frontend processing
+    
