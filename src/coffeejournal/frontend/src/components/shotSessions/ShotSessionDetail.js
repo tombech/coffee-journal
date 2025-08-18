@@ -110,6 +110,35 @@ function ShotSessionDetail() {
     return colors[status] || '#6c757d';
   };
 
+  // Function to detect if a field changed from the previous shot in the session
+  const getFieldChangeStatus = (currentShot, fieldName) => {
+    // Find current shot index in the shots array
+    const currentIndex = shots.findIndex(shot => shot.id === currentShot.id);
+    
+    // If this is the first shot, no comparison needed
+    if (currentIndex <= 0) return null;
+    
+    const previousShot = shots[currentIndex - 1];
+    const currentValue = currentShot[fieldName];
+    const previousValue = previousShot[fieldName];
+    
+    // Direct comparison for most fields
+    return currentValue !== previousValue ? 'changed' : null;
+  };
+
+  // Function to get style for changed fields
+  const getChangedFieldStyle = (baseStyle, changeStatus) => {
+    if (changeStatus === 'changed') {
+      return {
+        ...baseStyle,
+        backgroundColor: '#fff3cd',
+        border: '2px solid #ffc107',
+        fontWeight: 'bold'
+      };
+    }
+    return baseStyle;
+  };
+
   if (loading) return <p className="loading-message">Loading shot session...</p>;
   if (error) return <p className="error-message">{error}</p>;
   if (!shotSession) return <p className="error-message">Shot session not found</p>;
@@ -282,70 +311,117 @@ function ShotSessionDetail() {
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+            <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8f9fa' }}>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Shot
+                <tr style={{ backgroundColor: '#e9ecef' }}>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    Shot #
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Dose → Yield
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    ⚖️ Dose (g)
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Ratio
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    ☕ Yield (g)
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Flow Rate
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    📊 Ratio
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Extraction Time
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    💧 Flow Rate (g/s)
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Status
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    ⏱️ Extract Time (s)
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Score
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    🌡️ Temperature (°C)
                   </th>
-                  <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                    Time Gap
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    ⚙️ Grind Setting
+                  </th>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    🎯 Extraction
+                  </th>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    ⭐ Score
+                  </th>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    🕒 Time Gap
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {shots.map((shot) => (
-                  <tr key={shot.id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                    <td style={{ padding: '12px' }}>
+                  <tr key={shot.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top' }}>
                       <Link
                         to={`/shots/${shot.id}`}
                         style={{ 
-                          color: '#007bff', 
-                          textDecoration: 'none',
-                          fontWeight: 'bold'
+                          textDecoration: 'none', 
+                          color: 'inherit'
                         }}
                       >
                         #{shot.session_shot_number || shot.id}
                       </Link>
                     </td>
-                    <td style={{ padding: '12px', fontFamily: 'monospace' }}>
-                      {shot.dose_grams}g → {shot.yield_grams}g
+                    <td 
+                      style={getChangedFieldStyle(
+                        { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
+                        getFieldChangeStatus(shot, 'dose_grams')
+                      )}
+                      title={getFieldChangeStatus(shot, 'dose_grams') ? 'Dose changed from previous shot in session' : undefined}
+                    >
+                      {shot.dose_grams ? `${shot.dose_grams}g` : '-'}
                     </td>
-                    <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
+                    <td 
+                      style={getChangedFieldStyle(
+                        { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
+                        getFieldChangeStatus(shot, 'yield_grams')
+                      )}
+                      title={getFieldChangeStatus(shot, 'yield_grams') ? 'Yield changed from previous shot in session' : undefined}
+                    >
+                      {shot.yield_grams ? `${shot.yield_grams}g` : '-'}
+                    </td>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                       {shot.ratio || (shot.dose_yield_ratio ? `1:${shot.dose_yield_ratio}` : '-')}
                     </td>
-                    <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                       {shot.flow_rate ? `${shot.flow_rate}g/s` : 
                        (shot.yield_grams && shot.extraction_time_seconds ? 
                         `${(shot.yield_grams / shot.extraction_time_seconds).toFixed(1)}g/s` : '-')}
                     </td>
-                    <td style={{ padding: '12px' }}>
+                    <td 
+                      style={getChangedFieldStyle(
+                        { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
+                        getFieldChangeStatus(shot, 'extraction_time_seconds')
+                      )}
+                      title={getFieldChangeStatus(shot, 'extraction_time_seconds') ? 'Extraction time changed from previous shot in session' : undefined}
+                    >
                       {shot.extraction_time_seconds ? `${shot.extraction_time_seconds}s` : '-'}
                     </td>
-                    <td style={{ padding: '12px' }}>
-                      {shot.extraction_status && (
+                    <td 
+                      style={getChangedFieldStyle(
+                        { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
+                        getFieldChangeStatus(shot, 'water_temperature_c')
+                      )}
+                      title={getFieldChangeStatus(shot, 'water_temperature_c') ? 'Temperature changed from previous shot in session' : undefined}
+                    >
+                      {shot.water_temperature_c ? `${shot.water_temperature_c}°C` : '-'}
+                    </td>
+                    <td 
+                      style={getChangedFieldStyle(
+                        { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
+                        getFieldChangeStatus(shot, 'grinder_setting')
+                      )}
+                      title={getFieldChangeStatus(shot, 'grinder_setting') ? 'Grinder setting changed from previous shot in session' : undefined}
+                    >
+                      {shot.grinder_setting || '-'}
+                    </td>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                      {shot.extraction_status ? (
                         <span style={{
-                          padding: '4px 8px',
-                          borderRadius: '12px',
-                          fontSize: '12px',
+                          padding: '2px 4px',
+                          borderRadius: '8px',
+                          fontSize: '10px',
                           fontWeight: 'bold',
                           color: 'white',
                           backgroundColor: getExtractionStatusColor(shot.extraction_status),
@@ -353,14 +429,12 @@ function ShotSessionDetail() {
                         }}>
                           {shot.extraction_status.replace('-', ' ')}
                         </span>
-                      )}
+                      ) : '-'}
                     </td>
-                    <td style={{ padding: '12px' }}>
-                      {shot.overall_score ? (
-                        <span style={{ fontWeight: 'bold' }}>{shot.overall_score}/10</span>
-                      ) : 'Not rated'}
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                      {shot.overall_score ? shot.overall_score.toFixed(1) : '-'}
                     </td>
-                    <td style={{ padding: '12px', fontSize: '12px', color: '#666' }}>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', color: '#666' }}>
                       {shot.time_since_previous || '-'}
                     </td>
                   </tr>

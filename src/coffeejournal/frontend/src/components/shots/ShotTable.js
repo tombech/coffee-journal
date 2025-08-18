@@ -77,52 +77,6 @@ function ShotTable({
     }
   };
 
-  // Function to detect if a field changed from the previous shot in the same session
-  const getFieldChangeStatus = (currentShot, fieldName) => {
-    // Only highlight changes within the same session
-    if (!currentShot.shot_session_id) return null;
-    
-    // Find all shots in the same session, sorted by session shot number
-    const sessionShots = shotsWithScore
-      .filter(shot => shot.shot_session_id === currentShot.shot_session_id)
-      .sort((a, b) => (a.session_shot_number || 0) - (b.session_shot_number || 0));
-    
-    // Find current shot index in the session
-    const currentIndex = sessionShots.findIndex(shot => shot.id === currentShot.id);
-    
-    // If this is the first shot in the session, no comparison needed
-    if (currentIndex <= 0) return null;
-    
-    const previousShot = sessionShots[currentIndex - 1];
-    const currentValue = currentShot[fieldName];
-    const previousValue = previousShot[fieldName];
-    
-    // Handle different field types
-    if (fieldName === 'brewer_name') {
-      return currentShot.brewer?.name !== previousShot.brewer?.name ? 'changed' : null;
-    }
-    
-    // For numeric values, consider them different if they differ significantly
-    if (typeof currentValue === 'number' && typeof previousValue === 'number') {
-      return Math.abs(currentValue - previousValue) > 0.01 ? 'changed' : null;
-    }
-    
-    // For string values, direct comparison
-    return currentValue !== previousValue ? 'changed' : null;
-  };
-
-  // Function to get style for changed fields
-  const getChangedFieldStyle = (baseStyle, changeStatus) => {
-    if (changeStatus === 'changed') {
-      return {
-        ...baseStyle,
-        backgroundColor: '#fff3cd',
-        border: '2px solid #ffc107',
-        fontWeight: 'bold'
-      };
-    }
-    return baseStyle;
-  };
 
   // Use external sorting state if provided, otherwise use internal state
   const [internalSortColumn, setInternalSortColumn] = useState(initialSort);
@@ -451,21 +405,13 @@ function ShotTable({
                 ) : '-'}
               </td>
               <td 
-                style={getChangedFieldStyle(
-                  { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
-                  getFieldChangeStatus(shot, 'dose_grams')
-                )}
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}
                 data-testid="shot-dose-grams"
-                title={getFieldChangeStatus(shot, 'dose_grams') ? 'Dose changed from previous shot in session' : undefined}
               >
                 {shot.dose_grams ? `${shot.dose_grams}g` : '-'}
               </td>
               <td 
-                style={getChangedFieldStyle(
-                  { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
-                  getFieldChangeStatus(shot, 'yield_grams')
-                )}
-                title={getFieldChangeStatus(shot, 'yield_grams') ? 'Yield changed from previous shot in session' : undefined}
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}
               >
                 {shot.yield_grams ? `${shot.yield_grams}g` : '-'}
               </td>
@@ -478,29 +424,17 @@ function ShotTable({
                   `${(shot.yield_grams / shot.extraction_time_seconds).toFixed(1)}g/s` : '-')}
               </td>
               <td 
-                style={getChangedFieldStyle(
-                  { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
-                  getFieldChangeStatus(shot, 'extraction_time_seconds')
-                )}
-                title={getFieldChangeStatus(shot, 'extraction_time_seconds') ? 'Extraction time changed from previous shot in session' : undefined}
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}
               >
                 {shot.extraction_time_seconds ? `${shot.extraction_time_seconds}s` : '-'}
               </td>
               <td 
-                style={getChangedFieldStyle(
-                  { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
-                  getFieldChangeStatus(shot, 'water_temperature_c')
-                )}
-                title={getFieldChangeStatus(shot, 'water_temperature_c') ? 'Temperature changed from previous shot in session' : undefined}
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}
               >
                 {shot.water_temperature_c ? `${shot.water_temperature_c}°C` : '-'}
               </td>
               <td 
-                style={getChangedFieldStyle(
-                  { padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' },
-                  getFieldChangeStatus(shot, 'grinder_setting')
-                )}
-                title={getFieldChangeStatus(shot, 'grinder_setting') ? 'Grinder setting changed from previous shot in session' : undefined}
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}
                 data-testid="shot-grinder-setting"
               >
                 {shot.grinder_setting || '-'}
