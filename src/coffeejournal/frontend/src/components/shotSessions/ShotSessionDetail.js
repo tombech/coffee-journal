@@ -91,7 +91,7 @@ function ShotSessionDetail() {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return '-';
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -189,7 +189,7 @@ function ShotSessionDetail() {
               <Link to={`/products/${shotSession.product.id}`} style={{ color: '#007bff', textDecoration: 'none' }}>
                 {shotSession.product.product_name}
               </Link>
-            ) : 'N/A'}
+            ) : '-'}
           </div>
 
           <div style={{ marginBottom: '10px' }}>
@@ -198,14 +198,14 @@ function ShotSessionDetail() {
               <Link to={`/batches/${shotSession.product_batch.id}`} style={{ color: '#007bff', textDecoration: 'none' }}>
                 Batch #{shotSession.product_batch.id} ({shotSession.product_batch.roast_date})
               </Link>
-            ) : 'N/A'}
+            ) : '-'}
           </div>
 
           <div style={{ marginBottom: '10px' }}>
             <strong>Brewer: </strong>
             {shotSession.brewer ? (
               <span>{shotSession.brewer.name}</span>
-            ) : 'N/A'}
+            ) : '-'}
           </div>
 
           <div style={{ marginBottom: '10px' }}>
@@ -330,13 +330,15 @@ function ShotSessionDetail() {
                       {shot.dose_grams}g → {shot.yield_grams}g
                     </td>
                     <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
-                      1:{shot.dose_yield_ratio || 'N/A'}
+                      {shot.ratio || (shot.dose_yield_ratio ? `1:${shot.dose_yield_ratio}` : '-')}
                     </td>
                     <td style={{ padding: '12px', fontFamily: 'monospace', fontWeight: 'bold' }}>
-                      {shot.flow_rate ? `${shot.flow_rate}g/s` : 'N/A'}
+                      {shot.flow_rate ? `${shot.flow_rate}g/s` : 
+                       (shot.yield_grams && shot.extraction_time_seconds ? 
+                        `${(shot.yield_grams / shot.extraction_time_seconds).toFixed(1)}g/s` : '-')}
                     </td>
                     <td style={{ padding: '12px' }}>
-                      {shot.extraction_time_seconds ? `${shot.extraction_time_seconds}s` : 'N/A'}
+                      {shot.extraction_time_seconds ? `${shot.extraction_time_seconds}s` : '-'}
                     </td>
                     <td style={{ padding: '12px' }}>
                       {shot.extraction_status && (

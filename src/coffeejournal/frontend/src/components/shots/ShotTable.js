@@ -470,10 +470,12 @@ function ShotTable({
                 {shot.yield_grams ? `${shot.yield_grams}g` : '-'}
               </td>
               <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
-                {shot.dose_yield_ratio ? `1:${shot.dose_yield_ratio}` : '-'}
+                {shot.ratio || (shot.dose_yield_ratio ? `1:${shot.dose_yield_ratio}` : '-')}
               </td>
               <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
-                {shot.flow_rate ? `${shot.flow_rate}g/s` : '-'}
+                {shot.flow_rate ? `${shot.flow_rate}g/s` : 
+                 (shot.yield_grams && shot.extraction_time_seconds ? 
+                  `${(shot.yield_grams / shot.extraction_time_seconds).toFixed(1)}g/s` : '-')}
               </td>
               <td 
                 style={getChangedFieldStyle(

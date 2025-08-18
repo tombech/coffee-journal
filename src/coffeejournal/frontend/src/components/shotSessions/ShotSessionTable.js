@@ -61,7 +61,7 @@ function ShotSessionTable({
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return '-';
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -72,6 +72,48 @@ function ShotSessionTable({
 
   const formatShotCount = (shotCount) => {
     return shotCount === 1 ? '1 shot' : `${shotCount} shots`;
+  };
+
+  // Function to detect if a field changed from the previous session in the same product
+  const getFieldChangeStatus = (currentSession, fieldName) => {
+    // Only highlight changes within the same product
+    if (!currentSession.product_id) return null;
+    
+    // Find all sessions for the same product, sorted by creation date
+    const productSessions = shotSessions
+      .filter(session => session.product_id === currentSession.product_id)
+      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    
+    // Find current session index in the product sessions
+    const currentIndex = productSessions.findIndex(session => session.id === currentSession.id);
+    
+    // If this is the first session for this product, no comparison needed
+    if (currentIndex <= 0) return null;
+    
+    const previousSession = productSessions[currentIndex - 1];
+    const currentValue = currentSession[fieldName];
+    const previousValue = previousSession[fieldName];
+    
+    // Handle different field types
+    if (fieldName === 'brewer') {
+      return currentSession.brewer?.id !== previousSession.brewer?.id ? 'changed' : null;
+    }
+    
+    // For string values, direct comparison
+    return currentValue !== previousValue ? 'changed' : null;
+  };
+
+  // Function to get style for changed fields
+  const getChangedFieldStyle = (baseStyle, changeStatus) => {
+    if (changeStatus === 'changed') {
+      return {
+        ...baseStyle,
+        backgroundColor: '#fff3cd',
+        border: '2px solid #ffc107',
+        fontWeight: 'bold'
+      };
+    }
+    return baseStyle;
   };
 
   const getPaginationInfo = () => {
@@ -345,22 +387,22 @@ function ShotSessionTable({
                   {session.title || `Session ${session.id}`}
                 </Link>
               </td>
-              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={getChangedFieldStyle({ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }, getFieldChangeStatus(session, 'product_id'))}>
                 {session.product ? (
                   <Link to={`/products/${session.product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {session.product.product_name || '-'}
+                    {session.product.product_name}
                   </Link>
                 ) : (
-                  'N/A'
+                  '-'
                 )}
               </td>
-              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={getChangedFieldStyle({ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }, getFieldChangeStatus(session, 'brewer'))}>
                 {session.brewer ? (
                   <Link to={`/brewers/${session.brewer.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {session.brewer.name || '-'}
+                    {session.brewer.name}
                   </Link>
                 ) : (
-                  'N/A'
+                  '-'
                 )}
               </td>
               <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
