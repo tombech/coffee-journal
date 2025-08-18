@@ -28,8 +28,8 @@ class TestEquipmentSmartDefaults:
         method1 = brew_method_repo.create({'name': 'Ancient Method'})
         method2 = brew_method_repo.create({'name': 'Modern Method'})
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create very old sessions for method1
         very_old = (datetime.now(timezone.utc) - timedelta(days=365)).isoformat()
@@ -75,8 +75,8 @@ class TestEquipmentSmartDefaults:
             'name': 'Session Heavy'
         })
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create sessions only for grinder2
         now = datetime.now(timezone.utc)
@@ -116,8 +116,8 @@ class TestEquipmentSmartDefaults:
         filter1 = filter_repo.create({'name': 'Filter A'})
         filter2 = filter_repo.create({'name': 'Filter B'})
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create equal usage for both filters
         now = datetime.now(timezone.utc)
@@ -143,8 +143,8 @@ class TestEquipmentSmartDefaults:
         kettle1 = kettle_repo.create({'name': 'Yesterday Kettle'})
         kettle2 = kettle_repo.create({'name': 'Today Kettle'})
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create sessions from yesterday
         yesterday = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
@@ -183,8 +183,8 @@ class TestEquipmentSmartDefaults:
         scale1 = scale_repo.create({'name': 'Scale 1'})
         scale2 = scale_repo.create({'name': 'Scale 2'})
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create sessions with various timestamp issues
         session1 = factory.get_brew_session_repository().create({
@@ -229,13 +229,13 @@ class TestRoasterSmartDefaults:
         # Create more products for roaster1
         for i in range(5):
             product_repo.create({
-                'name': f'Coffee {i}',
+                'product_name': f'Coffee {i}',
                 'roaster_id': roaster1['id']
             })
         
         # Fewer for roaster2
         product_repo.create({
-            'name': 'Single Coffee',
+            'product_name': 'Single Coffee',
             'roaster_id': roaster2['id']
         })
         
@@ -254,7 +254,7 @@ class TestRoasterSmartDefaults:
         old_time = (datetime.now(timezone.utc) - timedelta(days=90)).isoformat()
         for i in range(10):
             product = product_repo.create({
-                'name': f'Old Coffee {i}',
+                'product_name': f'Old Coffee {i}',
                 'roaster_id': roaster1['id']
             })
             product_repo.update(product['id'], {
@@ -264,7 +264,7 @@ class TestRoasterSmartDefaults:
         
         # Create recent product for roaster2
         recent_product = product_repo.create({
-            'name': 'Fresh Coffee',
+            'product_name': 'Fresh Coffee',
             'roaster_id': roaster2['id'],
             'created_at': datetime.now(timezone.utc).isoformat()
         })
@@ -314,8 +314,8 @@ class TestSmartDefaultEdgeCases:
         method1 = method_repo.create({'name': 'Week Old'})
         method2 = method_repo.create({'name': 'Week Plus'})
         
-        product = factory.get_product_repository().create({'name': 'Test', 'roaster_id': 1})
-        batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+        product = factory.get_product_repository().create({'product_name': 'Test', 'roaster_id': 1})
+        batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
         
         # Create session exactly 7 days old (should have recency score of 0)
         week_old = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()

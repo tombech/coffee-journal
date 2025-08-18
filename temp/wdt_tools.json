@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Hjemmelaget WDT",
+    "short_form": "HWDT",
+    "description": "",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "icon": "",
+    "is_default": true,
+    "needle_count": 5,
+    "needle_diameter": 0.4,
+    "handle_material": "Wood",
+    "brand": "",
+    "id": 1,
+    "created_at": "2025-08-15T16:31:18.928040+00:00",
+    "updated_at": "2025-08-15T16:31:18.928040+00:00"
+  }
+]

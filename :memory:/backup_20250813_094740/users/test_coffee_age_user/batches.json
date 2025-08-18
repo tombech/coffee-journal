@@ -1,0 +1,118 @@
+[
+  {
+    "product_id": 1,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 1,
+    "created_at": "2025-08-13T07:43:36.589984+00:00",
+    "updated_at": "2025-08-13T07:43:36.589984+00:00"
+  },
+  {
+    "product_id": 2,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 2,
+    "created_at": "2025-08-13T07:43:36.685732+00:00",
+    "updated_at": "2025-08-13T07:43:36.685732+00:00"
+  },
+  {
+    "product_id": 3,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 3,
+    "created_at": "2025-08-13T07:43:36.767356+00:00",
+    "updated_at": "2025-08-13T07:43:36.767356+00:00"
+  },
+  {
+    "product_id": 4,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 4,
+    "created_at": "2025-08-13T07:43:36.848005+00:00",
+    "updated_at": "2025-08-13T07:43:36.848005+00:00"
+  },
+  {
+    "product_id": 5,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 5,
+    "created_at": "2025-08-13T07:43:36.935220+00:00",
+    "updated_at": "2025-08-13T07:43:36.935220+00:00"
+  },
+  {
+    "product_id": 5,
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 6,
+    "created_at": "2025-08-13T07:43:36.944884+00:00",
+    "updated_at": "2025-08-13T07:43:36.944884+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 7,
+    "created_at": "2025-08-13T07:43:37.014012+00:00",
+    "updated_at": "2025-08-13T07:43:37.014012+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-08-13",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 8,
+    "created_at": "2025-08-13T07:43:37.023297+00:00",
+    "updated_at": "2025-08-13T07:43:37.023297+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-08-12",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 9,
+    "created_at": "2025-08-13T07:43:37.030281+00:00",
+    "updated_at": "2025-08-13T07:43:37.030281+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-08-08",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 10,
+    "created_at": "2025-08-13T07:43:37.036372+00:00",
+    "updated_at": "2025-08-13T07:43:37.036372+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-08-06",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 11,
+    "created_at": "2025-08-13T07:43:37.042601+00:00",
+    "updated_at": "2025-08-13T07:43:37.042601+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-07-30",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 12,
+    "created_at": "2025-08-13T07:43:37.049823+00:00",
+    "updated_at": "2025-08-13T07:43:37.049823+00:00"
+  },
+  {
+    "product_id": 6,
+    "roast_date": "2025-07-09",
+    "amount_grams": 250,
+    "purchase_price": 15.99,
+    "id": 13,
+    "created_at": "2025-08-13T07:43:37.057209+00:00",
+    "updated_at": "2025-08-13T07:43:37.057209+00:00"
+  }
+]

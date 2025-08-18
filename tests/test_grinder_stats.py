@@ -61,12 +61,13 @@ def test_grinder_stats_with_sessions(repositories):
     })
     
     product = product_repo.create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': 1
     })
     
     batch = batch_repo.create({
         'product_id': product['id'],
+        'roast_date': '2024-01-01',
         'amount_grams': 250,
         'price': 15.00
     })
@@ -112,12 +113,13 @@ def test_grinder_stats_over_1kg(repositories):
     })
     
     product = product_repo.create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': 1
     })
     
     batch = batch_repo.create({
         'product_id': product['id'],
+        'roast_date': '2024-01-01',
         'amount_grams': 250,
         'price': 15.00
     })
@@ -156,12 +158,13 @@ def test_grinder_stats_no_manual_offset(repositories):
     })
     
     product = product_repo.create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': 1
     })
     
     batch = batch_repo.create({
         'product_id': product['id'],
+        'roast_date': '2024-01-01',
         'amount_grams': 250,
         'price': 15.00
     })
@@ -198,12 +201,13 @@ def test_grinder_stats_sessions_without_coffee_amount(repositories):
     })
     
     product = product_repo.create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': 1
     })
     
     batch = batch_repo.create({
         'product_id': product['id'],
+        'roast_date': '2024-01-01',
         'amount_grams': 250,
         'price': 15.00
     })
@@ -262,12 +266,13 @@ def test_grinder_stats_different_grinders(repositories):
     })
     
     product = product_repo.create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': 1
     })
     
     batch = batch_repo.create({
         'product_id': product['id'],
+        'roast_date': '2024-01-01',
         'amount_grams': 250,
         'price': 15.00
     })

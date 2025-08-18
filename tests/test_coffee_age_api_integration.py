@@ -215,39 +215,23 @@ class TestCoffeeAgeAPIIntegration:
         assert created_shot.get('coffee_age') is None
     
     def test_coffee_age_with_missing_roast_date(self, client, test_data):
-        """Test coffee age calculation when roast date is missing."""
+        """Test that batch creation fails when roast date is missing (schema validation)."""
         user_id = test_data['user_id']
         product = test_data['product']
-        brewer = test_data['brewer']
         
-        # Create a batch without roast date
+        # Try to create a batch without roast date - should fail schema validation
         batch_data = {
             'product_id': product['id'],
             'amount_grams': 250,
             'purchase_price': 15.99
-            # No roast_date
+            # No roast_date - this should cause ValidationError
         }
         
         with client.application.app_context():
             factory = get_repository_factory()
-            batch = factory.get_batch_repository(user_id).create(batch_data)
-        
-        # Create shot with this batch
-        shot_data = {
-            'product_id': product['id'],
-            'product_batch_id': batch['id'],
-            'brewer_id': brewer['id'],
-            'dose_grams': 18.0,
-            'yield_grams': 36.0,
-            'notes': 'Shot with batch but no roast date'
-        }
-        
-        response = client.post(f'/api/shots?user_id={user_id}', json=shot_data)
-        assert response.status_code == 201
-        
-        created_shot = response.get_json()
-        # Should have coffee_age as None when roast date is missing
-        assert created_shot.get('coffee_age') is None
+            # This should raise ValueError due to schema validation failure
+            with pytest.raises(ValueError, match="'roast_date' is a required property"):
+                factory.get_batch_repository(user_id).create(batch_data)
     
     def test_coffee_age_formats(self, client, test_data):
         """Test different coffee age formats based on duration."""

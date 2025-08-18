@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Basic WDT",
+    "short_form": "Basic WDT",
+    "description": "Simple distribution tool",
+    "needle_count": 8,
+    "needle_diameter": 0.4,
+    "handle_material": "wood",
+    "brand": "Generic"
+  },
+  {
+    "id": 2,
+    "name": "Decent WDT",
+    "short_form": "Decent WDT",
+    "description": "Precision distribution tool",
+    "needle_count": 9,
+    "needle_diameter": 0.35,
+    "handle_material": "aluminum",
+    "brand": "Decent"
+  },
+  {
+    "id": 3,
+    "name": "Premium WDT",
+    "short_form": "Premium WDT",
+    "description": "High-end distribution tool",
+    "needle_count": 10,
+    "needle_diameter": 0.3,
+    "handle_material": "titanium",
+    "brand": "Levercraft"
+  }
+]

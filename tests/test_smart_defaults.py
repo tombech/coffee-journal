@@ -53,11 +53,11 @@ def test_roaster_smart_default_frequency_based(repositories):
     roaster3 = roaster_repo.create({'name': 'Stumptown'})
     
     # Create products: roaster2 has most products
-    product_repo.create({'name': 'Product 1', 'roaster_id': roaster1['id']})
-    product_repo.create({'name': 'Product 2', 'roaster_id': roaster2['id']})
-    product_repo.create({'name': 'Product 3', 'roaster_id': roaster2['id']})
-    product_repo.create({'name': 'Product 4', 'roaster_id': roaster2['id']})
-    product_repo.create({'name': 'Product 5', 'roaster_id': roaster3['id']})
+    product_repo.create({'product_name': 'Product 1', 'roaster_id': roaster1['id']})
+    product_repo.create({'product_name': 'Product 2', 'roaster_id': roaster2['id']})
+    product_repo.create({'product_name': 'Product 3', 'roaster_id': roaster2['id']})
+    product_repo.create({'product_name': 'Product 4', 'roaster_id': roaster2['id']})
+    product_repo.create({'product_name': 'Product 5', 'roaster_id': roaster3['id']})
     
     # Smart default should return roaster2 (most products)
     smart_default = roaster_repo.get_smart_default(repositories['factory'])
@@ -79,9 +79,9 @@ def test_roaster_smart_default_recency_based(repositories):
     recent_time = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
     
     # Roaster1 has more products but they're old
-    product1 = product_repo.create({'name': 'Old Product 1', 'roaster_id': roaster1['id']})
-    product2 = product_repo.create({'name': 'Old Product 2', 'roaster_id': roaster1['id']})
-    product3 = product_repo.create({'name': 'Old Product 3', 'roaster_id': roaster1['id']})
+    product1 = product_repo.create({'product_name': 'Old Product 1', 'roaster_id': roaster1['id']})
+    product2 = product_repo.create({'product_name': 'Old Product 2', 'roaster_id': roaster1['id']})
+    product3 = product_repo.create({'product_name': 'Old Product 3', 'roaster_id': roaster1['id']})
     
     # Manually update timestamps to be old
     product_repo.update(product1['id'], {**product1, 'created_at': old_time})
@@ -89,7 +89,7 @@ def test_roaster_smart_default_recency_based(repositories):
     product_repo.update(product3['id'], {**product3, 'created_at': old_time})
     
     # Roaster2 has fewer products but recent
-    product4 = product_repo.create({'name': 'Recent Product', 'roaster_id': roaster2['id']})
+    product4 = product_repo.create({'product_name': 'Recent Product', 'roaster_id': roaster2['id']})
     product_repo.update(product4['id'], {**product4, 'created_at': recent_time})
     
     # Smart default might prefer recency
@@ -149,8 +149,8 @@ def test_grinder_smart_default_frequency_based(repositories):
     grinder2 = grinder_repo.create({'name': 'Grinder 2'})
     grinder3 = grinder_repo.create({'name': 'Grinder 3'})
     
-    product = product_repo.create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = batch_repo.create({'product_id': product['id'], 'amount_grams': 250})
+    product = product_repo.create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = batch_repo.create({'product_id': product['id'], 'amount_grams': 250, 'roast_date': '2024-01-01'})
     
     # Create sessions: grinder2 has most sessions
     session_repo.create({'product_id': product['id'], 'product_batch_id': batch['id'], 'grinder_id': grinder1['id']})
@@ -176,8 +176,8 @@ def test_grinder_smart_default_recency_based(repositories):
     grinder1 = grinder_repo.create({'name': 'Old Grinder'})
     grinder2 = grinder_repo.create({'name': 'Recent Grinder'})
     
-    product = product_repo.create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = batch_repo.create({'product_id': product['id'], 'amount_grams': 250})
+    product = product_repo.create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = batch_repo.create({'product_id': product['id'], 'amount_grams': 250, 'roast_date': '2024-01-01'})
     
     # Create sessions with different timestamps
     old_time = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()

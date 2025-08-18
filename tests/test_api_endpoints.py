@@ -248,6 +248,57 @@ class TestBatchEndpoints:
         get_response = client.get(f'/api/batches/{batch_id}')
         assert get_response.status_code == 404
 
+    def test_create_batch_with_empty_roast_date(self, client):
+        """Test creating a batch with empty roast_date (should use today's date as default)."""
+        # First create a product
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster'
+        })
+        product_id = product_response.get_json()['id']
+        
+        # Create a batch with empty roast_date (this should trigger the datetime import bug)
+        batch_data = {
+            'roast_date': '',  # Empty string - this triggers the datetime.now() code path
+            'amount_grams': 250.0,
+            'price': 15.99
+        }
+        
+        response = client.post(f'/api/products/{product_id}/batches', json=batch_data)
+        # This should succeed once we fix the datetime import
+        assert response.status_code == 201
+        
+        batch = response.get_json()
+        assert batch['product_id'] == product_id
+        # Should have today's date as default
+        import datetime
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        assert batch['roast_date'] == today
+
+    def test_create_batch_with_missing_roast_date(self, client):
+        """Test creating a batch with missing roast_date (should use today's date as default)."""
+        # First create a product
+        product_response = client.post('/api/products', json={
+            'roaster_name': 'Test Roaster'
+        })
+        product_id = product_response.get_json()['id']
+        
+        # Create a batch without roast_date field (this should also trigger the datetime import bug)
+        batch_data = {
+            'amount_grams': 250.0,
+            'price': 15.99
+        }
+        
+        response = client.post(f'/api/products/{product_id}/batches', json=batch_data)
+        # This should succeed once we fix the datetime import
+        assert response.status_code == 201
+        
+        batch = response.get_json()
+        assert batch['product_id'] == product_id
+        # Should have today's date as default
+        import datetime
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
+        assert batch['roast_date'] == today
+
 
 class TestBrewSessionEndpoints:
     """Test brew session API endpoints."""

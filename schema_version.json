@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.4",
-  "created_date": "2025-08-11",
-  "description": "Added espresso support with shot tracking, shot sessions, and espresso-specific equipment lookups. Unified brewers across methods.",
+  "schema_version": "1.5",
+  "created_date": "2025-08-17",
+  "description": "Clarified scoring system: taste notes (int 1-10), overall score (float 1.0-10.0), product/batch rating (float 0.0-5.0 in 0.5 steps).",
   "entities": {
     "products": {
       "version": "1.3",
-      "fields": ["id", "roaster_id", "bean_type_id", "country_id", "region_id", "product_name", "roast_type", "description", "url", "decaf", "created_at", "updated_at"],
+      "fields": ["id", "roaster_id", "bean_type_id", "country_id", "region_id", "product_name", "roast_type", "description", "url", "image_url", "decaf", "decaf_method_id", "rating", "bean_process", "notes", "created_at", "updated_at"],
       "foreign_keys": ["roaster_id", "bean_type_id", "country_id", "region_id"],
       "calculated_fields": [],
       "audit_fields": ["created_at", "updated_at"]
@@ -27,7 +27,7 @@
     },
     "shots": {
       "version": "1.4",
-      "fields": ["id", "timestamp", "product_batch_id", "product_id", "shot_session_id", "brewer_id", "grinder_id", "portafilter_id", "basket_id", "scale_id", "recipe_id", "dose_grams", "yield_grams", "preinfusion_seconds", "brew_time_seconds", "pressure_bars", "temperature_c", "grinder_setting", "sweetness", "acidity", "bitterness", "body", "aroma", "crema", "flavor_profile_match", "extraction_status", "notes", "score", "created_at", "updated_at"],
+      "fields": ["id", "timestamp", "product_batch_id", "product_id", "shot_session_id", "brewer_id", "grinder_id", "portafilter_id", "basket_id", "scale_id", "recipe_id", "dose_grams", "yield_grams", "preinfusion_seconds", "extraction_time_seconds", "brew_time_seconds", "pressure_bars", "water_temperature_c", "temperature_c", "grinder_setting", "sweetness", "acidity", "bitterness", "body", "aroma", "crema", "flavor_profile_match", "extraction_status", "notes", "score", "created_at", "updated_at"],
       "foreign_keys": ["product_batch_id", "product_id", "shot_session_id", "brewer_id", "grinder_id", "portafilter_id", "basket_id", "scale_id", "recipe_id"],
       "calculated_fields": ["ratio"],
       "audit_fields": ["created_at", "updated_at"],
@@ -35,8 +35,8 @@
     },
     "shot_sessions": {
       "version": "1.4",
-      "fields": ["id", "title", "notes", "created_at", "updated_at"],
-      "foreign_keys": [],
+      "fields": ["id", "title", "product_id", "product_batch_id", "brewer_id", "notes", "created_at", "updated_at"],
+      "foreign_keys": ["product_id", "product_batch_id", "brewer_id"],
       "calculated_fields": [],
       "audit_fields": ["created_at", "updated_at"]
     },
@@ -47,15 +47,22 @@
       "audit_fields": ["created_at", "updated_at"],
       "system_fields": ["is_default"],
       "extended_fields": {
-        "portafilters": ["size_mm", "bottomless"],
-        "baskets": ["capacity_grams", "pressurized"],
-        "brewers": ["type", "brand", "model"]
+        "grinders": ["brand", "grinder_type", "burr_material", "product_url", "manually_ground_grams"],
+        "portafilters": ["size", "size_mm", "bottomless", "brand", "material", "handle_type"],
+        "baskets": ["basket_type", "hole_count", "capacity_grams", "pressurized", "size", "brand", "material", "holes"],
+        "brewers": ["type", "brand", "model"],
+        "tampers": ["size", "weight", "handle_material", "base_material", "brand"],
+        "wdt_tools": ["needle_count", "needle_diameter", "brand", "handle_material"],
+        "filters": ["material", "brand", "compatibility"],
+        "brew_methods": ["brew_time_range", "water_temperature", "grind_size"]
       },
       "note": "All fields except id and name are optional. Only one item per table can have is_default=true. Regions table includes additional country_id field as foreign key reference. Extended fields are specific to certain lookup types."
     }
   },
   "validation_rules": {
-    "tasting_scores": "Integer range 1-10",
+    "tasting_scores": "Integer range 1-10 (sweetness, acidity, bitterness, body, aroma, flavor_profile_match, crema)",
+    "overall_scores": "Float range 1.0-10.0 (brew_sessions.score, shots.score - overrides calculated score)",
+    "star_ratings": "Float range 0.0-5.0 in 0.5 steps (products.rating, batches.rating - user star ratings)",
     "ids": "Auto-incrementing integers starting from 1",
     "dates": "ISO format strings (YYYY-MM-DD)",
     "timestamps": "ISO datetime strings (YYYY-MM-DDTHH:mm:ss)",

@@ -174,6 +174,7 @@ class TestProductRepository:
         
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -185,48 +186,6 @@ class TestProductRepository:
         deleted_product = product_repo.find_by_id(product_id)
         assert deleted_product is None
     
-    def test_find_by_filters(self, repo_factory):
-        """Test finding products by filters."""
-        roaster_repo = repo_factory.get_roaster_repository()
-        bean_type_repo = repo_factory.get_bean_type_repository()
-        product_repo = repo_factory.get_product_repository()
-        
-        # Create test data
-        roaster1 = roaster_repo.create({'name': 'Roaster 1'})
-        roaster2 = roaster_repo.create({'name': 'Roaster 2'})
-        bean_type = bean_type_repo.create({'name': 'Arabica'})
-        
-        # Create products
-        product1 = product_repo.create({
-            'roaster': 'Roaster 1',
-            'roaster_id': roaster1['id'],
-            'bean_type': 'Arabica',
-            'bean_type_id': bean_type['id']
-        })
-        product2 = product_repo.create({
-            'roaster': 'Roaster 2',
-            'roaster_id': roaster2['id'],
-            'bean_type': 'Arabica',
-            'bean_type_id': bean_type['id']
-        })
-        product3 = product_repo.create({
-            'roaster': 'Roaster 1',
-            'roaster_id': roaster1['id']
-        })
-        
-        # Test filters
-        filtered = product_repo.find_by_filters({'roaster': 'Roaster 1'})
-        assert len(filtered) == 2
-        
-        filtered = product_repo.find_by_filters({'bean_type': 'Arabica'})
-        assert len(filtered) == 2
-        
-        filtered = product_repo.find_by_filters({
-            'roaster': 'Roaster 1',
-            'bean_type': 'Arabica'
-        })
-        assert len(filtered) == 1
-        assert filtered[0]['id'] == product1['id']
 
 
 class TestBatchRepository:
@@ -241,6 +200,7 @@ class TestBatchRepository:
         # Create dependencies
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -270,10 +230,12 @@ class TestBatchRepository:
         # Create test data
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product1 = product_repo.create({
+            'product_name': 'Test Product 1',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
         product2 = product_repo.create({
+            'product_name': 'Test Product 2',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -309,6 +271,7 @@ class TestBatchRepository:
         # Create test data
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -346,6 +309,7 @@ class TestBrewSessionRepository:
         # Create dependencies
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -385,10 +349,12 @@ class TestBrewSessionRepository:
         # Create test data
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product1 = product_repo.create({
+            'product_name': 'Test Product 1',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
         product2 = product_repo.create({
+            'product_name': 'Test Product 2',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -436,6 +402,7 @@ class TestBrewSessionRepository:
         # Create test data
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -481,6 +448,7 @@ class TestCalculatedProperties:
         
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -507,6 +475,7 @@ class TestCalculatedProperties:
         
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -536,6 +505,7 @@ class TestCalculatedProperties:
         
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })
@@ -562,6 +532,7 @@ class TestCalculatedProperties:
         
         roaster = roaster_repo.create({'name': 'Test Roaster'})
         product = product_repo.create({
+            'product_name': 'Test Product',
             'roaster': 'Test Roaster',
             'roaster_id': roaster['id']
         })

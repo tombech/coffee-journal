@@ -6,7 +6,10 @@ from pathlib import Path
 import threading
 import tempfile
 from filelock import FileLock, Timeout
+import jsonschema
+from jsonschema import validate, ValidationError
 from .base import BaseRepository, LookupRepository
+from .schemas import get_schema_for_entity
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -24,6 +27,8 @@ class JSONRepositoryBase(BaseRepository):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.filepath = self.data_dir / filename
+        self.filename = filename
+        self.entity_name = filename[:-5] if filename.endswith('.json') else filename
         
         # Create cross-process lock file in system temp directory to avoid permissions issues
         lock_dir = Path(tempfile.gettempdir()) / "coffeejournal_locks"
@@ -38,6 +43,10 @@ class JSONRepositoryBase(BaseRepository):
         # In-memory cache for performance
         self._cache = None
         self._cache_mtime = None
+        
+        # Schema validation settings
+        self._enable_validation = os.environ.get('DISABLE_SCHEMA_VALIDATION', '').lower() != 'true'
+        self._schema = None
         
         self._ensure_file_exists()
     
@@ -145,6 +154,67 @@ class JSONRepositoryBase(BaseRepository):
         except Timeout:
             raise RuntimeError(f"Timeout waiting for write lock on {self.filepath}")
     
+    def _get_schema(self):
+        """Get the JSON schema for this repository's entity type."""
+        if self._schema is None:
+            self._schema = get_schema_for_entity(self.entity_name)
+        return self._schema
+    
+    def _validate_entity(self, entity: Dict[str, Any], skip_fields: List[str] = None) -> None:
+        """Validate an entity against its schema."""
+        if not self._enable_validation:
+            return
+        
+        schema = self._get_schema()
+        if not schema:
+            return  # No schema defined for this entity
+        
+        # Create a copy for validation to avoid modifying the original
+        entity_copy = entity.copy()
+        
+        # Remove fields that should be skipped (e.g., calculated fields)
+        if skip_fields:
+            for field in skip_fields:
+                entity_copy.pop(field, None)
+        
+        try:
+            validate(instance=entity_copy, schema=schema)
+        except ValidationError as e:
+            # Add debugging info for troubleshooting
+            print(f"DEBUG: Validation failed for {self.entity_name}")
+            print(f"DEBUG: Entity data: {entity_copy}")
+            print(f"DEBUG: Error: {e.message}")
+            print(f"DEBUG: Error path: {e.absolute_path}")
+            raise ValueError(f"Schema validation failed for {self.entity_name}: {e.message}")
+    
+    def _validate_all_data(self, data: List[Dict[str, Any]]) -> List[str]:
+        """Validate all entities in the dataset and return any validation errors."""
+        if not self._enable_validation:
+            return []
+        
+        errors = []
+        for i, entity in enumerate(data):
+            try:
+                self._validate_entity(entity)
+            except ValueError as e:
+                errors.append(f"Record {i} (ID: {entity.get('id', 'unknown')}): {e}")
+        
+        return errors
+    
+    def _strip_enriched_fields(self, entity: Dict[str, Any]) -> Dict[str, Any]:
+        """Remove any fields that are not in the schema (enriched/calculated fields)."""
+        schema = self._get_schema()
+        if not schema or 'properties' not in schema:
+            return entity
+        
+        allowed_fields = set(schema['properties'].keys())
+        cleaned = {}
+        for key, value in entity.items():
+            if key in allowed_fields:
+                cleaned[key] = value
+        
+        return cleaned
+    
     def _get_next_id(self, data: List[Dict[str, Any]]) -> int:
         """Get next available ID."""
         if not data:
@@ -166,8 +236,11 @@ class JSONRepositoryBase(BaseRepository):
     
     def create(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create new entity."""
+        # Strip any enriched fields that shouldn't be saved
+        cleaned_data = self._strip_enriched_fields(data)
+        
         all_data = self._read_data()
-        new_item = data.copy()
+        new_item = cleaned_data.copy()
         new_item['id'] = self._get_next_id(all_data)
         
         # Add audit timestamps
@@ -175,25 +248,41 @@ class JSONRepositoryBase(BaseRepository):
         new_item['created_at'] = now
         new_item['updated_at'] = now
         
+        # Validate before saving
+        self._validate_entity(new_item)
+        
         all_data.append(new_item)
         self._write_data(all_data)
         return new_item
     
     def update(self, id: int, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Update existing entity."""
+        # Strip any enriched fields that shouldn't be saved
+        cleaned_data = self._strip_enriched_fields(data)
+        print(f"DEBUG UPDATE: Original data: {data}")
+        print(f"DEBUG UPDATE: Cleaned data: {cleaned_data}")
+        
         all_data = self._read_data()
         for i, item in enumerate(all_data):
             if item['id'] == id:
+                print(f"DEBUG UPDATE: Existing item: {item}")
                 # Start with existing item to preserve all fields
                 updated_item = item.copy()
-                # Merge in the update data
-                updated_item.update(data)
+                # Merge in the cleaned update data
+                updated_item.update(cleaned_data)
+                print(f"DEBUG UPDATE: Updated item before timestamps: {updated_item}")
                 # Ensure ID is preserved
                 updated_item['id'] = id
                 
                 # Preserve created_at, update updated_at
                 updated_item['created_at'] = item.get('created_at', datetime.now(timezone.utc).isoformat())
                 updated_item['updated_at'] = datetime.now(timezone.utc).isoformat()
+                
+                # Validate before saving (skip enriched fields that may be present)
+                schema = self._get_schema()
+                allowed_fields = set(schema['properties'].keys()) if schema and 'properties' in schema else set()
+                enriched_fields = [key for key in updated_item.keys() if key not in allowed_fields]
+                self._validate_entity(updated_item, skip_fields=enriched_fields)
                 
                 all_data[i] = updated_item
                 self._write_data(all_data)
@@ -528,25 +617,6 @@ class ProductRepository(JSONRepositoryBase):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'products.json')
     
-    def find_by_filters(self, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Find products matching filters."""
-        products = self.find_all()
-        filtered = products
-        
-        # Note: These filters expect string values but the data stores IDs.
-        # For now, this method is not fully compatible with the ID-based structure.
-        # Filtering should be done at the API level after enrichment.
-        if 'roaster' in filters:
-            # Legacy: look for roaster name in deprecated 'roaster' field
-            filtered = [p for p in filtered if p.get('roaster') == filters['roaster']]
-        if 'bean_type' in filters:
-            # Legacy: look for bean_type name in deprecated 'bean_type' field
-            filtered = [p for p in filtered if filters['bean_type'] in p.get('bean_type', [])]
-        if 'country' in filters:
-            # Legacy: look for country name in deprecated 'country' field
-            filtered = [p for p in filtered if p.get('country') == filters['country']]
-        
-        return filtered
 
 
 class BatchRepository(JSONRepositoryBase):

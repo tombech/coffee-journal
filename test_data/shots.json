@@ -28,7 +28,118 @@
     "timestamp": "2025-08-07T15:54:26.495445",
     "updated_at": "2025-08-11T22:24:44.306024+00:00",
     "ratio": "1:2.27",
-    "created_at": "2025-08-11T22:24:44.306019+00:00"
+    "created_at": "2025-08-11T22:24:44.306019+00:00",
+    "product": {
+      "id": 4,
+      "roaster_id": 4,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 5,
+      "region_id": [
+        5
+      ],
+      "product_name": "Hologram",
+      "roast_type": 3,
+      "description": "Kenyan coffee with bright acidity and wine-like characteristics",
+      "url": "https://counterculturecoffee.com/coffee/hologram",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
+      "decaf": false,
+      "roaster": {
+        "id": 4,
+        "name": "Counter Culture Coffee",
+        "short_form": "Counter Culture",
+        "description": "Durham-based sustainable coffee roaster",
+        "url": "https://counterculturecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 5,
+        "name": "Kenya",
+        "short_form": "Kenya",
+        "description": "High-grown coffees known for wine-like acidity"
+      },
+      "region": [
+        {
+          "id": 5,
+          "name": "Nyeri",
+          "short_form": "Nyeri",
+          "country_id": 5,
+          "description": "Kenyan region known for bright acidity"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Hologram",
+    "batch": {
+      "id": 4,
+      "product_id": 4,
+      "roast_date": "2024-12-20",
+      "purchase_date": "2024-12-28",
+      "amount_grams": 250.0,
+      "price": 16.0,
+      "seller": "Counter Culture Direct",
+      "notes": "Limited edition batch",
+      "rating": 5,
+      "is_active": true
+    },
+    "coffee_age": "33 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 5,
+      "name": "Wilfa Uniform",
+      "short_form": "Uniform",
+      "description": "Nordic-designed electric grinder"
+    },
+    "grinder_name": "Wilfa Uniform",
+    "portafilter": {
+      "id": 4,
+      "name": "VST 58mm",
+      "short_form": "VST 58mm",
+      "description": "Precision VST 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "stainless steel"
+    },
+    "portafilter_name": "VST 58mm",
+    "basket": {
+      "id": 2,
+      "name": "VST 18g",
+      "short_form": "VST 18g",
+      "description": "Precision VST 18g basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 37
+    },
+    "basket_name": "VST 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "calculated_score": 7.8
   },
   {
     "id": 2,
@@ -59,7 +170,117 @@
     "timestamp": "2025-08-07T17:21:26.495445",
     "updated_at": "2025-08-11T22:24:44.319926+00:00",
     "ratio": "1:2.35",
-    "created_at": "2025-08-11T22:24:44.319923+00:00"
+    "created_at": "2025-08-11T22:24:44.319923+00:00",
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 2,
+      "name": "Gaggia Classic Pro",
+      "short_form": "Classic Pro",
+      "description": "Traditional Italian espresso machine",
+      "type": "espresso",
+      "brand": "Gaggia",
+      "model": "Classic Pro"
+    },
+    "brewer_name": "Gaggia Classic Pro",
+    "grinder": {
+      "id": 5,
+      "name": "Wilfa Uniform",
+      "short_form": "Uniform",
+      "description": "Nordic-designed electric grinder"
+    },
+    "grinder_name": "Wilfa Uniform",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 2,
+      "name": "Decent Tamper",
+      "short_form": "Decent",
+      "description": "Precision tamper with level base",
+      "size": "58.5mm",
+      "weight": "500g",
+      "material": "stainless steel",
+      "base_style": "convex"
+    },
+    "tamper_name": "Decent Tamper",
+    "calculated_score": 6.2
   },
   {
     "id": 3,
@@ -90,7 +311,117 @@
     "timestamp": "2025-08-07T15:52:26.495445",
     "updated_at": "2025-08-11T22:24:44.324099+00:00",
     "ratio": "1:2.17",
-    "created_at": "2025-08-11T22:24:44.324093+00:00"
+    "created_at": "2025-08-11T22:24:44.324093+00:00",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 3,
+      "name": "Fellow Ode",
+      "short_form": "Ode",
+      "description": "Flat burr grinder optimized for filter coffee"
+    },
+    "grinder_name": "Fellow Ode",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 2,
+      "name": "Decent Tamper",
+      "short_form": "Decent",
+      "description": "Precision tamper with level base",
+      "size": "58.5mm",
+      "weight": "500g",
+      "material": "stainless steel",
+      "base_style": "convex"
+    },
+    "tamper_name": "Decent Tamper",
+    "calculated_score": 8.2
   },
   {
     "id": 4,
@@ -121,7 +452,117 @@
     "timestamp": "2025-08-07T15:55:26.495445",
     "updated_at": "2025-08-11T22:24:44.328980+00:00",
     "ratio": "1:1.63",
-    "created_at": "2025-08-11T22:24:44.328972+00:00"
+    "created_at": "2025-08-11T22:24:44.328972+00:00",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 4,
+      "name": "VST 58mm",
+      "short_form": "VST 58mm",
+      "description": "Precision VST 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "stainless steel"
+    },
+    "portafilter_name": "VST 58mm",
+    "basket": {
+      "id": 3,
+      "name": "IMS 20g",
+      "short_form": "IMS 20g",
+      "description": "Competition IMS 20g basket",
+      "size": "58mm",
+      "capacity": "20g",
+      "holes": 39
+    },
+    "basket_name": "IMS 20g",
+    "tamper": {
+      "id": 2,
+      "name": "Decent Tamper",
+      "short_form": "Decent",
+      "description": "Precision tamper with level base",
+      "size": "58.5mm",
+      "weight": "500g",
+      "material": "stainless steel",
+      "base_style": "convex"
+    },
+    "tamper_name": "Decent Tamper",
+    "calculated_score": 6.8
   },
   {
     "id": 5,
@@ -152,7 +593,117 @@
     "timestamp": "2025-08-07T16:53:26.495445",
     "updated_at": "2025-08-11T22:24:44.334714+00:00",
     "ratio": "1:1.7",
-    "created_at": "2025-08-11T22:24:44.334709+00:00"
+    "created_at": "2025-08-11T22:24:44.334709+00:00",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 2,
+      "name": "Baratza Encore",
+      "short_form": "Encore",
+      "description": "Entry-level electric burr grinder"
+    },
+    "grinder_name": "Baratza Encore",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 1,
+      "name": "Basic 58mm",
+      "short_form": "Basic 58mm",
+      "description": "Standard aluminum tamper",
+      "size": "58mm",
+      "weight": "400g",
+      "material": "aluminum",
+      "base_style": "flat"
+    },
+    "tamper_name": "Basic 58mm",
+    "calculated_score": 6.6
   },
   {
     "id": 6,
@@ -180,7 +731,127 @@
     "bitterness": 1,
     "overall_score": 4,
     "notes": "Slightly sour - adjust grind finer",
-    "timestamp": "2025-08-09T15:57:26.495462"
+    "timestamp": "2025-08-09T15:57:26.495462",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "35 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 2,
+      "name": "Baratza Encore",
+      "short_form": "Encore",
+      "description": "Entry-level electric burr grinder"
+    },
+    "grinder_name": "Baratza Encore",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 2,
+      "session_name": "Weekend Practice",
+      "product_id": 3,
+      "product_batch_id": 3,
+      "brewer_id": 3,
+      "notes": "Working on dialing in this new batch",
+      "created_at": "2025-08-09T15:47:26.495462"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 7.0
   },
   {
     "id": 7,
@@ -208,7 +879,128 @@
     "bitterness": 7,
     "overall_score": 5,
     "notes": "",
-    "timestamp": "2025-08-09T16:56:26.495462"
+    "timestamp": "2025-08-09T16:56:26.495462",
+    "product": {
+      "id": 4,
+      "roaster_id": 4,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 5,
+      "region_id": [
+        5
+      ],
+      "product_name": "Hologram",
+      "roast_type": 3,
+      "description": "Kenyan coffee with bright acidity and wine-like characteristics",
+      "url": "https://counterculturecoffee.com/coffee/hologram",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
+      "decaf": false,
+      "roaster": {
+        "id": 4,
+        "name": "Counter Culture Coffee",
+        "short_form": "Counter Culture",
+        "description": "Durham-based sustainable coffee roaster",
+        "url": "https://counterculturecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 5,
+        "name": "Kenya",
+        "short_form": "Kenya",
+        "description": "High-grown coffees known for wine-like acidity"
+      },
+      "region": [
+        {
+          "id": 5,
+          "name": "Nyeri",
+          "short_form": "Nyeri",
+          "country_id": 5,
+          "description": "Kenyan region known for bright acidity"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Hologram",
+    "batch": {
+      "id": 4,
+      "product_id": 4,
+      "roast_date": "2024-12-20",
+      "purchase_date": "2024-12-28",
+      "amount_grams": 250.0,
+      "price": 16.0,
+      "seller": "Counter Culture Direct",
+      "notes": "Limited edition batch",
+      "rating": 5,
+      "is_active": true
+    },
+    "coffee_age": "33 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 2,
+      "session_name": "Weekend Practice",
+      "product_id": 3,
+      "product_batch_id": 3,
+      "brewer_id": 3,
+      "notes": "Working on dialing in this new batch",
+      "created_at": "2025-08-09T15:47:26.495462"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 4.4
   },
   {
     "id": 8,
@@ -236,7 +1028,127 @@
     "bitterness": 2,
     "overall_score": 9,
     "notes": "Good crema formation",
-    "timestamp": "2025-08-09T16:17:26.495462"
+    "timestamp": "2025-08-09T16:17:26.495462",
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 2,
+      "name": "Gaggia Classic Pro",
+      "short_form": "Classic Pro",
+      "description": "Traditional Italian espresso machine",
+      "type": "espresso",
+      "brand": "Gaggia",
+      "model": "Classic Pro"
+    },
+    "brewer_name": "Gaggia Classic Pro",
+    "grinder": {
+      "id": 4,
+      "name": "Comandante C40",
+      "short_form": "C40",
+      "description": "Premium conical burr hand grinder"
+    },
+    "grinder_name": "Comandante C40",
+    "portafilter": {
+      "id": 4,
+      "name": "VST 58mm",
+      "short_form": "VST 58mm",
+      "description": "Precision VST 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "stainless steel"
+    },
+    "portafilter_name": "VST 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 2,
+      "session_name": "Weekend Practice",
+      "product_id": 3,
+      "product_batch_id": 3,
+      "brewer_id": 3,
+      "notes": "Working on dialing in this new batch",
+      "created_at": "2025-08-09T15:47:26.495462"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 8.0
   },
   {
     "id": 9,
@@ -264,7 +1176,127 @@
     "bitterness": 3,
     "overall_score": 10,
     "notes": "Rich body with caramel sweetness",
-    "timestamp": "2025-08-09T16:42:26.495462"
+    "timestamp": "2025-08-09T16:42:26.495462",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "35 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 3,
+      "name": "IMS 20g",
+      "short_form": "IMS 20g",
+      "description": "Competition IMS 20g basket",
+      "size": "58mm",
+      "capacity": "20g",
+      "holes": 39
+    },
+    "basket_name": "IMS 20g",
+    "tamper": {
+      "id": 1,
+      "name": "Basic 58mm",
+      "short_form": "Basic 58mm",
+      "description": "Standard aluminum tamper",
+      "size": "58mm",
+      "weight": "400g",
+      "material": "aluminum",
+      "base_style": "flat"
+    },
+    "tamper_name": "Basic 58mm",
+    "shot_session": {
+      "id": 2,
+      "session_name": "Weekend Practice",
+      "product_id": 3,
+      "product_batch_id": 3,
+      "brewer_id": 3,
+      "notes": "Working on dialing in this new batch",
+      "created_at": "2025-08-09T15:47:26.495462"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 8.0
   },
   {
     "id": 10,
@@ -292,7 +1324,127 @@
     "bitterness": 1,
     "overall_score": 8,
     "notes": "",
-    "timestamp": "2025-08-03T16:20:26.495473"
+    "timestamp": "2025-08-03T16:20:26.495473",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 3,
+      "name": "Fellow Ode",
+      "short_form": "Ode",
+      "description": "Flat burr grinder optimized for filter coffee"
+    },
+    "grinder_name": "Fellow Ode",
+    "portafilter": {
+      "id": 1,
+      "name": "Standard 58mm",
+      "short_form": "Standard 58mm",
+      "description": "Standard 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 2,
+      "material": "brass"
+    },
+    "portafilter_name": "Standard 58mm",
+    "basket": {
+      "id": 3,
+      "name": "IMS 20g",
+      "short_form": "IMS 20g",
+      "description": "Competition IMS 20g basket",
+      "size": "58mm",
+      "capacity": "20g",
+      "holes": 39
+    },
+    "basket_name": "IMS 20g",
+    "tamper": {
+      "id": 2,
+      "name": "Decent Tamper",
+      "short_form": "Decent",
+      "description": "Precision tamper with level base",
+      "size": "58.5mm",
+      "weight": "500g",
+      "material": "stainless steel",
+      "base_style": "convex"
+    },
+    "tamper_name": "Decent Tamper",
+    "shot_session": {
+      "id": 3,
+      "session_name": "New Bean Exploration",
+      "product_id": 4,
+      "product_batch_id": 4,
+      "brewer_id": 1,
+      "notes": "Experimenting with different dose ratios",
+      "created_at": "2025-08-03T15:47:26.495473"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 8.4
   },
   {
     "id": 11,
@@ -320,7 +1472,127 @@
     "bitterness": 1,
     "overall_score": 4,
     "notes": "Good crema formation",
-    "timestamp": "2025-08-03T16:39:26.495473"
+    "timestamp": "2025-08-03T16:39:26.495473",
+    "product": {
+      "id": 3,
+      "roaster_id": 3,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 4,
+      "region_id": [
+        4
+      ],
+      "product_name": "Guatemala Antigua",
+      "roast_type": 4,
+      "description": "Full-bodied Guatemalan coffee with spicy undertones",
+      "url": "https://www.stumptowncoffee.com/products/guatemala-antigua",
+      "image_url": "https://via.placeholder.com/300x300/795548/FFFFFF?text=Guatemala+Antigua",
+      "decaf": false,
+      "roaster": {
+        "id": 3,
+        "name": "Stumptown Coffee Roasters",
+        "short_form": "Stumptown",
+        "description": "Portland-based artisan coffee roaster",
+        "url": "https://www.stumptowncoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 4,
+        "name": "Guatemala",
+        "short_form": "Guatemala",
+        "description": "Volcanic soil producing full-bodied coffees"
+      },
+      "region": [
+        {
+          "id": 4,
+          "name": "Antigua",
+          "short_form": "Antigua",
+          "country_id": 4,
+          "description": "Historic Guatemalan volcanic valley"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Guatemala Antigua",
+    "batch": {
+      "id": 3,
+      "product_id": 3,
+      "roast_date": "2024-12-10",
+      "purchase_date": "2024-12-25",
+      "amount_grams": 340.0,
+      "price": 19.75,
+      "seller": "Local Coffee Shop",
+      "notes": "Christmas gift",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 3,
+      "name": "Rancilio Silvia",
+      "short_form": "Silvia",
+      "description": "Semi-professional home espresso machine",
+      "type": "espresso",
+      "brand": "Rancilio",
+      "model": "Silvia"
+    },
+    "brewer_name": "Rancilio Silvia",
+    "grinder": {
+      "id": 2,
+      "name": "Baratza Encore",
+      "short_form": "Encore",
+      "description": "Entry-level electric burr grinder"
+    },
+    "grinder_name": "Baratza Encore",
+    "portafilter": {
+      "id": 1,
+      "name": "Standard 58mm",
+      "short_form": "Standard 58mm",
+      "description": "Standard 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 2,
+      "material": "brass"
+    },
+    "portafilter_name": "Standard 58mm",
+    "basket": {
+      "id": 3,
+      "name": "IMS 20g",
+      "short_form": "IMS 20g",
+      "description": "Competition IMS 20g basket",
+      "size": "58mm",
+      "capacity": "20g",
+      "holes": 39
+    },
+    "basket_name": "IMS 20g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 3,
+      "session_name": "New Bean Exploration",
+      "product_id": 4,
+      "product_batch_id": 4,
+      "brewer_id": 1,
+      "notes": "Experimenting with different dose ratios",
+      "created_at": "2025-08-03T15:47:26.495473"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 6.8
   },
   {
     "id": 12,
@@ -348,7 +1620,128 @@
     "bitterness": 3,
     "overall_score": 10,
     "notes": "Good crema formation",
-    "timestamp": "2025-08-03T17:34:26.495473"
+    "timestamp": "2025-08-03T17:34:26.495473",
+    "product": {
+      "id": 4,
+      "roaster_id": 4,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 5,
+      "region_id": [
+        5
+      ],
+      "product_name": "Hologram",
+      "roast_type": 3,
+      "description": "Kenyan coffee with bright acidity and wine-like characteristics",
+      "url": "https://counterculturecoffee.com/coffee/hologram",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
+      "decaf": false,
+      "roaster": {
+        "id": 4,
+        "name": "Counter Culture Coffee",
+        "short_form": "Counter Culture",
+        "description": "Durham-based sustainable coffee roaster",
+        "url": "https://counterculturecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 5,
+        "name": "Kenya",
+        "short_form": "Kenya",
+        "description": "High-grown coffees known for wine-like acidity"
+      },
+      "region": [
+        {
+          "id": 5,
+          "name": "Nyeri",
+          "short_form": "Nyeri",
+          "country_id": 5,
+          "description": "Kenyan region known for bright acidity"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Hologram",
+    "batch": {
+      "id": 4,
+      "product_id": 4,
+      "roast_date": "2024-12-20",
+      "purchase_date": "2024-12-28",
+      "amount_grams": 250.0,
+      "price": 16.0,
+      "seller": "Counter Culture Direct",
+      "notes": "Limited edition batch",
+      "rating": 5,
+      "is_active": true
+    },
+    "coffee_age": "32 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 3,
+      "name": "Fellow Ode",
+      "short_form": "Ode",
+      "description": "Flat burr grinder optimized for filter coffee"
+    },
+    "grinder_name": "Fellow Ode",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 2,
+      "name": "VST 18g",
+      "short_form": "VST 18g",
+      "description": "Precision VST 18g basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 37
+    },
+    "basket_name": "VST 18g",
+    "tamper": {
+      "id": 1,
+      "name": "Basic 58mm",
+      "short_form": "Basic 58mm",
+      "description": "Standard aluminum tamper",
+      "size": "58mm",
+      "weight": "400g",
+      "material": "aluminum",
+      "base_style": "flat"
+    },
+    "tamper_name": "Basic 58mm",
+    "shot_session": {
+      "id": 3,
+      "session_name": "New Bean Exploration",
+      "product_id": 4,
+      "product_batch_id": 4,
+      "brewer_id": 1,
+      "notes": "Experimenting with different dose ratios",
+      "created_at": "2025-08-03T15:47:26.495473"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 8.6
   },
   {
     "id": 13,
@@ -404,7 +1797,128 @@
     "bitterness": 2,
     "overall_score": 5,
     "notes": "Too bitter - try coarser grind",
-    "timestamp": "2025-07-29T16:40:26.495482"
+    "timestamp": "2025-07-29T16:40:26.495482",
+    "product": {
+      "id": 4,
+      "roaster_id": 4,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 5,
+      "region_id": [
+        5
+      ],
+      "product_name": "Hologram",
+      "roast_type": 3,
+      "description": "Kenyan coffee with bright acidity and wine-like characteristics",
+      "url": "https://counterculturecoffee.com/coffee/hologram",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
+      "decaf": false,
+      "roaster": {
+        "id": 4,
+        "name": "Counter Culture Coffee",
+        "short_form": "Counter Culture",
+        "description": "Durham-based sustainable coffee roaster",
+        "url": "https://counterculturecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 5,
+        "name": "Kenya",
+        "short_form": "Kenya",
+        "description": "High-grown coffees known for wine-like acidity"
+      },
+      "region": [
+        {
+          "id": 5,
+          "name": "Nyeri",
+          "short_form": "Nyeri",
+          "country_id": 5,
+          "description": "Kenyan region known for bright acidity"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Hologram",
+    "batch": {
+      "id": 4,
+      "product_id": 4,
+      "roast_date": "2024-12-20",
+      "purchase_date": "2024-12-28",
+      "amount_grams": 250.0,
+      "price": 16.0,
+      "seller": "Counter Culture Direct",
+      "notes": "Limited edition batch",
+      "rating": 5,
+      "is_active": true
+    },
+    "coffee_age": "32 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 3,
+      "name": "IMS 20g",
+      "short_form": "IMS 20g",
+      "description": "Competition IMS 20g basket",
+      "size": "58mm",
+      "capacity": "20g",
+      "holes": 39
+    },
+    "basket_name": "IMS 20g",
+    "tamper": {
+      "id": 1,
+      "name": "Basic 58mm",
+      "short_form": "Basic 58mm",
+      "description": "Standard aluminum tamper",
+      "size": "58mm",
+      "weight": "400g",
+      "material": "aluminum",
+      "base_style": "flat"
+    },
+    "tamper_name": "Basic 58mm",
+    "shot_session": {
+      "id": 4,
+      "session_name": "Dialing Competition Shot",
+      "product_id": 1,
+      "product_batch_id": 1,
+      "brewer_id": 4,
+      "notes": "Perfecting extraction timing",
+      "created_at": "2025-07-29T15:47:26.495482"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 5.8
   },
   {
     "id": 15,
@@ -432,7 +1946,127 @@
     "bitterness": 2,
     "overall_score": 6,
     "notes": "Too bitter - try coarser grind",
-    "timestamp": "2025-07-29T17:35:26.495482"
+    "timestamp": "2025-07-29T17:35:26.495482",
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "32 weeks",
+    "brewer": {
+      "id": 2,
+      "name": "Gaggia Classic Pro",
+      "short_form": "Classic Pro",
+      "description": "Traditional Italian espresso machine",
+      "type": "espresso",
+      "brand": "Gaggia",
+      "model": "Classic Pro"
+    },
+    "brewer_name": "Gaggia Classic Pro",
+    "grinder": {
+      "id": 2,
+      "name": "Baratza Encore",
+      "short_form": "Encore",
+      "description": "Entry-level electric burr grinder"
+    },
+    "grinder_name": "Baratza Encore",
+    "portafilter": {
+      "id": 1,
+      "name": "Standard 58mm",
+      "short_form": "Standard 58mm",
+      "description": "Standard 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 2,
+      "material": "brass"
+    },
+    "portafilter_name": "Standard 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 4,
+      "session_name": "Dialing Competition Shot",
+      "product_id": 1,
+      "product_batch_id": 1,
+      "brewer_id": 4,
+      "notes": "Perfecting extraction timing",
+      "created_at": "2025-07-29T15:47:26.495482"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 6.6
   },
   {
     "id": 16,
@@ -488,7 +2122,127 @@
     "bitterness": 1,
     "overall_score": 10,
     "notes": "Smooth and balanced",
-    "timestamp": "2025-07-29T17:34:26.495482"
+    "timestamp": "2025-07-29T17:34:26.495482",
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "32 weeks",
+    "brewer": {
+      "id": 2,
+      "name": "Gaggia Classic Pro",
+      "short_form": "Classic Pro",
+      "description": "Traditional Italian espresso machine",
+      "type": "espresso",
+      "brand": "Gaggia",
+      "model": "Classic Pro"
+    },
+    "brewer_name": "Gaggia Classic Pro",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 1,
+      "name": "Standard 58mm",
+      "short_form": "Standard 58mm",
+      "description": "Standard 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 2,
+      "material": "brass"
+    },
+    "portafilter_name": "Standard 58mm",
+    "basket": {
+      "id": 2,
+      "name": "VST 18g",
+      "short_form": "VST 18g",
+      "description": "Precision VST 18g basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 37
+    },
+    "basket_name": "VST 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "shot_session": {
+      "id": 4,
+      "session_name": "Dialing Competition Shot",
+      "product_id": 1,
+      "product_batch_id": 1,
+      "brewer_id": 4,
+      "notes": "Perfecting extraction timing",
+      "created_at": "2025-07-29T15:47:26.495482"
+    },
+    "shot_session_title": "Unknown",
+    "calculated_score": 9.0
   },
   {
     "id": 18,
@@ -544,7 +2298,118 @@
     "bitterness": 1,
     "overall_score": 9,
     "notes": "Perfect extraction today",
-    "timestamp": "2025-08-05T05:06:26.495428"
+    "timestamp": "2025-08-05T05:06:26.495428",
+    "product": {
+      "id": 4,
+      "roaster_id": 4,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 5,
+      "region_id": [
+        5
+      ],
+      "product_name": "Hologram",
+      "roast_type": 3,
+      "description": "Kenyan coffee with bright acidity and wine-like characteristics",
+      "url": "https://counterculturecoffee.com/coffee/hologram",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Hologram",
+      "decaf": false,
+      "roaster": {
+        "id": 4,
+        "name": "Counter Culture Coffee",
+        "short_form": "Counter Culture",
+        "description": "Durham-based sustainable coffee roaster",
+        "url": "https://counterculturecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 5,
+        "name": "Kenya",
+        "short_form": "Kenya",
+        "description": "High-grown coffees known for wine-like acidity"
+      },
+      "region": [
+        {
+          "id": 5,
+          "name": "Nyeri",
+          "short_form": "Nyeri",
+          "country_id": 5,
+          "description": "Kenyan region known for bright acidity"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Hologram",
+    "batch": {
+      "id": 4,
+      "product_id": 4,
+      "roast_date": "2024-12-20",
+      "purchase_date": "2024-12-28",
+      "amount_grams": 250.0,
+      "price": 16.0,
+      "seller": "Counter Culture Direct",
+      "notes": "Limited edition batch",
+      "rating": 5,
+      "is_active": true
+    },
+    "coffee_age": "33 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 7,
+      "name": "Baratza Virtuoso+",
+      "short_form": "Virtuoso+",
+      "description": "Mid-range conical burr grinder"
+    },
+    "grinder_name": "Baratza Virtuoso+",
+    "portafilter": {
+      "id": 2,
+      "name": "Naked 58mm",
+      "short_form": "Naked 58mm",
+      "description": "Bottomless 58mm portafilter",
+      "size": "58mm",
+      "basket_count": 1,
+      "material": "brass"
+    },
+    "portafilter_name": "Naked 58mm",
+    "basket": {
+      "id": 1,
+      "name": "Standard 18g",
+      "short_form": "18g",
+      "description": "Standard double basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 36
+    },
+    "basket_name": "Standard 18g",
+    "tamper": {
+      "id": 3,
+      "name": "Pullman Big Step",
+      "short_form": "Pullman",
+      "description": "Professional competition tamper",
+      "size": "58.55mm",
+      "weight": "750g",
+      "material": "stainless steel",
+      "base_style": "flat"
+    },
+    "tamper_name": "Pullman Big Step",
+    "calculated_score": 9.0
   },
   {
     "id": 20,
@@ -603,7 +2468,114 @@
     "created_at": "2025-08-13T14:04:56.675993+00:00",
     "updated_at": "2025-08-13T14:04:56.675993+00:00",
     "ratio": "1:2.17",
-    "id": 21
+    "id": 21,
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 5,
+      "name": "Wilfa Uniform",
+      "short_form": "Uniform",
+      "description": "Nordic-designed electric grinder"
+    },
+    "grinder_name": "Wilfa Uniform",
+    "portafilter": {
+      "id": 3,
+      "name": "Standard 54mm",
+      "short_form": "Standard 54mm",
+      "description": "Standard 54mm portafilter",
+      "size": "54mm",
+      "basket_count": 2,
+      "material": "brass"
+    },
+    "portafilter_name": "Standard 54mm",
+    "basket": {
+      "id": 2,
+      "name": "VST 18g",
+      "short_form": "VST 18g",
+      "description": "Precision VST 18g basket",
+      "size": "58mm",
+      "capacity": "18g",
+      "holes": 37
+    },
+    "basket_name": "VST 18g",
+    "scale": {
+      "id": 2,
+      "name": "Acaia Pearl",
+      "short_form": "Pearl",
+      "description": "Professional coffee scale with app connectivity"
+    },
+    "scale_name": "Acaia Pearl",
+    "dose_yield_ratio": 2.2,
+    "calculated_score": 5.3
   },
   {
     "brewer_id": 1,
@@ -617,7 +2589,91 @@
     "updated_at": "2025-08-13T21:15:20.841054+00:00",
     "timestamp": "2025-08-13T21:15:20.840998+00:00",
     "ratio": "1:2.0",
-    "id": 22
+    "id": 22,
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "shot_session": {
+      "brewer_id": 1,
+      "notes": "Testing string ID to int conversion",
+      "product_batch_id": 1,
+      "product_id": 1,
+      "title": "Test String ID Conversion",
+      "created_at": "2025-08-13T21:15:20.818883+00:00",
+      "updated_at": "2025-08-13T21:15:20.818883+00:00",
+      "id": 17
+    },
+    "shot_session_title": "Test String ID Conversion",
+    "dose_yield_ratio": 2.0,
+    "calculated_score": null
   },
   {
     "brewer_id": 1,
@@ -632,6 +2688,182 @@
     "updated_at": "2025-08-13T21:16:22.518279+00:00",
     "timestamp": "2025-08-13T21:16:22.518221+00:00",
     "ratio": "1:2.0",
-    "id": 23
+    "id": 23,
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "batch": {
+      "id": 1,
+      "product_id": 1,
+      "roast_date": "2024-12-15",
+      "purchase_date": "2024-12-20",
+      "amount_grams": 340.0,
+      "price": 18.5,
+      "seller": "Blue Bottle Coffee Store",
+      "notes": "Fresh roast, excellent quality",
+      "is_active": true
+    },
+    "coffee_age": "34 weeks",
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "grinder": {
+      "id": 1,
+      "name": "Hario Mini Mill",
+      "short_form": "Mini Mill",
+      "description": "Compact ceramic burr hand grinder"
+    },
+    "grinder_name": "Hario Mini Mill",
+    "shot_session": {
+      "brewer_id": 1,
+      "notes": "Testing production-like data",
+      "product_batch_id": 1,
+      "product_id": 1,
+      "title": "Production Test Session",
+      "created_at": "2025-08-13T21:16:22.496887+00:00",
+      "updated_at": "2025-08-13T21:16:22.496887+00:00",
+      "id": 18
+    },
+    "shot_session_title": "Production Test Session",
+    "dose_yield_ratio": 2.0,
+    "calculated_score": null
+  },
+  {
+    "brewer_id": 1,
+    "dose_grams": 18.0,
+    "extraction_time_seconds": 28,
+    "notes": "Test API shot",
+    "product_id": 1,
+    "yield_grams": 36.0,
+    "created_at": "2025-08-16T18:12:04.736959+00:00",
+    "updated_at": "2025-08-16T18:12:04.736959+00:00",
+    "timestamp": "2025-08-16T18:12:04.736596+00:00",
+    "ratio": "1:2.0",
+    "id": 24,
+    "product": {
+      "id": 1,
+      "roaster_id": 1,
+      "bean_type_id": [
+        1
+      ],
+      "country_id": 1,
+      "region_id": [
+        1
+      ],
+      "product_name": "Yirgacheffe Single Origin",
+      "roast_type": 3,
+      "description": "Bright, floral coffee with citrus notes",
+      "url": "https://bluebottlecoffee.com/coffee/yirgacheffe",
+      "image_url": "https://via.placeholder.com/300x300/8D6E63/FFFFFF?text=Yirgacheffe+Single+Origin",
+      "decaf": false,
+      "roaster": {
+        "id": 1,
+        "name": "Blue Bottle Coffee",
+        "short_form": "Blue Bottle",
+        "description": "Oakland-based specialty coffee roaster",
+        "url": "https://bluebottlecoffee.com"
+      },
+      "bean_type": [
+        {
+          "id": 1,
+          "name": "Arabica",
+          "short_form": "Arabica",
+          "description": "High-quality coffee species with complex flavors"
+        }
+      ],
+      "country": {
+        "id": 1,
+        "name": "Ethiopia",
+        "short_form": "Ethiopia",
+        "description": "Birthplace of coffee with diverse flavor profiles"
+      },
+      "region": [
+        {
+          "id": 1,
+          "name": "Yirgacheffe",
+          "short_form": "Yirgacheffe",
+          "country_id": 1,
+          "description": "Floral, tea-like Ethiopian coffees"
+        }
+      ],
+      "decaf_method": null
+    },
+    "product_name": "Yirgacheffe Single Origin",
+    "coffee_age": null,
+    "brewer": {
+      "id": 1,
+      "name": "Breville Bambino Plus",
+      "short_form": "Bambino+",
+      "description": "Entry-level espresso machine with automatic milk frother",
+      "type": "espresso",
+      "brand": "Breville",
+      "model": "Bambino Plus"
+    },
+    "brewer_name": "Breville Bambino Plus",
+    "dose_yield_ratio": 2.0,
+    "calculated_score": null
+  },
+  {
+    "dose_grams": 20.0,
+    "notes": "Test shot",
+    "yield_grams": 60.0,
+    "created_at": "2025-08-17T19:45:08.823435+00:00",
+    "updated_at": "2025-08-17T19:45:08.823435+00:00",
+    "timestamp": "2025-08-17T19:45:08.823399+00:00",
+    "ratio": "1:3.0",
+    "id": 25
   }
 ]

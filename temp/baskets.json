@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Sage single wall double",
+    "short_form": "SSWD",
+    "description": "",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "icon": "",
+    "is_default": false,
+    "basket_type": "Single",
+    "hole_count": null,
+    "capacity_grams": null,
+    "brand": "Sage",
+    "id": 1,
+    "created_at": "2025-08-12T22:21:13.361870+00:00",
+    "updated_at": "2025-08-12T22:21:13.361870+00:00"
+  },
+  {
+    "name": "Generic double",
+    "short_form": "GD",
+    "description": "Came with the bottomless portafilter",
+    "notes": "",
+    "url": "",
+    "image_url": "",
+    "icon": "",
+    "is_default": false,
+    "basket_type": "Single",
+    "hole_count": null,
+    "capacity_grams": null,
+    "brand": "Generic",
+    "id": 2,
+    "created_at": "2025-08-12T22:22:19.884557+00:00",
+    "updated_at": "2025-08-12T22:22:19.884557+00:00"
+  }
+]

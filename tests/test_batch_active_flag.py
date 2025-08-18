@@ -38,9 +38,9 @@ class TestBatchActiveFlag:
         
         # Create product
         product_data = {
-            'name': 'Test Coffee',
+            'product_name': 'Test Coffee',
             'roaster_id': roaster['id'],
-            'bean_type_ids': [bean_type['id']],
+            'bean_type_id': [bean_type['id']],
             'country_id': country['id']
         }
         product_response = client.post('/api/products', json=product_data)

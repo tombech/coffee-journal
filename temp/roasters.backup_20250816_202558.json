@@ -1,0 +1,97 @@
+[
+  {
+    "created_at": "2025-07-13T17:48:09.552777+00:00",
+    "description": null,
+    "icon": null,
+    "id": 1,
+    "image_url": "https://www.kaffebrenneriet.no/Files/Images/logo%20(1).png",
+    "name": "Kaffebrenneriet",
+    "notes": null,
+    "short_form": null,
+    "updated_at": "2025-07-19T19:04:14.402354+00:00",
+    "url": "https://www.kaffebrenneriet.no/",
+    "website": "https://www.kaffebrenneriet.no/",
+    "is_default": false
+  },
+  {
+    "created_at": "2025-07-13T17:48:09.552777+00:00",
+    "description": null,
+    "icon": null,
+    "id": 2,
+    "image_url": null,
+    "name": "Stavanger Kaffebrenneri",
+    "notes": null,
+    "short_form": null,
+    "updated_at": "2025-07-19T19:04:58.295556+00:00",
+    "url": "https://www.stavangerkaffebrenneri.no/",
+    "website": "https://www.stavangerkaffebrenneri.no/",
+    "is_default": false
+  },
+  {
+    "name": "Solberg & Hansen",
+    "id": 3,
+    "short_form": null,
+    "description": null,
+    "notes": null,
+    "url": null,
+    "image_url": null,
+    "icon": null,
+    "created_at": "2025-07-13T17:48:09.552777+00:00",
+    "updated_at": "2025-07-13T17:48:09.552777+00:00",
+    "is_default": false
+  },
+  {
+    "name": "Joh. Johnsen Kaffe AS",
+    "id": 4,
+    "short_form": null,
+    "description": null,
+    "notes": null,
+    "url": null,
+    "image_url": null,
+    "icon": null,
+    "created_at": "2025-07-13T17:48:09.552777+00:00",
+    "updated_at": "2025-07-13T17:48:09.552777+00:00",
+    "is_default": false
+  },
+  {
+    "created_at": "2025-07-13T17:48:09.552777+00:00",
+    "description": null,
+    "icon": null,
+    "id": 5,
+    "image_url": null,
+    "name": "Stockfleths",
+    "notes": null,
+    "short_form": null,
+    "updated_at": "2025-07-19T19:01:32.926547+00:00",
+    "url": null,
+    "is_default": false
+  },
+  {
+    "name": "Fuglen Coffee",
+    "id": 6,
+    "created_at": "2025-07-23T09:38:19.882193+00:00",
+    "updated_at": "2025-07-23T09:38:19.882193+00:00"
+  },
+  {
+    "name": "Espresso House",
+    "id": 7,
+    "created_at": "2025-08-05T15:19:47.688122+00:00",
+    "updated_at": "2025-08-05T15:19:47.688122+00:00"
+  },
+  {
+    "name": "B\u00f8nner i Byen",
+    "short_form": "BiB",
+    "description": "",
+    "notes": "",
+    "url": "https://bonneribyen.no",
+    "image_url": "https://bibcdn.b-cdn.net/wp-content/uploads/2022/08/cropped-Logo_web_liggende_185x55.png.webp",
+    "icon": "",
+    "is_default": false,
+    "location": "Bod\u00f8/online",
+    "website": "https://bonneribyen.no",
+    "specialty": "Kaffe og te",
+    "id": 8,
+    "created_at": "2025-08-08T10:01:24.302896+00:00",
+    "updated_at": "2025-08-08T10:01:24.302896+00:00"
+  }
+]

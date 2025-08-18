@@ -368,19 +368,22 @@ class TestDataManager {
     const portafilter = await this.createItem('portafilters', {
       name: `Test Portafilter ${this.testId}`,
       size: '58mm',
+      size_mm: 58,
       material: 'Stainless Steel'
     });
     
     const basket = await this.createItem('baskets', {
       name: `Test Basket ${this.testId}`,
-      holes: 'Precision',
-      capacity: '18g'
+      holes: 25,  // Number of holes (integer)
+      capacity_grams: 18,  // Capacity in grams (number)
+      basket_type: 'Precision'
     });
     
     const tamper = await this.createItem('tampers', {
       name: `Test Tamper ${this.testId}`,
       size: '58mm',
-      material: 'Aluminum'
+      base_material: 'Aluminum',
+      handle_material: 'Wood'
     });
     
     // Create shot with equipment

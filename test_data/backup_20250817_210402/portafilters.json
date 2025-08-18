@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Standard 58mm",
+    "short_form": "Standard 58mm",
+    "description": "Standard 58mm portafilter",
+    "size": "58mm",
+    "basket_count": 2,
+    "material": "brass"
+  },
+  {
+    "id": 2,
+    "name": "Naked 58mm",
+    "short_form": "Naked 58mm",
+    "description": "Bottomless 58mm portafilter",
+    "size": "58mm",
+    "basket_count": 1,
+    "material": "brass"
+  },
+  {
+    "id": 3,
+    "name": "Standard 54mm",
+    "short_form": "Standard 54mm",
+    "description": "Standard 54mm portafilter",
+    "size": "54mm",
+    "basket_count": 2,
+    "material": "brass"
+  },
+  {
+    "id": 4,
+    "name": "VST 58mm",
+    "short_form": "VST 58mm",
+    "description": "Precision VST 58mm portafilter",
+    "size": "58mm",
+    "basket_count": 1,
+    "material": "stainless steel"
+  }
+]

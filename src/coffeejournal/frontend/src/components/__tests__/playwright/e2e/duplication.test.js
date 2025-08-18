@@ -144,12 +144,12 @@ test.describe('Brew Session Duplication', () => {
       amount_coffee_grams: 22.0,
       amount_water_grams: 350.0,
       brew_temperature_c: 92.5,
-      sweetness: 8.5,
-      acidity: 7.0,
-      bitterness: 3.5,
-      body: 8.0,
-      aroma: 9.0,
-      flavor_profile_match: 8.25,
+      sweetness: 8,
+      acidity: 7,
+      bitterness: 3,
+      body: 8,
+      aroma: 9,
+      flavor_profile_match: 8,
       notes: complexNotes
     });
     
@@ -172,13 +172,10 @@ test.describe('Brew Session Duplication', () => {
     await expect(page.getByLabel(/coffee.*grams/i)).toHaveValue('22');
     await expect(page.getByLabel(/water.*grams/i)).toHaveValue('350');
     await expect(page.getByLabel(/temperature/i)).toHaveValue('92.5');
-    // Note: Sweetness might be rounded to whole number, so check for either
-    const sweetnessValue = await page.getByLabel(/sweetness/i).inputValue();
-    expect(['8', '8.5']).toContain(sweetnessValue);
+    // Verify taste notes (integers)
+    await expect(page.getByLabel(/sweetness/i)).toHaveValue('8');
     await expect(page.getByLabel(/acidity/i)).toHaveValue('7');
-    // Bitterness might also be rounded
-    const bitternessValue = await page.getByLabel(/bitterness/i).inputValue();
-    expect(['3', '3.5']).toContain(bitternessValue);
+    await expect(page.getByLabel(/bitterness/i)).toHaveValue('3');
     await expect(page.getByLabel(/notes/i)).toHaveValue(complexNotes);
   });
 

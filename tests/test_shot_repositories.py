@@ -19,7 +19,6 @@ class TestShotRepository:
             'brewer_id': 1,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -31,7 +30,7 @@ class TestShotRepository:
         assert shot['id'] is not None
         assert shot['dose_grams'] == 18.0
         assert shot['yield_grams'] == 36.0
-        assert shot['dose_yield_ratio'] == 2.0
+        # dose_yield_ratio is calculated, not stored
         assert shot['extraction_time_seconds'] == 25
         assert shot['extraction_status'] == 'perfect'
         assert shot['timestamp'] is not None
@@ -51,7 +50,6 @@ class TestShotRepository:
             'brewer_id': 1,
             'dose_grams': 19.5,
             'yield_grams': 38.0,
-            'dose_yield_ratio': 1.9,
             'extraction_time_seconds': 28,
             'water_temperature_c': 92,
             'portafilter_id': 2,
@@ -94,7 +92,6 @@ class TestShotRepository:
             'shot_session_id': 1,
             'dose_grams': 18.5,
             'yield_grams': 37.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 26,
             'water_temperature_c': 94,
             'extraction_status': 'perfect',
@@ -115,7 +112,6 @@ class TestShotRepository:
             'brewer_id': 1,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -127,7 +123,6 @@ class TestShotRepository:
         updated_shot = shot_repo.update(shot_id, {
             'dose_grams': 19.0,
             'yield_grams': 38.0,
-            'dose_yield_ratio': 2.0,
             'extraction_status': 'under-extracted',
             'overall_score': 7,
             'notes': 'Updated shot parameters'
@@ -155,7 +150,6 @@ class TestShotRepository:
             'brewer_id': 1,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -183,7 +177,6 @@ class TestShotRepository:
             'brewer_id': 1,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -196,7 +189,6 @@ class TestShotRepository:
             'brewer_id': 2,
             'dose_grams': 19.0,
             'yield_grams': 38.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 27,
             'water_temperature_c': 92,
             'extraction_status': 'under-extracted',
@@ -223,7 +215,6 @@ class TestShotRepository:
             'shot_session_id': 1,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -237,7 +228,6 @@ class TestShotRepository:
             'shot_session_id': 1,
             'dose_grams': 18.5,
             'yield_grams': 37.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 26,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -251,7 +241,6 @@ class TestShotRepository:
             'shot_session_id': 2,
             'dose_grams': 19.0,
             'yield_grams': 38.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 27,
             'water_temperature_c': 92,
             'extraction_status': 'under-extracted',
@@ -274,7 +263,7 @@ class TestShotSessionRepository:
         shot_session_repo = repo_factory.get_shot_session_repository()
         
         session_data = {
-            'session_name': 'Morning Dialing Session',
+            'title': 'Morning Dialing Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1,
@@ -284,7 +273,7 @@ class TestShotSessionRepository:
         session = shot_session_repo.create(session_data)
         
         assert session['id'] is not None
-        assert session['session_name'] == 'Morning Dialing Session'
+        assert session['title'] == 'Morning Dialing Session'
         assert session['product_id'] == 1
         assert session['product_batch_id'] == 1
         assert session['brewer_id'] == 1
@@ -294,14 +283,14 @@ class TestShotSessionRepository:
         # Verify it's persisted
         found_session = shot_session_repo.find_by_id(session['id'])
         assert found_session is not None
-        assert found_session['session_name'] == 'Morning Dialing Session'
+        assert found_session['title'] == 'Morning Dialing Session'
     
     def test_create_minimal_shot_session(self, repo_factory):
         """Test creating a shot session with minimal data."""
         shot_session_repo = repo_factory.get_shot_session_repository()
         
         session_data = {
-            'session_name': 'Quick Session',
+            'title': 'Quick Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1
@@ -309,7 +298,7 @@ class TestShotSessionRepository:
         
         session = shot_session_repo.create(session_data)
         
-        assert session['session_name'] == 'Quick Session'
+        assert session['title'] == 'Quick Session'
         assert session.get('notes') is None or session.get('notes') == ''
     
     def test_update_shot_session(self, repo_factory):
@@ -318,7 +307,7 @@ class TestShotSessionRepository:
         
         # Create initial session
         session = shot_session_repo.create({
-            'session_name': 'Test Session',
+            'title': 'Test Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1,
@@ -328,17 +317,17 @@ class TestShotSessionRepository:
         
         # Update the session
         updated_session = shot_session_repo.update(session_id, {
-            'session_name': 'Updated Test Session',
+            'title': 'Updated Test Session',
             'notes': 'Updated notes with more details'
         })
         
-        assert updated_session['session_name'] == 'Updated Test Session'
+        assert updated_session['title'] == 'Updated Test Session'
         assert updated_session['notes'] == 'Updated notes with more details'
         assert updated_session['id'] == session_id
         
         # Verify persistence
         fetched_session = shot_session_repo.find_by_id(session_id)
-        assert fetched_session['session_name'] == 'Updated Test Session'
+        assert fetched_session['title'] == 'Updated Test Session'
         assert fetched_session['notes'] == 'Updated notes with more details'
     
     def test_delete_shot_session(self, repo_factory):
@@ -346,7 +335,7 @@ class TestShotSessionRepository:
         shot_session_repo = repo_factory.get_shot_session_repository()
         
         session = shot_session_repo.create({
-            'session_name': 'Delete Test Session',
+            'title': 'Delete Test Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1
@@ -368,14 +357,14 @@ class TestShotSessionRepository:
         
         # Create multiple sessions
         session1 = shot_session_repo.create({
-            'session_name': 'Morning Session',
+            'title': 'Morning Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1
         })
         
         session2 = shot_session_repo.create({
-            'session_name': 'Afternoon Session',
+            'title': 'Afternoon Session',
             'product_id': 2,
             'product_batch_id': 2,
             'brewer_id': 2
@@ -396,7 +385,7 @@ class TestShotSessionRepository:
         
         # Create a shot session
         session = shot_session_repo.create({
-            'session_name': 'Relationship Test Session',
+            'title': 'Relationship Test Session',
             'product_id': 1,
             'product_batch_id': 1,
             'brewer_id': 1,
@@ -412,7 +401,6 @@ class TestShotSessionRepository:
             'shot_session_id': session_id,
             'dose_grams': 18.0,
             'yield_grams': 36.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 25,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',
@@ -426,7 +414,6 @@ class TestShotSessionRepository:
             'shot_session_id': session_id,
             'dose_grams': 18.5,
             'yield_grams': 37.0,
-            'dose_yield_ratio': 2.0,
             'extraction_time_seconds': 26,
             'water_temperature_c': 93,
             'extraction_status': 'perfect',

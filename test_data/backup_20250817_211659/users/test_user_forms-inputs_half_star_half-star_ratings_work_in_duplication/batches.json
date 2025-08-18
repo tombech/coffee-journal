@@ -1,0 +1,16 @@
+[
+  {
+    "product_id": 1,
+    "roast_date": "2025-08-17",
+    "purchase_date": "2025-08-17",
+    "amount_grams": 250.0,
+    "price": 15.99,
+    "seller": null,
+    "notes": null,
+    "rating": null,
+    "is_active": true,
+    "id": 1,
+    "created_at": "2025-08-17T19:15:28.275877+00:00",
+    "updated_at": "2025-08-17T19:15:28.275877+00:00"
+  }
+]

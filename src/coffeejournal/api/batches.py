@@ -175,18 +175,35 @@ def update_batch(batch_id):
     if not product:
         return jsonify({'error': 'Product not found'}), 404
     
-    # Update batch
-    batch_data = {
-        'product_id': product_id,
-        'roast_date': data.get('roast_date'),
-        'purchase_date': data.get('purchase_date'),
-        'amount_grams': safe_float(data.get('amount_grams')),
-        'price': safe_float(data.get('price')),
-        'seller': data.get('seller'),
-        'notes': data.get('notes'),
-        'rating': safe_int(data.get('rating')),
-        'is_active': data.get('is_active', existing_batch.get('is_active', True))  # Preserve existing or default to True
-    }
+    # Update batch - only include fields that are provided in the request
+    batch_data = {}
+    
+    # Always include product_id for updates
+    batch_data['product_id'] = product_id
+    
+    # Only include fields that are explicitly provided in the request
+    if 'roast_date' in data:
+        roast_date = data['roast_date']
+        if roast_date == '':  # Handle empty string
+            roast_date = datetime.now().strftime('%Y-%m-%d')  # Default to today
+        batch_data['roast_date'] = roast_date
+    if 'purchase_date' in data:
+        purchase_date = data['purchase_date']
+        if purchase_date == '':  # Handle empty string
+            purchase_date = None
+        batch_data['purchase_date'] = purchase_date
+    if 'amount_grams' in data:
+        batch_data['amount_grams'] = safe_float(data['amount_grams'])
+    if 'price' in data:
+        batch_data['price'] = safe_float(data['price'])
+    if 'seller' in data:
+        batch_data['seller'] = data['seller']
+    if 'notes' in data:
+        batch_data['notes'] = data['notes']
+    if 'rating' in data:
+        batch_data['rating'] = safe_int(data['rating'])
+    if 'is_active' in data:
+        batch_data['is_active'] = data['is_active']
     
     batch = batch_repo.update(batch_id, batch_data)
     

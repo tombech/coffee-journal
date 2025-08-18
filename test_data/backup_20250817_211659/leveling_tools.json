@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "OCD 58mm",
+    "short_form": "OCD",
+    "description": "Ona Coffee Distributor",
+    "size": "58mm",
+    "adjustment_type": "adjustable",
+    "depth_range": "3-12mm",
+    "brand": "Ona Coffee"
+  },
+  {
+    "id": 2,
+    "name": "Saint Anthony 58mm",
+    "short_form": "Saint Anthony",
+    "description": "Leveling and distribution tool",
+    "size": "58mm",
+    "adjustment_type": "adjustable",
+    "depth_range": "2-10mm",
+    "brand": "Saint Anthony Industries"
+  },
+  {
+    "id": 3,
+    "name": "Basic Leveler",
+    "short_form": "Basic Leveler",
+    "description": "Simple leveling tool",
+    "size": "58mm",
+    "adjustment_type": "fixed",
+    "depth_range": "8mm",
+    "brand": "Generic"
+  }
+]

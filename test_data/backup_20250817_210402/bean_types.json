@@ -1,0 +1,61 @@
+[
+  {
+    "id": 1,
+    "name": "Arabica",
+    "short_form": "Arabica",
+    "description": "High-quality coffee species with complex flavors"
+  },
+  {
+    "id": 2,
+    "name": "Robusta",
+    "short_form": "Robusta",
+    "description": "Hardy coffee species with higher caffeine content"
+  },
+  {
+    "id": 3,
+    "name": "Liberica",
+    "short_form": "Liberica",
+    "description": "Rare coffee species with unique woody flavor"
+  },
+  {
+    "id": 4,
+    "name": "Excelsa",
+    "short_form": "Excelsa",
+    "description": "Coffee variety known for tart, fruity flavors"
+  },
+  {
+    "name": "Sequential Test 1",
+    "description": "Rapid sequence test 1",
+    "id": 5,
+    "created_at": "2025-08-12T08:36:57.840429+00:00",
+    "updated_at": "2025-08-12T08:36:57.840429+00:00"
+  },
+  {
+    "name": "Sequential Test 2",
+    "description": "Rapid sequence test 2",
+    "id": 6,
+    "created_at": "2025-08-12T08:36:57.880294+00:00",
+    "updated_at": "2025-08-12T08:36:57.880294+00:00"
+  },
+  {
+    "name": "Sequential Test 3",
+    "description": "Rapid sequence test 3",
+    "id": 7,
+    "created_at": "2025-08-12T08:36:57.907929+00:00",
+    "updated_at": "2025-08-12T08:36:57.907929+00:00"
+  },
+  {
+    "name": "Sequential Test 4",
+    "description": "Rapid sequence test 4",
+    "id": 8,
+    "created_at": "2025-08-12T08:36:57.921229+00:00",
+    "updated_at": "2025-08-12T08:36:57.921229+00:00"
+  },
+  {
+    "name": "Sequential Test 5",
+    "description": "Rapid sequence test 5",
+    "id": 9,
+    "created_at": "2025-08-12T08:36:57.933008+00:00",
+    "updated_at": "2025-08-12T08:36:57.933008+00:00"
+  }
+]

@@ -95,8 +95,8 @@ def test_smart_defaults_frequency_based(client, factory):
     method2 = factory.get_brew_method_repository().create({'name': 'Chemex'})
     method3 = factory.get_brew_method_repository().create({'name': 'AeroPress'})
     
-    product = factory.get_product_repository().create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+    product = factory.get_product_repository().create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
     
     # Create brew sessions - method2 used most frequently
     now = datetime.now(timezone.utc)
@@ -145,8 +145,8 @@ def test_smart_defaults_recency_based(client, factory):
     grinder1 = factory.get_grinder_repository().create({'name': 'Old Grinder'})
     grinder2 = factory.get_grinder_repository().create({'name': 'Recent Grinder'})
     
-    product = factory.get_product_repository().create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+    product = factory.get_product_repository().create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
     
     # Create old sessions for grinder1
     old_time = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
@@ -206,8 +206,8 @@ def test_smart_defaults_all_equipment_types(client, factory):
     kettle2 = factory.get_kettle_repository().create({'name': 'Basic Kettle'})
     scale2 = factory.get_scale_repository().create({'name': 'Basic Scale'})
     
-    product = factory.get_product_repository().create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+    product = factory.get_product_repository().create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
     
     # Create sessions using first set of equipment
     now = datetime.now(timezone.utc)
@@ -285,8 +285,8 @@ def test_smart_defaults_mixed_scenarios(client, factory):
     # Set manual default for grinder
     factory.get_grinder_repository().set_default(grinder1['id'])
     
-    product = factory.get_product_repository().create({'name': 'Test Coffee', 'roaster_id': 1})
-    batch = factory.get_batch_repository().create({'product_id': product['id'], 'amount_grams': 250})
+    product = factory.get_product_repository().create({'product_name': 'Test Coffee', 'roaster_id': 1})
+    batch = factory.get_batch_repository().create({'product_id': product['id'], 'roast_date': '2024-01-01', 'amount_grams': 250})
     
     # Create sessions - method2 used more but grinder2 used more
     now = datetime.now(timezone.utc)

@@ -271,6 +271,16 @@ def create_shot():
             if field in data and data[field] is not None:
                 data[field] = int(data[field])
         
+        # Strip out any enriched fields that shouldn't be saved
+        fields_to_remove = ['product', 'batch', 'brewer', 'grinder', 'portafilter', 
+                            'basket', 'tamper', 'scale', 'recipe', 'shot_session',
+                            'product_name', 'brewer_name', 'grinder_name', 
+                            'portafilter_name', 'basket_name', 'tamper_name', 
+                            'scale_name', 'recipe_name', 'shot_session_title',
+                            'dose_yield_ratio', 'calculated_score', 'coffee_age']
+        for field in fields_to_remove:
+            data.pop(field, None)
+        
         # Create the shot
         factory = get_repository_factory()
         shot = factory.get_shot_repository(user_id).create(data)
@@ -320,6 +330,16 @@ def update_shot(shot_id):
         for field in id_fields:
             if field in data and data[field] is not None:
                 data[field] = int(data[field])
+        
+        # Strip out any enriched fields that shouldn't be saved
+        fields_to_remove = ['product', 'batch', 'brewer', 'grinder', 'portafilter', 
+                            'basket', 'tamper', 'scale', 'recipe', 'shot_session',
+                            'product_name', 'brewer_name', 'grinder_name', 
+                            'portafilter_name', 'basket_name', 'tamper_name', 
+                            'scale_name', 'recipe_name', 'shot_session_title',
+                            'dose_yield_ratio', 'calculated_score', 'coffee_age']
+        for field in fields_to_remove:
+            data.pop(field, None)
         
         # Update the shot
         factory = get_repository_factory()

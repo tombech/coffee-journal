@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Standard 18g",
+    "short_form": "18g",
+    "description": "Standard double basket",
+    "size": "58mm",
+    "capacity": "18g",
+    "holes": 36
+  },
+  {
+    "id": 2,
+    "name": "VST 18g",
+    "short_form": "VST 18g",
+    "description": "Precision VST 18g basket",
+    "size": "58mm",
+    "capacity": "18g",
+    "holes": 37
+  },
+  {
+    "id": 3,
+    "name": "IMS 20g",
+    "short_form": "IMS 20g",
+    "description": "Competition IMS 20g basket",
+    "size": "58mm",
+    "capacity": "20g",
+    "holes": 39
+  },
+  {
+    "id": 4,
+    "name": "Standard 15g",
+    "short_form": "15g",
+    "description": "Standard double basket",
+    "size": "54mm",
+    "capacity": "15g",
+    "holes": 32
+  },
+  {
+    "id": 5,
+    "name": "Triple 21g",
+    "short_form": "21g",
+    "description": "Triple shot basket",
+    "size": "58mm",
+    "capacity": "21g",
+    "holes": 42
+  }
+]

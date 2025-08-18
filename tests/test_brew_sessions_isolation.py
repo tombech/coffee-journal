@@ -72,7 +72,7 @@ class TestBrewSessionsIsolation:
             'amount_coffee_grams': 20,
             'amount_water_grams': 300,
             'brew_temperature_c': 94,
-            'score': 8.5
+            'score': 4.5
         })
         assert session_response.status_code == 201
         session_data = session_response.get_json()

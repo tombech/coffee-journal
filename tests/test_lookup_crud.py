@@ -23,11 +23,14 @@ class TestLookupCRUD:
     @pytest.mark.parametrize("endpoint,singular", LOOKUP_TYPES)
     def test_create_lookup_item(self, client, endpoint, singular):
         """Test creating a lookup item with extended properties."""
+        # Use 'product_url' for grinders and kettles, 'url' for others
+        url_field = 'product_url' if endpoint in ['grinders', 'kettles'] else 'url'
+        
         data = {
             'name': f'Test {singular.title()}',
             'description': f'Test {singular} description',
             'notes': f'Some notes about this {singular}',
-            'product_url': f'https://example.com/{singular}',
+            url_field: f'https://example.com/{singular}',
             'image_url': f'https://example.com/{singular}.jpg',
             'short_form': f'T{singular[0].upper()}',
             'icon': f'{singular}.png'
@@ -40,7 +43,7 @@ class TestLookupCRUD:
         assert item['name'] == data['name']
         assert item['description'] == data['description']
         assert item['notes'] == data['notes']
-        assert item['product_url'] == data['product_url']
+        assert item[url_field] == data[url_field]
         assert item['image_url'] == data['image_url']
         assert item['short_form'] == data['short_form']
         assert item['icon'] == data['icon']
@@ -104,12 +107,15 @@ class TestLookupCRUD:
         })
         item_id = create_response.get_json()['id']
         
+        # Use 'product_url' for grinders and kettles, 'url' for others
+        url_field = 'product_url' if endpoint in ['grinders', 'kettles'] else 'url'
+        
         # Update the item
         update_data = {
             'name': f'Updated {singular.title()}',
             'description': 'Updated description',
             'notes': 'New notes',
-            'product_url': 'https://updated.com'
+            url_field: 'https://updated.com'
         }
         
         response = client.put(f'/api/{endpoint}/{item_id}', json=update_data)
@@ -119,7 +125,7 @@ class TestLookupCRUD:
         assert updated_item['name'] == update_data['name']
         assert updated_item['description'] == update_data['description']
         assert updated_item['notes'] == update_data['notes']
-        assert updated_item['product_url'] == update_data['product_url']
+        assert updated_item[url_field] == update_data[url_field]
     
     @pytest.mark.parametrize("endpoint,singular", LOOKUP_TYPES)
     def test_update_nonexistent_lookup_item(self, client, endpoint, singular):

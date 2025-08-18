@@ -39,7 +39,7 @@ def sample_data(factory):
     
     # Create product
     product = factory.get_product_repository().create({
-        'name': 'Test Coffee',
+        'product_name': 'Test Coffee',
         'roaster_id': roaster['id']
     })
     
@@ -262,20 +262,20 @@ def test_duplicate_minimal_session(client, factory, sample_data):
 
 
 def test_duplicate_session_with_ratings(client, factory, sample_data):
-    """Test duplication preserves all rating fields including decimals."""
-    # Create session with decimal ratings
+    """Test duplication preserves all rating fields."""
+    # Create session with ratings
     session_with_ratings = factory.get_brew_session_repository().create({
         'product_id': sample_data['product']['id'],
         'product_batch_id': sample_data['batch']['id'],
         'amount_coffee_grams': 20.0,
         'amount_water_grams': 320.0,
         'timestamp': '2024-01-17T10:00:00',
-        'sweetness': 7.5,
-        'acidity': 8.5,
-        'bitterness': 2.5,
-        'body': 6.5,
-        'aroma': 9.0,
-        'flavor_profile_match': 8.0,
+        'sweetness': 8,
+        'acidity': 9,
+        'bitterness': 3,
+        'body': 7,
+        'aroma': 9,
+        'flavor_profile_match': 8,
         'score': 8.25
     })
     
@@ -287,12 +287,12 @@ def test_duplicate_session_with_ratings(client, factory, sample_data):
     duplicated_data = json.loads(response.data)
     
     # All ratings should be preserved exactly
-    assert duplicated_data['sweetness'] == 7.5
-    assert duplicated_data['acidity'] == 8.5
-    assert duplicated_data['bitterness'] == 2.5
-    assert duplicated_data['body'] == 6.5
-    assert duplicated_data['aroma'] == 9.0
-    assert duplicated_data['flavor_profile_match'] == 8.0
+    assert duplicated_data['sweetness'] == 8
+    assert duplicated_data['acidity'] == 9
+    assert duplicated_data['bitterness'] == 3
+    assert duplicated_data['body'] == 7
+    assert duplicated_data['aroma'] == 9
+    assert duplicated_data['flavor_profile_match'] == 8
     assert duplicated_data['score'] == 8.25
 
 

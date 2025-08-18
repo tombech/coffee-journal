@@ -214,6 +214,11 @@ def _load_migration_modules(manager: MigrationManager):
         from . import migration_1_3_to_1_4
         if "1.3->1.4" not in manager.migrations:
             manager.migrations["1.3->1.4"] = migration_1_3_to_1_4.migrate_v1_3_to_v1_4
+        
+        # Load v1_4_to_v1_5 migration (Schema Validation Updates)
+        from . import migration_1_4_to_1_5
+        if "1.4->1.5" not in manager.migrations:
+            manager.migrations["1.4->1.5"] = migration_1_4_to_1_5.migrate_v1_4_to_v1_5
             
     except ImportError as e:
         logger.warning(f"Could not load migration module: {e}")

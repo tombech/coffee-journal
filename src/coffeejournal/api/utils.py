@@ -237,7 +237,7 @@ def enrich_product_with_lookups(product, factory, user_id=None):
     return product
 
 
-def resolve_lookup_field(data, field_name, repository, allow_multiple=False):
+def resolve_lookup_field(data, field_name, repository, allow_multiple=False, country_id=None):
     """
     Resolve lookup field from either ID or name submission.
     
@@ -246,6 +246,7 @@ def resolve_lookup_field(data, field_name, repository, allow_multiple=False):
         field_name: Base field name (e.g., 'roaster', 'bean_type')
         repository: Repository to use for lookup operations
         allow_multiple: If True, handle arrays of lookups
+        country_id: Optional country_id for region lookups
     
     Returns:
         dict: Contains resolved 'name', 'id', and optionally 'names'/'ids' for multiple
@@ -279,7 +280,11 @@ def resolve_lookup_field(data, field_name, repository, allow_multiple=False):
                 names = [names]
             for name in names:
                 if name and not any(item['name'] == name for item in resolved_items):
-                    item = repository.get_or_create(name)
+                    # Pass country_id for region repositories
+                    if hasattr(repository, 'entity_name') and repository.entity_name == 'regions' and country_id:
+                        item = repository.get_or_create(name, country_id=country_id)
+                    else:
+                        item = repository.get_or_create(name)
                     resolved_items.append(item)
                     resolved_ids.append(item['id'])
                     resolved_names.append(item['name'])
@@ -306,7 +311,11 @@ def resolve_lookup_field(data, field_name, repository, allow_multiple=False):
         
         if lookup_name:
             # Create or get item by name
-            item = repository.get_or_create(lookup_name)
+            # Pass country_id for region repositories
+            if hasattr(repository, 'entity_name') and repository.entity_name == 'regions' and country_id:
+                item = repository.get_or_create(lookup_name, country_id=country_id)
+            else:
+                item = repository.get_or_create(lookup_name)
             return {
                 'item': item,
                 'id': item['id'],

@@ -12,6 +12,7 @@ This module contains all endpoints related to coffee products:
 """
 
 from flask import Blueprint, jsonify, request
+from datetime import datetime
 from ..repositories.factory import get_repository_factory
 from ..services.brew_recommendations import BrewRecommendationService
 from .utils import (
@@ -122,7 +123,7 @@ def create_product():
     
     bean_type_result = resolve_lookup_field(data, 'bean_type', factory.get_bean_type_repository(user_id), allow_multiple=True)
     country_result = resolve_lookup_field(data, 'country', factory.get_country_repository(user_id))
-    region_result = resolve_lookup_field(data, 'region', factory.get_region_repository(user_id), allow_multiple=True)
+    region_result = resolve_lookup_field(data, 'region', factory.get_region_repository(user_id), allow_multiple=True, country_id=country_result['id'])
     
     # Handle decaf method
     decaf_method_result = {'item': None, 'id': None, 'name': None}
@@ -130,12 +131,23 @@ def create_product():
         decaf_method_result = resolve_lookup_field(data, 'decaf_method', factory.get_decaf_method_repository(user_id))
     
     # Create product data - only store ID fields per schema
+    # Generate default product_name if not provided
+    product_name = data.get('product_name')
+    if not product_name:
+        # Generate a name from roaster and bean type if available
+        roaster_name = roaster_result.get('name', 'Unknown Roaster')
+        bean_type_names = bean_type_result.get('names', [])
+        if bean_type_names:
+            product_name = f"{roaster_name} {' '.join(bean_type_names)}"
+        else:
+            product_name = f"{roaster_name} Coffee"
+    
     product_data = {
         'roaster_id': roaster_result['id'],
         'bean_type_id': bean_type_result['ids'],
         'country_id': country_result['id'],
         'region_id': region_result['ids'],
-        'product_name': data.get('product_name'),
+        'product_name': product_name,
         'roast_type': safe_int(data.get('roast_type')),
         'description': data.get('description'),
         'url': data.get('url'),
@@ -181,7 +193,7 @@ def update_product(product_id):
     
     bean_type_result = resolve_lookup_field(data, 'bean_type', factory.get_bean_type_repository(user_id), allow_multiple=True)
     country_result = resolve_lookup_field(data, 'country', factory.get_country_repository(user_id))
-    region_result = resolve_lookup_field(data, 'region', factory.get_region_repository(user_id), allow_multiple=True)
+    region_result = resolve_lookup_field(data, 'region', factory.get_region_repository(user_id), allow_multiple=True, country_id=country_result['id'])
     
     # Handle decaf method
     decaf_method_result = {'item': None, 'id': None, 'name': None}
@@ -278,10 +290,19 @@ def handle_product_batches(product_id):
             return jsonify({'error': 'No data provided'}), 400
         
         # Extract fields from request
+        roast_date = data.get('roast_date')
+        if roast_date == '' or roast_date is None:  # Handle empty string or missing field
+            # Default to today's date if not provided
+            roast_date = datetime.now().strftime('%Y-%m-%d')
+            
+        purchase_date = data.get('purchase_date')
+        if purchase_date == '':  # Handle empty string
+            purchase_date = None
+        
         batch_data = {
             'product_id': product_id,  # Use product_id from URL
-            'roast_date': data.get('roast_date'),
-            'purchase_date': data.get('purchase_date'),
+            'roast_date': roast_date,
+            'purchase_date': purchase_date,
             'amount_grams': safe_float(data.get('amount_grams')),
             'price': safe_float(data.get('price')),
             'seller': data.get('seller'),

@@ -1,0 +1,74 @@
+[
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 1,
+    "created_at": "2025-08-13T07:43:36.576836+00:00",
+    "updated_at": "2025-08-13T07:43:36.576836+00:00"
+  },
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 2,
+    "created_at": "2025-08-13T07:43:36.682388+00:00",
+    "updated_at": "2025-08-13T07:43:36.682388+00:00"
+  },
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 3,
+    "created_at": "2025-08-13T07:43:36.764113+00:00",
+    "updated_at": "2025-08-13T07:43:36.764113+00:00"
+  },
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 4,
+    "created_at": "2025-08-13T07:43:36.844561+00:00",
+    "updated_at": "2025-08-13T07:43:36.844561+00:00"
+  },
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 5,
+    "created_at": "2025-08-13T07:43:36.931710+00:00",
+    "updated_at": "2025-08-13T07:43:36.931710+00:00"
+  },
+  {
+    "product_name": "Test Coffee for Age",
+    "bean_type_id": [],
+    "country_id": null,
+    "region_id": [],
+    "roaster_id": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "id": 6,
+    "created_at": "2025-08-13T07:43:37.010488+00:00",
+    "updated_at": "2025-08-13T07:43:37.010488+00:00"
+  }
+]
