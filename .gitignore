@@ -212,3 +212,12 @@ playwright-report/
 # Backup files
 *.bak
 *_backup*
+
+# Temporary production data folder
+temp/
+
+# In-memory test data
+:memory:/
+
+# Test results
+test-results.json

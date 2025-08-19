@@ -3,7 +3,6 @@
     "product_id": 1,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 1,
     "created_at": "2025-08-13T07:43:36.589984+00:00",
     "updated_at": "2025-08-13T07:43:36.589984+00:00"
@@ -12,7 +11,6 @@
     "product_id": 2,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 2,
     "created_at": "2025-08-13T07:43:36.685732+00:00",
     "updated_at": "2025-08-13T07:43:36.685732+00:00"
@@ -21,7 +19,6 @@
     "product_id": 3,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 3,
     "created_at": "2025-08-13T07:43:36.767356+00:00",
     "updated_at": "2025-08-13T07:43:36.767356+00:00"
@@ -30,7 +27,6 @@
     "product_id": 4,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 4,
     "created_at": "2025-08-13T07:43:36.848005+00:00",
     "updated_at": "2025-08-13T07:43:36.848005+00:00"
@@ -39,7 +35,6 @@
     "product_id": 5,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 5,
     "created_at": "2025-08-13T07:43:36.935220+00:00",
     "updated_at": "2025-08-13T07:43:36.935220+00:00"
@@ -47,7 +42,6 @@
   {
     "product_id": 5,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 6,
     "created_at": "2025-08-13T07:43:36.944884+00:00",
     "updated_at": "2025-08-13T07:43:36.944884+00:00"
@@ -56,7 +50,6 @@
     "product_id": 6,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 7,
     "created_at": "2025-08-13T07:43:37.014012+00:00",
     "updated_at": "2025-08-13T07:43:37.014012+00:00"
@@ -65,7 +58,6 @@
     "product_id": 6,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 8,
     "created_at": "2025-08-13T07:43:37.023297+00:00",
     "updated_at": "2025-08-13T07:43:37.023297+00:00"
@@ -74,7 +66,6 @@
     "product_id": 6,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 9,
     "created_at": "2025-08-13T07:43:37.030281+00:00",
     "updated_at": "2025-08-13T07:43:37.030281+00:00"
@@ -83,7 +74,6 @@
     "product_id": 6,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 10,
     "created_at": "2025-08-13T07:43:37.036372+00:00",
     "updated_at": "2025-08-13T07:43:37.036372+00:00"
@@ -92,7 +82,6 @@
     "product_id": 6,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 11,
     "created_at": "2025-08-13T07:43:37.042601+00:00",
     "updated_at": "2025-08-13T07:43:37.042601+00:00"
@@ -101,7 +90,6 @@
     "product_id": 6,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 12,
     "created_at": "2025-08-13T07:43:37.049823+00:00",
     "updated_at": "2025-08-13T07:43:37.049823+00:00"
@@ -110,7 +98,6 @@
     "product_id": 6,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 13,
     "created_at": "2025-08-13T07:43:37.057209+00:00",
     "updated_at": "2025-08-13T07:43:37.057209+00:00"
@@ -119,7 +106,6 @@
     "product_id": 7,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 14,
     "created_at": "2025-08-13T07:47:40.632834+00:00",
     "updated_at": "2025-08-13T07:47:40.632834+00:00"
@@ -128,7 +114,6 @@
     "product_id": 8,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 15,
     "created_at": "2025-08-13T07:47:40.717238+00:00",
     "updated_at": "2025-08-13T07:47:40.717238+00:00"
@@ -137,7 +122,6 @@
     "product_id": 9,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 16,
     "created_at": "2025-08-13T07:47:40.794037+00:00",
     "updated_at": "2025-08-13T07:47:40.794037+00:00"
@@ -146,7 +130,6 @@
     "product_id": 10,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 17,
     "created_at": "2025-08-13T07:47:40.875993+00:00",
     "updated_at": "2025-08-13T07:47:40.875993+00:00"
@@ -155,7 +138,6 @@
     "product_id": 11,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 18,
     "created_at": "2025-08-13T07:47:40.965139+00:00",
     "updated_at": "2025-08-13T07:47:40.965139+00:00"
@@ -163,7 +145,6 @@
   {
     "product_id": 11,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 19,
     "created_at": "2025-08-13T07:47:40.974483+00:00",
     "updated_at": "2025-08-13T07:47:40.974483+00:00"
@@ -172,7 +153,6 @@
     "product_id": 12,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 20,
     "created_at": "2025-08-13T07:47:41.043556+00:00",
     "updated_at": "2025-08-13T07:47:41.043556+00:00"
@@ -181,7 +161,6 @@
     "product_id": 12,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 21,
     "created_at": "2025-08-13T07:47:41.053374+00:00",
     "updated_at": "2025-08-13T07:47:41.053374+00:00"
@@ -190,7 +169,6 @@
     "product_id": 12,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 22,
     "created_at": "2025-08-13T07:47:41.060767+00:00",
     "updated_at": "2025-08-13T07:47:41.060767+00:00"
@@ -199,7 +177,6 @@
     "product_id": 12,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 23,
     "created_at": "2025-08-13T07:47:41.068052+00:00",
     "updated_at": "2025-08-13T07:47:41.068052+00:00"
@@ -208,7 +185,6 @@
     "product_id": 12,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 24,
     "created_at": "2025-08-13T07:47:41.074929+00:00",
     "updated_at": "2025-08-13T07:47:41.074929+00:00"
@@ -217,7 +193,6 @@
     "product_id": 12,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 25,
     "created_at": "2025-08-13T07:47:41.088920+00:00",
     "updated_at": "2025-08-13T07:47:41.088920+00:00"
@@ -226,7 +201,6 @@
     "product_id": 12,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 26,
     "created_at": "2025-08-13T07:47:41.104708+00:00",
     "updated_at": "2025-08-13T07:47:41.104708+00:00"
@@ -235,7 +209,6 @@
     "product_id": 13,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 27,
     "created_at": "2025-08-13T07:50:32.860405+00:00",
     "updated_at": "2025-08-13T07:50:32.860405+00:00"
@@ -244,7 +217,6 @@
     "product_id": 14,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 28,
     "created_at": "2025-08-13T07:50:32.957757+00:00",
     "updated_at": "2025-08-13T07:50:32.957757+00:00"
@@ -253,7 +225,6 @@
     "product_id": 15,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 29,
     "created_at": "2025-08-13T07:50:33.035559+00:00",
     "updated_at": "2025-08-13T07:50:33.035559+00:00"
@@ -262,7 +233,6 @@
     "product_id": 16,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 30,
     "created_at": "2025-08-13T07:50:33.190536+00:00",
     "updated_at": "2025-08-13T07:50:33.190536+00:00"
@@ -271,7 +241,6 @@
     "product_id": 17,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 31,
     "created_at": "2025-08-13T07:50:33.295183+00:00",
     "updated_at": "2025-08-13T07:50:33.295183+00:00"
@@ -279,7 +248,6 @@
   {
     "product_id": 17,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 32,
     "created_at": "2025-08-13T07:50:33.304182+00:00",
     "updated_at": "2025-08-13T07:50:33.304182+00:00"
@@ -288,7 +256,6 @@
     "product_id": 18,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 33,
     "created_at": "2025-08-13T07:50:33.372069+00:00",
     "updated_at": "2025-08-13T07:50:33.372069+00:00"
@@ -297,7 +264,6 @@
     "product_id": 18,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 34,
     "created_at": "2025-08-13T07:50:33.382185+00:00",
     "updated_at": "2025-08-13T07:50:33.382185+00:00"
@@ -306,7 +272,6 @@
     "product_id": 18,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 35,
     "created_at": "2025-08-13T07:50:33.389613+00:00",
     "updated_at": "2025-08-13T07:50:33.389613+00:00"
@@ -315,7 +280,6 @@
     "product_id": 18,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 36,
     "created_at": "2025-08-13T07:50:33.396690+00:00",
     "updated_at": "2025-08-13T07:50:33.396690+00:00"
@@ -324,7 +288,6 @@
     "product_id": 18,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 37,
     "created_at": "2025-08-13T07:50:33.403767+00:00",
     "updated_at": "2025-08-13T07:50:33.403767+00:00"
@@ -333,7 +296,6 @@
     "product_id": 18,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 38,
     "created_at": "2025-08-13T07:50:33.411193+00:00",
     "updated_at": "2025-08-13T07:50:33.411193+00:00"
@@ -342,7 +304,6 @@
     "product_id": 18,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 39,
     "created_at": "2025-08-13T07:50:33.418345+00:00",
     "updated_at": "2025-08-13T07:50:33.418345+00:00"
@@ -351,7 +312,6 @@
     "product_id": 19,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 40,
     "created_at": "2025-08-13T07:56:50.996502+00:00",
     "updated_at": "2025-08-13T07:56:50.996502+00:00"
@@ -360,7 +320,6 @@
     "product_id": 20,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 41,
     "created_at": "2025-08-13T07:56:51.077782+00:00",
     "updated_at": "2025-08-13T07:56:51.077782+00:00"
@@ -369,7 +328,6 @@
     "product_id": 21,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 42,
     "created_at": "2025-08-13T07:56:51.154928+00:00",
     "updated_at": "2025-08-13T07:56:51.154928+00:00"
@@ -378,7 +336,6 @@
     "product_id": 22,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 43,
     "created_at": "2025-08-13T07:56:51.229518+00:00",
     "updated_at": "2025-08-13T07:56:51.229518+00:00"
@@ -387,7 +344,6 @@
     "product_id": 23,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 44,
     "created_at": "2025-08-13T07:56:51.305782+00:00",
     "updated_at": "2025-08-13T07:56:51.305782+00:00"
@@ -395,7 +351,6 @@
   {
     "product_id": 23,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 45,
     "created_at": "2025-08-13T07:56:51.316328+00:00",
     "updated_at": "2025-08-13T07:56:51.316328+00:00"
@@ -404,7 +359,6 @@
     "product_id": 24,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 46,
     "created_at": "2025-08-13T07:56:51.425917+00:00",
     "updated_at": "2025-08-13T07:56:51.425917+00:00"
@@ -413,7 +367,6 @@
     "product_id": 24,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 47,
     "created_at": "2025-08-13T07:56:51.435840+00:00",
     "updated_at": "2025-08-13T07:56:51.435840+00:00"
@@ -422,7 +375,6 @@
     "product_id": 24,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 48,
     "created_at": "2025-08-13T07:56:51.443718+00:00",
     "updated_at": "2025-08-13T07:56:51.443718+00:00"
@@ -431,7 +383,6 @@
     "product_id": 24,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 49,
     "created_at": "2025-08-13T07:56:51.451561+00:00",
     "updated_at": "2025-08-13T07:56:51.451561+00:00"
@@ -440,7 +391,6 @@
     "product_id": 24,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 50,
     "created_at": "2025-08-13T07:56:51.468260+00:00",
     "updated_at": "2025-08-13T07:56:51.468260+00:00"
@@ -449,7 +399,6 @@
     "product_id": 24,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 51,
     "created_at": "2025-08-13T07:56:51.482763+00:00",
     "updated_at": "2025-08-13T07:56:51.482763+00:00"
@@ -458,7 +407,6 @@
     "product_id": 24,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 52,
     "created_at": "2025-08-13T07:56:51.493434+00:00",
     "updated_at": "2025-08-13T07:56:51.493434+00:00"
@@ -467,7 +415,6 @@
     "product_id": 25,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 53,
     "created_at": "2025-08-13T07:57:23.751482+00:00",
     "updated_at": "2025-08-13T07:57:23.751482+00:00"
@@ -476,7 +423,6 @@
     "product_id": 26,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 54,
     "created_at": "2025-08-13T07:57:23.832834+00:00",
     "updated_at": "2025-08-13T07:57:23.832834+00:00"
@@ -485,7 +431,6 @@
     "product_id": 27,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 55,
     "created_at": "2025-08-13T07:57:23.912469+00:00",
     "updated_at": "2025-08-13T07:57:23.912469+00:00"
@@ -494,7 +439,6 @@
     "product_id": 28,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 56,
     "created_at": "2025-08-13T07:57:23.987210+00:00",
     "updated_at": "2025-08-13T07:57:23.987210+00:00"
@@ -503,7 +447,6 @@
     "product_id": 29,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 57,
     "created_at": "2025-08-13T07:57:24.069272+00:00",
     "updated_at": "2025-08-13T07:57:24.069272+00:00"
@@ -511,7 +454,6 @@
   {
     "product_id": 29,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 58,
     "created_at": "2025-08-13T07:57:24.080038+00:00",
     "updated_at": "2025-08-13T07:57:24.080038+00:00"
@@ -520,7 +462,6 @@
     "product_id": 30,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 59,
     "created_at": "2025-08-13T07:57:24.164454+00:00",
     "updated_at": "2025-08-13T07:57:24.164454+00:00"
@@ -529,7 +470,6 @@
     "product_id": 30,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 60,
     "created_at": "2025-08-13T07:57:24.174300+00:00",
     "updated_at": "2025-08-13T07:57:24.174300+00:00"
@@ -538,7 +478,6 @@
     "product_id": 30,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 61,
     "created_at": "2025-08-13T07:57:24.182533+00:00",
     "updated_at": "2025-08-13T07:57:24.182533+00:00"
@@ -547,7 +486,6 @@
     "product_id": 30,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 62,
     "created_at": "2025-08-13T07:57:24.190453+00:00",
     "updated_at": "2025-08-13T07:57:24.190453+00:00"
@@ -556,7 +494,6 @@
     "product_id": 30,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 63,
     "created_at": "2025-08-13T07:57:24.199154+00:00",
     "updated_at": "2025-08-13T07:57:24.199154+00:00"
@@ -565,7 +502,6 @@
     "product_id": 30,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 64,
     "created_at": "2025-08-13T07:57:24.207031+00:00",
     "updated_at": "2025-08-13T07:57:24.207031+00:00"
@@ -574,7 +510,6 @@
     "product_id": 30,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 65,
     "created_at": "2025-08-13T07:57:24.215652+00:00",
     "updated_at": "2025-08-13T07:57:24.215652+00:00"
@@ -583,7 +518,6 @@
     "product_id": 31,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 66,
     "created_at": "2025-08-13T08:03:03.590070+00:00",
     "updated_at": "2025-08-13T08:03:03.590070+00:00"
@@ -592,7 +526,6 @@
     "product_id": 32,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 67,
     "created_at": "2025-08-13T08:03:03.667485+00:00",
     "updated_at": "2025-08-13T08:03:03.667485+00:00"
@@ -601,7 +534,6 @@
     "product_id": 33,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 68,
     "created_at": "2025-08-13T08:03:03.745526+00:00",
     "updated_at": "2025-08-13T08:03:03.745526+00:00"
@@ -610,7 +542,6 @@
     "product_id": 34,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 69,
     "created_at": "2025-08-13T08:03:03.818206+00:00",
     "updated_at": "2025-08-13T08:03:03.818206+00:00"
@@ -619,7 +550,6 @@
     "product_id": 35,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 70,
     "created_at": "2025-08-13T08:03:03.893544+00:00",
     "updated_at": "2025-08-13T08:03:03.893544+00:00"
@@ -627,7 +557,6 @@
   {
     "product_id": 35,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 71,
     "created_at": "2025-08-13T08:03:03.904319+00:00",
     "updated_at": "2025-08-13T08:03:03.904319+00:00"
@@ -636,7 +565,6 @@
     "product_id": 36,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 72,
     "created_at": "2025-08-13T08:03:03.975890+00:00",
     "updated_at": "2025-08-13T08:03:03.975890+00:00"
@@ -645,7 +573,6 @@
     "product_id": 36,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 73,
     "created_at": "2025-08-13T08:03:03.986881+00:00",
     "updated_at": "2025-08-13T08:03:03.986881+00:00"
@@ -654,7 +581,6 @@
     "product_id": 36,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 74,
     "created_at": "2025-08-13T08:03:03.999911+00:00",
     "updated_at": "2025-08-13T08:03:03.999911+00:00"
@@ -663,7 +589,6 @@
     "product_id": 36,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 75,
     "created_at": "2025-08-13T08:03:04.008350+00:00",
     "updated_at": "2025-08-13T08:03:04.008350+00:00"
@@ -672,7 +597,6 @@
     "product_id": 36,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 76,
     "created_at": "2025-08-13T08:03:04.029269+00:00",
     "updated_at": "2025-08-13T08:03:04.029269+00:00"
@@ -681,7 +605,6 @@
     "product_id": 36,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 77,
     "created_at": "2025-08-13T08:03:04.045979+00:00",
     "updated_at": "2025-08-13T08:03:04.045979+00:00"
@@ -690,7 +613,6 @@
     "product_id": 36,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 78,
     "created_at": "2025-08-13T08:03:04.058026+00:00",
     "updated_at": "2025-08-13T08:03:04.058026+00:00"
@@ -699,7 +621,6 @@
     "product_id": 37,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 79,
     "created_at": "2025-08-13T08:15:19.429700+00:00",
     "updated_at": "2025-08-13T08:15:19.429700+00:00"
@@ -708,7 +629,6 @@
     "product_id": 38,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 80,
     "created_at": "2025-08-13T08:15:19.508907+00:00",
     "updated_at": "2025-08-13T08:15:19.508907+00:00"
@@ -717,7 +637,6 @@
     "product_id": 39,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 81,
     "created_at": "2025-08-13T08:15:19.588605+00:00",
     "updated_at": "2025-08-13T08:15:19.588605+00:00"
@@ -726,7 +645,6 @@
     "product_id": 40,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 82,
     "created_at": "2025-08-13T08:15:19.662214+00:00",
     "updated_at": "2025-08-13T08:15:19.662214+00:00"
@@ -735,7 +653,6 @@
     "product_id": 41,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 83,
     "created_at": "2025-08-13T08:15:19.738361+00:00",
     "updated_at": "2025-08-13T08:15:19.738361+00:00"
@@ -743,7 +660,6 @@
   {
     "product_id": 41,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 84,
     "created_at": "2025-08-13T08:15:19.749161+00:00",
     "updated_at": "2025-08-13T08:15:19.749161+00:00"
@@ -752,7 +668,6 @@
     "product_id": 42,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 85,
     "created_at": "2025-08-13T08:15:19.831982+00:00",
     "updated_at": "2025-08-13T08:15:19.831982+00:00"
@@ -761,7 +676,6 @@
     "product_id": 42,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 86,
     "created_at": "2025-08-13T08:15:19.842284+00:00",
     "updated_at": "2025-08-13T08:15:19.842284+00:00"
@@ -770,7 +684,6 @@
     "product_id": 42,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 87,
     "created_at": "2025-08-13T08:15:19.850766+00:00",
     "updated_at": "2025-08-13T08:15:19.850766+00:00"
@@ -779,7 +692,6 @@
     "product_id": 42,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 88,
     "created_at": "2025-08-13T08:15:19.859520+00:00",
     "updated_at": "2025-08-13T08:15:19.859520+00:00"
@@ -788,7 +700,6 @@
     "product_id": 42,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 89,
     "created_at": "2025-08-13T08:15:19.867628+00:00",
     "updated_at": "2025-08-13T08:15:19.867628+00:00"
@@ -797,7 +708,6 @@
     "product_id": 42,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 90,
     "created_at": "2025-08-13T08:15:19.876417+00:00",
     "updated_at": "2025-08-13T08:15:19.876417+00:00"
@@ -806,7 +716,6 @@
     "product_id": 42,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 91,
     "created_at": "2025-08-13T08:15:19.884845+00:00",
     "updated_at": "2025-08-13T08:15:19.884845+00:00"
@@ -815,7 +724,6 @@
     "product_id": 43,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 92,
     "created_at": "2025-08-13T19:16:30.704402+00:00",
     "updated_at": "2025-08-13T19:16:30.704402+00:00"
@@ -824,7 +732,6 @@
     "product_id": 44,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 93,
     "created_at": "2025-08-13T19:16:30.781538+00:00",
     "updated_at": "2025-08-13T19:16:30.781538+00:00"
@@ -833,7 +740,6 @@
     "product_id": 45,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 94,
     "created_at": "2025-08-13T19:16:30.924215+00:00",
     "updated_at": "2025-08-13T19:16:30.924215+00:00"
@@ -842,7 +748,6 @@
     "product_id": 46,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 95,
     "created_at": "2025-08-13T19:16:31.007165+00:00",
     "updated_at": "2025-08-13T19:16:31.007165+00:00"
@@ -851,7 +756,6 @@
     "product_id": 47,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 96,
     "created_at": "2025-08-13T19:16:31.085605+00:00",
     "updated_at": "2025-08-13T19:16:31.085605+00:00"
@@ -859,7 +763,6 @@
   {
     "product_id": 47,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 97,
     "created_at": "2025-08-13T19:16:31.099489+00:00",
     "updated_at": "2025-08-13T19:16:31.099489+00:00"
@@ -868,7 +771,6 @@
     "product_id": 48,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 98,
     "created_at": "2025-08-13T19:16:31.172638+00:00",
     "updated_at": "2025-08-13T19:16:31.172638+00:00"
@@ -877,7 +779,6 @@
     "product_id": 48,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 99,
     "created_at": "2025-08-13T19:16:31.183854+00:00",
     "updated_at": "2025-08-13T19:16:31.183854+00:00"
@@ -886,7 +787,6 @@
     "product_id": 48,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 100,
     "created_at": "2025-08-13T19:16:31.193478+00:00",
     "updated_at": "2025-08-13T19:16:31.193478+00:00"
@@ -895,7 +795,6 @@
     "product_id": 48,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 101,
     "created_at": "2025-08-13T19:16:31.204706+00:00",
     "updated_at": "2025-08-13T19:16:31.204706+00:00"
@@ -904,7 +803,6 @@
     "product_id": 48,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 102,
     "created_at": "2025-08-13T19:16:31.228875+00:00",
     "updated_at": "2025-08-13T19:16:31.228875+00:00"
@@ -913,7 +811,6 @@
     "product_id": 48,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 103,
     "created_at": "2025-08-13T19:16:31.243296+00:00",
     "updated_at": "2025-08-13T19:16:31.243296+00:00"
@@ -922,7 +819,6 @@
     "product_id": 48,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 104,
     "created_at": "2025-08-13T19:16:31.255808+00:00",
     "updated_at": "2025-08-13T19:16:31.255808+00:00"
@@ -931,7 +827,6 @@
     "product_id": 49,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 105,
     "created_at": "2025-08-13T20:14:54.078444+00:00",
     "updated_at": "2025-08-13T20:14:54.078444+00:00"
@@ -940,7 +835,6 @@
     "product_id": 50,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 106,
     "created_at": "2025-08-13T20:14:54.160514+00:00",
     "updated_at": "2025-08-13T20:14:54.160514+00:00"
@@ -949,7 +843,6 @@
     "product_id": 51,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 107,
     "created_at": "2025-08-13T20:14:54.282603+00:00",
     "updated_at": "2025-08-13T20:14:54.282603+00:00"
@@ -958,7 +851,6 @@
     "product_id": 52,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 108,
     "created_at": "2025-08-13T20:14:54.368011+00:00",
     "updated_at": "2025-08-13T20:14:54.368011+00:00"
@@ -967,7 +859,6 @@
     "product_id": 53,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 109,
     "created_at": "2025-08-13T20:14:54.448147+00:00",
     "updated_at": "2025-08-13T20:14:54.448147+00:00"
@@ -975,7 +866,6 @@
   {
     "product_id": 53,
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 110,
     "created_at": "2025-08-13T20:14:54.458957+00:00",
     "updated_at": "2025-08-13T20:14:54.458957+00:00"
@@ -984,7 +874,6 @@
     "product_id": 54,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 111,
     "created_at": "2025-08-13T20:14:54.530358+00:00",
     "updated_at": "2025-08-13T20:14:54.530358+00:00"
@@ -993,7 +882,6 @@
     "product_id": 54,
     "roast_date": "2025-08-13",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 112,
     "created_at": "2025-08-13T20:14:54.542269+00:00",
     "updated_at": "2025-08-13T20:14:54.542269+00:00"
@@ -1002,7 +890,6 @@
     "product_id": 54,
     "roast_date": "2025-08-12",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 113,
     "created_at": "2025-08-13T20:14:54.551973+00:00",
     "updated_at": "2025-08-13T20:14:54.551973+00:00"
@@ -1011,7 +898,6 @@
     "product_id": 54,
     "roast_date": "2025-08-08",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 114,
     "created_at": "2025-08-13T20:14:54.562378+00:00",
     "updated_at": "2025-08-13T20:14:54.562378+00:00"
@@ -1020,7 +906,6 @@
     "product_id": 54,
     "roast_date": "2025-08-06",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 115,
     "created_at": "2025-08-13T20:14:54.585292+00:00",
     "updated_at": "2025-08-13T20:14:54.585292+00:00"
@@ -1029,7 +914,6 @@
     "product_id": 54,
     "roast_date": "2025-07-30",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 116,
     "created_at": "2025-08-13T20:14:54.601629+00:00",
     "updated_at": "2025-08-13T20:14:54.601629+00:00"
@@ -1038,7 +922,6 @@
     "product_id": 54,
     "roast_date": "2025-07-09",
     "amount_grams": 250,
-    "purchase_price": 15.99,
     "id": 117,
     "created_at": "2025-08-13T20:14:54.613964+00:00",
     "updated_at": "2025-08-13T20:14:54.613964+00:00"
@@ -3010,5 +2893,293 @@
     "id": 363,
     "created_at": "2025-08-18T18:54:09.085645+00:00",
     "updated_at": "2025-08-18T18:54:09.085645+00:00"
+  },
+  {
+    "product_id": 181,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 364,
+    "created_at": "2025-08-18T19:24:51.479877+00:00",
+    "updated_at": "2025-08-18T19:24:51.479877+00:00"
+  },
+  {
+    "product_id": 182,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 365,
+    "created_at": "2025-08-18T19:24:51.657659+00:00",
+    "updated_at": "2025-08-18T19:24:51.657659+00:00"
+  },
+  {
+    "product_id": 183,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 366,
+    "created_at": "2025-08-18T19:24:51.809304+00:00",
+    "updated_at": "2025-08-18T19:24:51.809304+00:00"
+  },
+  {
+    "product_id": 184,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 367,
+    "created_at": "2025-08-18T19:24:51.932634+00:00",
+    "updated_at": "2025-08-18T19:24:51.932634+00:00"
+  },
+  {
+    "product_id": 185,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 368,
+    "created_at": "2025-08-18T19:24:52.085899+00:00",
+    "updated_at": "2025-08-18T19:24:52.085899+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 369,
+    "created_at": "2025-08-18T19:24:52.226706+00:00",
+    "updated_at": "2025-08-18T19:24:52.226706+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-18",
+    "amount_grams": 250,
+    "id": 370,
+    "created_at": "2025-08-18T19:24:52.251910+00:00",
+    "updated_at": "2025-08-18T19:24:52.251910+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-17",
+    "amount_grams": 250,
+    "id": 371,
+    "created_at": "2025-08-18T19:24:52.284758+00:00",
+    "updated_at": "2025-08-18T19:24:52.284758+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-13",
+    "amount_grams": 250,
+    "id": 372,
+    "created_at": "2025-08-18T19:24:52.318777+00:00",
+    "updated_at": "2025-08-18T19:24:52.318777+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-11",
+    "amount_grams": 250,
+    "id": 373,
+    "created_at": "2025-08-18T19:24:52.351480+00:00",
+    "updated_at": "2025-08-18T19:24:52.351480+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 374,
+    "created_at": "2025-08-18T19:24:52.396672+00:00",
+    "updated_at": "2025-08-18T19:24:52.396672+00:00"
+  },
+  {
+    "product_id": 186,
+    "roast_date": "2025-07-14",
+    "amount_grams": 250,
+    "id": 375,
+    "created_at": "2025-08-18T19:24:52.426848+00:00",
+    "updated_at": "2025-08-18T19:24:52.426848+00:00"
+  },
+  {
+    "product_id": 187,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 376,
+    "created_at": "2025-08-18T19:35:58.839089+00:00",
+    "updated_at": "2025-08-18T19:35:58.839089+00:00"
+  },
+  {
+    "product_id": 188,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 377,
+    "created_at": "2025-08-18T19:35:58.963135+00:00",
+    "updated_at": "2025-08-18T19:35:58.963135+00:00"
+  },
+  {
+    "product_id": 189,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 378,
+    "created_at": "2025-08-18T19:35:59.094684+00:00",
+    "updated_at": "2025-08-18T19:35:59.094684+00:00"
+  },
+  {
+    "product_id": 190,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 379,
+    "created_at": "2025-08-18T19:35:59.190936+00:00",
+    "updated_at": "2025-08-18T19:35:59.190936+00:00"
+  },
+  {
+    "product_id": 191,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 380,
+    "created_at": "2025-08-18T19:35:59.310189+00:00",
+    "updated_at": "2025-08-18T19:35:59.310189+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 381,
+    "created_at": "2025-08-18T19:35:59.419871+00:00",
+    "updated_at": "2025-08-18T19:35:59.419871+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-18",
+    "amount_grams": 250,
+    "id": 382,
+    "created_at": "2025-08-18T19:35:59.445321+00:00",
+    "updated_at": "2025-08-18T19:35:59.445321+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-17",
+    "amount_grams": 250,
+    "id": 383,
+    "created_at": "2025-08-18T19:35:59.477111+00:00",
+    "updated_at": "2025-08-18T19:35:59.477111+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-13",
+    "amount_grams": 250,
+    "id": 384,
+    "created_at": "2025-08-18T19:35:59.508262+00:00",
+    "updated_at": "2025-08-18T19:35:59.508262+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-11",
+    "amount_grams": 250,
+    "id": 385,
+    "created_at": "2025-08-18T19:35:59.552021+00:00",
+    "updated_at": "2025-08-18T19:35:59.552021+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-08-04",
+    "amount_grams": 250,
+    "id": 386,
+    "created_at": "2025-08-18T19:35:59.581580+00:00",
+    "updated_at": "2025-08-18T19:35:59.581580+00:00"
+  },
+  {
+    "product_id": 192,
+    "roast_date": "2025-07-14",
+    "amount_grams": 250,
+    "id": 387,
+    "created_at": "2025-08-18T19:35:59.612434+00:00",
+    "updated_at": "2025-08-18T19:35:59.612434+00:00"
+  },
+  {
+    "product_id": 193,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 388,
+    "created_at": "2025-08-19T14:40:08.954393+00:00",
+    "updated_at": "2025-08-19T14:40:08.954393+00:00"
+  },
+  {
+    "product_id": 194,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 389,
+    "created_at": "2025-08-19T14:40:09.081827+00:00",
+    "updated_at": "2025-08-19T14:40:09.081827+00:00"
+  },
+  {
+    "product_id": 195,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 390,
+    "created_at": "2025-08-19T14:40:09.200481+00:00",
+    "updated_at": "2025-08-19T14:40:09.200481+00:00"
+  },
+  {
+    "product_id": 196,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 391,
+    "created_at": "2025-08-19T14:40:09.313646+00:00",
+    "updated_at": "2025-08-19T14:40:09.313646+00:00"
+  },
+  {
+    "product_id": 197,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 392,
+    "created_at": "2025-08-19T14:40:09.429816+00:00",
+    "updated_at": "2025-08-19T14:40:09.429816+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 393,
+    "created_at": "2025-08-19T14:40:09.532275+00:00",
+    "updated_at": "2025-08-19T14:40:09.532275+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-19",
+    "amount_grams": 250,
+    "id": 394,
+    "created_at": "2025-08-19T14:40:09.558314+00:00",
+    "updated_at": "2025-08-19T14:40:09.558314+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-18",
+    "amount_grams": 250,
+    "id": 395,
+    "created_at": "2025-08-19T14:40:09.587155+00:00",
+    "updated_at": "2025-08-19T14:40:09.587155+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-14",
+    "amount_grams": 250,
+    "id": 396,
+    "created_at": "2025-08-19T14:40:09.615201+00:00",
+    "updated_at": "2025-08-19T14:40:09.615201+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-12",
+    "amount_grams": 250,
+    "id": 397,
+    "created_at": "2025-08-19T14:40:09.643699+00:00",
+    "updated_at": "2025-08-19T14:40:09.643699+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-08-05",
+    "amount_grams": 250,
+    "id": 398,
+    "created_at": "2025-08-19T14:40:09.671808+00:00",
+    "updated_at": "2025-08-19T14:40:09.671808+00:00"
+  },
+  {
+    "product_id": 198,
+    "roast_date": "2025-07-15",
+    "amount_grams": 250,
+    "id": 399,
+    "created_at": "2025-08-19T14:40:09.700574+00:00",
+    "updated_at": "2025-08-19T14:40:09.700574+00:00"
   }
 ]

@@ -2779,7 +2779,9 @@
     },
     "shot_session_title": "Production Test Session",
     "dose_yield_ratio": 2.0,
-    "calculated_score": null
+    "calculated_score": null,
+    "session_shot_number": 1,
+    "time_since_previous": "first"
   },
   {
     "brewer_id": 1,
@@ -2878,6 +2880,67 @@
     "created_at": "2025-08-18T17:25:40.496336+00:00",
     "updated_at": "2025-08-18T17:25:40.496336+00:00",
     "timestamp": "2025-08-18T17:25:40.496297+00:00",
-    "id": 26
+    "id": 26,
+    "session_shot_number": 2,
+    "time_since_previous": "4d 20h",
+    "product_name": "Yirgacheffe Single Origin",
+    "brewer_name": "Breville Bambino Plus"
+  },
+  {
+    "dose_grams": 20.0,
+    "extraction_time_seconds": 28,
+    "grinder_setting": "15",
+    "notes": "Test shot with flow rate calculation",
+    "overall_score": 8.5,
+    "shot_session_id": 18,
+    "yield_grams": 40.0,
+    "created_at": "2025-08-18T19:28:53.866840+00:00",
+    "updated_at": "2025-08-18T19:28:53.866840+00:00",
+    "timestamp": "2025-08-18T19:28:53.866799+00:00",
+    "ratio": "1:2.0",
+    "id": 27
+  },
+  {
+    "dose_grams": 18.0,
+    "extraction_time_seconds": 30,
+    "grinder_setting": "14",
+    "notes": "Slightly longer extraction",
+    "overall_score": 7.5,
+    "shot_session_id": 18,
+    "yield_grams": 45.0,
+    "created_at": "2025-08-18T19:29:20.247549+00:00",
+    "updated_at": "2025-08-18T19:29:20.247549+00:00",
+    "timestamp": "2025-08-18T19:29:20.246748+00:00",
+    "ratio": "1:2.5",
+    "id": 28,
+    "coffee_age": null,
+    "shot_session": {
+      "brewer_id": 1,
+      "notes": "Testing production-like data",
+      "product_batch_id": 1,
+      "product_id": 1,
+      "title": "Production Test Session",
+      "created_at": "2025-08-13T21:16:22.496887+00:00",
+      "updated_at": "2025-08-13T21:16:22.496887+00:00",
+      "id": 18
+    },
+    "shot_session_title": "Production Test Session",
+    "dose_yield_ratio": 2.5,
+    "flow_rate": 1.5,
+    "calculated_score": null
+  },
+  {
+    "dose_grams": 19.0,
+    "extraction_time_seconds": 25,
+    "grinder_setting": "16",
+    "notes": "Faster shot",
+    "overall_score": 8.0,
+    "shot_session_id": 18,
+    "yield_grams": 38.0,
+    "created_at": "2025-08-18T19:29:20.274925+00:00",
+    "updated_at": "2025-08-18T19:29:20.274925+00:00",
+    "timestamp": "2025-08-18T19:29:20.274890+00:00",
+    "ratio": "1:2.0",
+    "id": 29
   }
 ]

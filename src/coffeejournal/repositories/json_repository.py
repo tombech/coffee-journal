@@ -120,22 +120,28 @@ class JSONRepositoryBase(BaseRepository):
     
     def _write_data(self, data: List[Dict[str, Any]]):
         """Write data to JSON file with cross-process locking and atomic writes."""
+        # SAFEGUARD: Always strip enriched fields before writing to prevent corruption
+        cleaned_data = []
+        for item in data:
+            cleaned_item = self._strip_enriched_fields(item)
+            cleaned_data.append(cleaned_item)
+        
         try:
             with self._get_lock(timeout=10.0):
                 # Atomic write: write to temp file, then rename for crash safety
                 temp_file = self.filepath.with_suffix('.tmp')
                 try:
                     with open(temp_file, 'w') as f:
-                        json.dump(data, f, indent=2, cls=JSONEncoder)
+                        json.dump(cleaned_data, f, indent=2, cls=JSONEncoder)
                         # Force write to disk immediately
                         f.flush()
                         os.fsync(f.fileno())
                     # Atomic rename - works on all platforms
                     temp_file.replace(self.filepath)
                     
-                    # Update cache with the new data (thread-safe)
+                    # Update cache with the cleaned data (thread-safe)
                     with self._thread_lock:
-                        self._cache = data.copy()
+                        self._cache = cleaned_data.copy()
                         self._cache_mtime = os.path.getmtime(self.filepath)
                     
                     # Ensure directory entry is synced
@@ -259,18 +265,16 @@ class JSONRepositoryBase(BaseRepository):
         """Update existing entity."""
         # Strip any enriched fields that shouldn't be saved
         cleaned_data = self._strip_enriched_fields(data)
-        print(f"DEBUG UPDATE: Original data: {data}")
-        print(f"DEBUG UPDATE: Cleaned data: {cleaned_data}")
         
         all_data = self._read_data()
         for i, item in enumerate(all_data):
             if item['id'] == id:
-                print(f"DEBUG UPDATE: Existing item: {item}")
-                # Start with existing item to preserve all fields
-                updated_item = item.copy()
+                # First strip any enriched fields from the existing item
+                cleaned_existing = self._strip_enriched_fields(item)
+                # Start with the cleaned existing item
+                updated_item = cleaned_existing.copy()
                 # Merge in the cleaned update data
                 updated_item.update(cleaned_data)
-                print(f"DEBUG UPDATE: Updated item before timestamps: {updated_item}")
                 # Ensure ID is preserved
                 updated_item['id'] = id
                 
@@ -278,11 +282,8 @@ class JSONRepositoryBase(BaseRepository):
                 updated_item['created_at'] = item.get('created_at', datetime.now(timezone.utc).isoformat())
                 updated_item['updated_at'] = datetime.now(timezone.utc).isoformat()
                 
-                # Validate before saving (skip enriched fields that may be present)
-                schema = self._get_schema()
-                allowed_fields = set(schema['properties'].keys()) if schema and 'properties' in schema else set()
-                enriched_fields = [key for key in updated_item.keys() if key not in allowed_fields]
-                self._validate_entity(updated_item, skip_fields=enriched_fields)
+                # Validate before saving
+                self._validate_entity(updated_item)
                 
                 all_data[i] = updated_item
                 self._write_data(all_data)
