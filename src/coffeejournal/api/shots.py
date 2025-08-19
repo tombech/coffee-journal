@@ -120,11 +120,18 @@ def enrich_shot(shot, factory, user_id):
             shot['recipe'] = recipe
             shot['recipe_name'] = recipe.get('name', 'Unknown')
     
-    # Enrich shot session
+    # Enrich shot session (avoid circular reference by only including essential fields)
     if shot.get('shot_session_id'):
         session = factory.get_shot_session_repository(user_id).find_by_id(shot['shot_session_id'])
         if session:
-            shot['shot_session'] = session
+            # Only include essential session fields to avoid circular reference
+            shot['shot_session'] = {
+                'id': session['id'],
+                'title': session.get('title', 'Unknown'),
+                'created_at': session.get('created_at'),
+                'product_id': session.get('product_id'),
+                'brewer_id': session.get('brewer_id')
+            }
             shot['shot_session_title'] = session.get('title', 'Unknown')
     
     # Calculate dose-yield ratio

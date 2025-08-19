@@ -68,17 +68,32 @@ def enrich_shot_session_with_shots(session, factory, user_id):
         else:
             shot['time_since_previous'] = 'first'
         
-        # Add product name
+        # Add product name (lightweight enrichment)
         if shot.get('product_id'):
             product = factory.get_product_repository(user_id).find_by_id(shot['product_id'])
             if product:
                 shot['product_name'] = product.get('product_name', 'Unknown')
         
-        # Add brewer name
+        # Add brewer name (lightweight enrichment)
         if shot.get('brewer_id'):
             brewer = factory.get_brewer_repository(user_id).find_by_id(shot['brewer_id'])
             if brewer:
                 shot['brewer_name'] = brewer.get('name', 'Unknown')
+        
+        # Add calculated fields that don't cause circular references
+        from ..api.utils import calculate_total_score
+        shot['calculated_score'] = calculate_total_score(shot)
+        
+        # Calculate dose-yield ratio
+        if shot.get('dose_grams') and shot.get('yield_grams'):
+            try:
+                dose_float = float(shot['dose_grams'])
+                yield_float = float(shot['yield_grams'])
+                if dose_float > 0:
+                    ratio = yield_float / dose_float
+                    shot['ratio'] = f"1:{ratio:.2f}"
+            except (ValueError, TypeError, ZeroDivisionError):
+                shot['ratio'] = None
     
     session['shots'] = shots
     session['shot_count'] = len(shots)
@@ -571,6 +586,11 @@ def duplicate_newest_shot_in_session(session_id):
         duplicate_data.pop('overall_score', None)
         duplicate_data.pop('notes', None)
         duplicate_data.pop('extraction_status', None)
+        
+        # Clear all tasting scores so user starts fresh
+        tasting_fields = ['sweetness', 'acidity', 'bitterness', 'body', 'aroma', 'crema', 'flavor_profile_match']
+        for field in tasting_fields:
+            duplicate_data.pop(field, None)
         
         # Keep the session reference
         duplicate_data['shot_session_id'] = session_id

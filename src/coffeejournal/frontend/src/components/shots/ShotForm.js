@@ -135,10 +135,44 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
         // Handle session_id URL parameter (e.g., /shots/new?session_id=5)
         const sessionIdParam = searchParams.get('session_id');
         if (sessionIdParam && !id && !initialData) {
+          // First set the session ID
           setFormData(prev => ({
             ...prev,
             shot_session_id: sessionIdParam
           }));
+          
+          // Then pre-populate product and batch from session if available
+          const sessionId = parseInt(sessionIdParam);
+          const session = shotSessionsData.data ? 
+            shotSessionsData.data.find(s => s.id === sessionId) :
+            shotSessionsData.find(s => s.id === sessionId);
+          
+          if (session) {
+            const sessionUpdates = {
+              shot_session_id: sessionIdParam
+            };
+            
+            // Pre-populate product from session
+            if (session.product_id && !formData.product_id) {
+              sessionUpdates.product_id = session.product_id;
+              
+              // Also pre-populate batch if session has one
+              if (session.product_batch_id) {
+                sessionUpdates.product_batch_id = session.product_batch_id;
+                
+                // Fetch batches for the product to ensure the batch dropdown is populated
+                const batchesResponse = await apiFetch(`/products/${session.product_id}/batches`);
+                if (batchesResponse.ok) {
+                  setBatches(await batchesResponse.json());
+                }
+              }
+            }
+            
+            setFormData(prev => ({
+              ...prev,
+              ...sessionUpdates
+            }));
+          }
         }
       } catch (err) {
         setError("Failed to load form data: " + err.message);

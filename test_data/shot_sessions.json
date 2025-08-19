@@ -1,7 +1,6 @@
 [
   {
     "id": 1,
-    "session_name": "Morning Dialing Session",
     "product_id": 1,
     "product_batch_id": 1,
     "brewer_id": 2,
@@ -10,7 +9,6 @@
   },
   {
     "id": 2,
-    "session_name": "Weekend Practice",
     "product_id": 3,
     "product_batch_id": 3,
     "brewer_id": 3,
@@ -19,7 +17,6 @@
   },
   {
     "id": 3,
-    "session_name": "New Bean Exploration",
     "product_id": 4,
     "product_batch_id": 4,
     "brewer_id": 1,
@@ -28,7 +25,6 @@
   },
   {
     "id": 4,
-    "session_name": "Dialing Competition Shot",
     "product_id": 1,
     "product_batch_id": 1,
     "brewer_id": 4,
@@ -39,10 +35,7 @@
     "title": "Test Session",
     "created_at": "2025-08-13T05:44:15.597604+00:00",
     "updated_at": "2025-08-13T05:44:15.597604+00:00",
-    "id": 5,
-    "shots": [],
-    "shot_count": 0,
-    "coffee_age": null
+    "id": 5
   },
   {
     "brewer_id": 1,
@@ -51,18 +44,7 @@
     "title": "Full Test Session",
     "created_at": "2025-08-13T05:44:15.614878+00:00",
     "updated_at": "2025-08-13T05:44:15.614878+00:00",
-    "id": 6,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "coffee_age": null,
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    }
+    "id": 6
   },
   {
     "brewer_id": 1,
@@ -71,18 +53,7 @@
     "title": "Test Session with Data",
     "created_at": "2025-08-13T05:44:42.561917+00:00",
     "updated_at": "2025-08-13T05:44:42.561917+00:00",
-    "id": 7,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "coffee_age": null,
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    }
+    "id": 7
   },
   {
     "brewer_id": 1,
@@ -91,18 +62,7 @@
     "title": "Debug Test Session",
     "created_at": "2025-08-13T05:53:03.721868+00:00",
     "updated_at": "2025-08-13T05:53:03.721868+00:00",
-    "id": 8,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "coffee_age": null,
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    }
+    "id": 8
   },
   {
     "brewer_id": 1,
@@ -112,22 +72,7 @@
     "title": "Session with Batch Test",
     "created_at": "2025-08-13T05:54:44.609030+00:00",
     "updated_at": "2025-08-13T05:54:44.609030+00:00",
-    "id": 9,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "coffee_age": "34 weeks",
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    }
+    "id": 9
   },
   {
     "brewer_id": 1,
@@ -137,31 +82,13 @@
     "title": "Updated Test Session",
     "created_at": "2025-08-13T05:59:08.675609+00:00",
     "updated_at": "2025-08-13T05:59:08.700247+00:00",
-    "id": 10,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    },
-    "coffee_age": "34 weeks"
+    "id": 10
   },
   {
     "title": "Minimal Session",
     "created_at": "2025-08-13T05:59:08.705469+00:00",
     "updated_at": "2025-08-13T05:59:08.705469+00:00",
-    "id": 11,
-    "shots": [],
-    "shot_count": 0,
-    "coffee_age": null
+    "id": 11
   },
   {
     "brewer_id": 1,
@@ -171,22 +98,7 @@
     "title": "Enrichment Test Session",
     "created_at": "2025-08-13T06:05:17.254162+00:00",
     "updated_at": "2025-08-13T06:05:17.254162+00:00",
-    "id": 12,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    },
-    "coffee_age": "34 weeks"
+    "id": 12
   },
   {
     "brewer_id": 1,
@@ -196,22 +108,7 @@
     "title": "Debug Enrichment Test",
     "created_at": "2025-08-13T06:06:24.525951+00:00",
     "updated_at": "2025-08-13T06:06:24.525951+00:00",
-    "id": 13,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    },
-    "coffee_age": "34 weeks"
+    "id": 13
   },
   {
     "brewer_id": 1,
@@ -221,22 +118,7 @@
     "title": "Updated Final Session",
     "created_at": "2025-08-13T06:17:17.625629+00:00",
     "updated_at": "2025-08-13T06:17:17.655740+00:00",
-    "id": 14,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    },
-    "coffee_age": "34 weeks"
+    "id": 14
   },
   {
     "brewer_id": 1,
@@ -246,22 +128,7 @@
     "title": "Test Session with Batch",
     "created_at": "2025-08-13T20:09:14.039179+00:00",
     "updated_at": "2025-08-13T20:09:14.039179+00:00",
-    "id": 15,
-    "shots": [],
-    "shot_count": 0,
-    "product": {
-      "id": 1,
-      "product_name": "Yirgacheffe Single Origin"
-    },
-    "product_batch": {
-      "id": 1,
-      "roast_date": "2024-12-15"
-    },
-    "coffee_age": "34 weeks",
-    "brewer": {
-      "id": 1,
-      "name": "Breville Bambino Plus"
-    }
+    "id": 15
   },
   {
     "title": "Updated Test Session",
@@ -271,9 +138,7 @@
     "notes": "Updated notes - testing edit persistence",
     "created_at": "2025-08-13T20:23:10.167265+00:00",
     "updated_at": "2025-08-13T20:23:22.072931+00:00",
-    "id": 16,
-    "shots": [],
-    "shot_count": 0
+    "id": 16
   },
   {
     "brewer_id": 1,
@@ -294,5 +159,25 @@
     "created_at": "2025-08-13T21:16:22.496887+00:00",
     "updated_at": "2025-08-13T21:16:22.496887+00:00",
     "id": 18
+  },
+  {
+    "brewer_id": 1,
+    "notes": "Testing complete flow",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "End-to-End Test Session",
+    "created_at": "2025-08-19T15:27:11.938547+00:00",
+    "updated_at": "2025-08-19T15:27:11.938547+00:00",
+    "id": 19
+  },
+  {
+    "brewer_id": 1,
+    "notes": "End-to-end testing session",
+    "product_batch_id": 1,
+    "product_id": 1,
+    "title": "E2E Test Session",
+    "created_at": "2025-08-19T15:32:49.939077+00:00",
+    "updated_at": "2025-08-19T15:32:49.939077+00:00",
+    "id": 20
   }
 ]

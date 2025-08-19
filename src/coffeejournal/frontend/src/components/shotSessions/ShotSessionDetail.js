@@ -90,6 +90,50 @@ function ShotSessionDetail() {
     }
   };
 
+  const handleAddShot = async () => {
+    try {
+      if (shots.length > 0) {
+        // Session has shots - duplicate the newest shot
+        const response = await apiFetch(`/shot_sessions/${id}/duplicate_newest_shot`, {
+          method: 'POST',
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        addToast("Last shot duplicated for editing!", 'success');
+        // Navigate to edit the newly created shot
+        navigate(`/shots/${result.new_shot.id}/edit`);
+      } else {
+        // No shots in session yet - go to regular shot creation form
+        navigate(`/shots/new?session_id=${id}`);
+      }
+    } catch (err) {
+      setError("Failed to add shot: " + err.message);
+      console.error("Error adding shot:", err);
+    }
+  };
+
+  const handleDeleteShot = async (shotId) => {
+    if (!window.confirm("Are you sure you want to delete this shot?")) {
+      return;
+    }
+    try {
+      const response = await apiFetch(`/shots/${shotId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      addToast("Shot deleted successfully!", 'success');
+      // Refresh the shots data
+      fetchShotSessionShots();
+    } catch (err) {
+      setError("Failed to delete shot: " + err.message);
+      console.error("Error deleting shot:", err);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     try {
@@ -276,21 +320,20 @@ function ShotSessionDetail() {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
           <h3 style={{ margin: 0, color: '#333', fontSize: '18px', fontWeight: 'bold' }}>☕ Shots in this Session</h3>
-          <Link
-            to={`/shots/new?session_id=${id}`}
+          <button
+            onClick={handleAddShot}
             style={{ 
               padding: '6px 8px', 
               border: 'none', 
               background: 'none', 
               cursor: 'pointer', 
-              fontSize: '16px',
-              textDecoration: 'none'
+              fontSize: '16px'
             }}
-            title="Add Shot to Session"
-            aria-label="Add Shot to Session"
+            title={shots.length > 0 ? "Duplicate last shot for editing" : "Add shot to session"}
+            aria-label={shots.length > 0 ? "Duplicate last shot for editing" : "Add shot to session"}
           >
             {ICONS.CREATE}
-          </Link>
+          </button>
         </div>
 
         {shots.length === 0 ? (
@@ -314,6 +357,9 @@ function ShotSessionDetail() {
             <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
               <thead>
                 <tr style={{ backgroundColor: '#e9ecef' }}>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left', width: '90px' }}>
+                    Actions
+                  </th>
                   <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
                     Shot #
                   </th>
@@ -352,6 +398,51 @@ function ShotSessionDetail() {
               <tbody>
                 {shots.map((shot) => (
                   <tr key={shot.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
+                    <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '90px', whiteSpace: 'nowrap' }}>
+                      <Link
+                        to={`/shots/${shot.id}/edit`}
+                        style={{ 
+                          padding: '2px 4px', 
+                          margin: '0 1px', 
+                          textDecoration: 'none',
+                          color: 'inherit',
+                          fontSize: '12px'
+                        }}
+                        title="Edit"
+                        aria-label="Edit shot"
+                      >
+                        ✏️
+                      </Link>
+                      <Link
+                        to={`/shots/${shot.id}`}
+                        style={{ 
+                          padding: '2px 4px', 
+                          margin: '0 1px', 
+                          textDecoration: 'none',
+                          color: 'inherit',
+                          fontSize: '12px'
+                        }}
+                        title="View"
+                        aria-label="View shot"
+                      >
+                        👁️
+                      </Link>
+                      <button 
+                        onClick={() => handleDeleteShot(shot.id)}
+                        title="Delete"
+                        aria-label="Delete shot"
+                        style={{ 
+                          padding: '2px 4px', 
+                          margin: '0 1px', 
+                          border: 'none', 
+                          background: 'none', 
+                          cursor: 'pointer', 
+                          fontSize: '12px' 
+                        }}
+                      >
+                        🗑️
+                      </button>
+                    </td>
                     <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top' }}>
                       <Link
                         to={`/shots/${shot.id}`}
