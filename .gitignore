@@ -201,8 +201,8 @@ notes/
 
 # Test artifacts and user data (not for version control)
 test_data/users/
-test-results/.last-run.json
-*/test-results/.last-run.json
+test-results/
+*/test-results/
 playwright-report/
 */playwright-report/
 
