@@ -134,6 +134,24 @@ function ShotSessionDetail() {
     }
   };
 
+  const handleDuplicateShot = async (shotId) => {
+    try {
+      const response = await apiFetch(`/shots/${shotId}/duplicate`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      addToast("Shot duplicated successfully!", 'success');
+      // Navigate to edit the newly created shot
+      navigate(`/shots/${result.new_shot.id}/edit`);
+    } catch (err) {
+      setError("Failed to duplicate shot: " + err.message);
+      console.error("Error duplicating shot:", err);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     try {
@@ -181,6 +199,43 @@ function ShotSessionDetail() {
       };
     }
     return baseStyle;
+  };
+
+  // Function to calculate time gap with sequence reset logic
+  const calculateTimeGapSequence = (currentShot, shotIndex) => {
+    // First shot in session always has gap of 0
+    if (shotIndex === 0) return '0';
+    
+    const previousShot = shots[shotIndex - 1];
+    if (!currentShot.timestamp || !previousShot.timestamp) return '-';
+    
+    try {
+      const currentTime = new Date(currentShot.timestamp);
+      const previousTime = new Date(previousShot.timestamp);
+      const timeDiffMs = currentTime - previousTime;
+      const timeDiffMinutes = timeDiffMs / (1000 * 60);
+      
+      // If gap is more than 20 minutes, reset sequence (user got distracted)
+      if (timeDiffMinutes > 20) {
+        return '0 (reset)';
+      }
+      
+      // Format the actual time gap
+      const totalSeconds = Math.floor(timeDiffMs / 1000);
+      if (totalSeconds < 60) {
+        return `${totalSeconds}s`;
+      } else if (totalSeconds < 3600) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
+      } else {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+      }
+    } catch (error) {
+      return '-';
+    }
   };
 
   if (loading) return <p className="loading-message">Loading shot session...</p>;
@@ -357,8 +412,11 @@ function ShotSessionDetail() {
             <table style={{ borderCollapse: 'collapse', fontSize: '12px', whiteSpace: 'nowrap' }}>
               <thead>
                 <tr style={{ backgroundColor: '#e9ecef' }}>
-                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left', width: '90px' }}>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left', width: '85px' }}>
                     Actions
+                  </th>
+                  <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
+                    📅 Created
                   </th>
                   <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
                     Shot #
@@ -396,9 +454,9 @@ function ShotSessionDetail() {
                 </tr>
               </thead>
               <tbody>
-                {shots.map((shot) => (
+                {shots.map((shot, index) => (
                   <tr key={shot.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
-                    <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '90px', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '85px', whiteSpace: 'nowrap' }}>
                       <Link
                         to={`/shots/${shot.id}/edit`}
                         style={{ 
@@ -413,20 +471,21 @@ function ShotSessionDetail() {
                       >
                         ✏️
                       </Link>
-                      <Link
-                        to={`/shots/${shot.id}`}
+                      <button 
+                        onClick={() => handleDuplicateShot(shot.id)}
+                        title="Duplicate"
+                        aria-label="Duplicate shot"
                         style={{ 
                           padding: '2px 4px', 
                           margin: '0 1px', 
-                          textDecoration: 'none',
-                          color: 'inherit',
-                          fontSize: '12px'
+                          border: 'none', 
+                          background: 'none', 
+                          cursor: 'pointer', 
+                          fontSize: '12px' 
                         }}
-                        title="View"
-                        aria-label="View shot"
                       >
-                        👁️
-                      </Link>
+                        {ICONS.DUPLICATE}
+                      </button>
                       <button 
                         onClick={() => handleDeleteShot(shot.id)}
                         title="Delete"
@@ -442,6 +501,9 @@ function ShotSessionDetail() {
                       >
                         🗑️
                       </button>
+                    </td>
+                    <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', color: '#666' }}>
+                      {shot.timestamp ? formatDate(shot.timestamp) : '-'}
                     </td>
                     <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top' }}>
                       <Link
@@ -526,7 +588,7 @@ function ShotSessionDetail() {
                       {shot.overall_score ? shot.overall_score.toFixed(1) : '-'}
                     </td>
                     <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', color: '#666' }}>
-                      {shot.time_since_previous || '-'}
+                      {calculateTimeGapSequence(shot, index)}
                     </td>
                   </tr>
                 ))}

@@ -283,10 +283,15 @@ function GrinderDetail() {
               </div>
               
               <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(stats.total_shots || 0)}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Total Shots</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
                   {stats.total_kilos > 0 ? `${Math.round(stats.total_kilos)}kg` : `${Math.round(stats.total_grams_ground)}g`}
                 </div>
-                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (Brews)</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (All)</div>
               </div>
               
               <div style={{ textAlign: 'center' }}>

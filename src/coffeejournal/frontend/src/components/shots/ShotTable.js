@@ -270,7 +270,7 @@ function ShotTable({
         <thead>
           <tr style={{ backgroundColor: '#e9ecef' }}>
             {showActions && (
-            <th style={{ padding: '4px', border: '1px solid #ddd', width: '110px', fontSize: '12px', textAlign: 'left' }}>Actions</th>
+            <th style={{ padding: '4px', border: '1px solid #ddd', width: '85px', fontSize: '12px', textAlign: 'left' }}>Actions</th>
             )}
             <th style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', whiteSpace: 'nowrap', textAlign: 'left' }}>
               {createIconHeader('📅', 'Date', 'timestamp', () => handleSort('timestamp'))}
@@ -322,7 +322,7 @@ function ShotTable({
           {shotsWithScore.map(shot => (
             <tr key={shot.id} style={{ '&:hover': { backgroundColor: '#f8f9fa' } }}>
               {showActions && (
-              <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '110px', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '2px', border: '1px solid #ddd', textAlign: 'center', fontSize: '11px', width: '85px', whiteSpace: 'nowrap' }}>
                 <button 
                   onClick={() => onEdit(shot)}
                   title="Edit"

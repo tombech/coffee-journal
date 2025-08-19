@@ -288,7 +288,7 @@ function ShotDetail() {
           </Link>
           {shot.shot_session_id && (
             <Link 
-              to={`/shot_sessions/${shot.shot_session_id}`}
+              to={`/shot-sessions/${shot.shot_session_id}`}
               style={{ 
                 padding: '6px 8px', 
                 border: 'none', 

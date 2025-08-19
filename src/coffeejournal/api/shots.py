@@ -48,12 +48,15 @@ def enrich_shot(shot, factory, user_id):
     if not shot:
         return shot
     
+    # Create a copy to avoid modifying original and prevent circular references
+    shot = shot.copy() if hasattr(shot, 'copy') else dict(shot)
+    
     # Enrich product
     if shot.get('product_id'):
         product = factory.get_product_repository(user_id).find_by_id(shot['product_id'])
         if product:
             # Enrich product with its lookups
-            product = enrich_product_with_lookups(product, factory, user_id)
+            product = enrich_product_with_lookups(product.copy(), factory, user_id)
             shot['product'] = product
             shot['product_name'] = product.get('product_name', 'Unknown')
     
@@ -61,7 +64,7 @@ def enrich_shot(shot, factory, user_id):
     if shot.get('product_batch_id'):
         batch = factory.get_batch_repository(user_id).find_by_id(shot['product_batch_id'])
         if batch:
-            shot['batch'] = batch
+            shot['batch'] = batch.copy()
             
             # Calculate coffee age from roast date to shot timestamp
             if batch.get('roast_date') and shot.get('timestamp'):
@@ -75,49 +78,49 @@ def enrich_shot(shot, factory, user_id):
     if shot.get('brewer_id'):
         brewer = factory.get_brewer_repository(user_id).find_by_id(shot['brewer_id'])
         if brewer:
-            shot['brewer'] = brewer
+            shot['brewer'] = brewer.copy()
             shot['brewer_name'] = brewer.get('name', 'Unknown')
     
     # Enrich grinder
     if shot.get('grinder_id'):
         grinder = factory.get_grinder_repository(user_id).find_by_id(shot['grinder_id'])
         if grinder:
-            shot['grinder'] = grinder
+            shot['grinder'] = grinder.copy()
             shot['grinder_name'] = grinder.get('name', 'Unknown')
     
     # Enrich portafilter
     if shot.get('portafilter_id'):
         portafilter = factory.get_portafilter_repository(user_id).find_by_id(shot['portafilter_id'])
         if portafilter:
-            shot['portafilter'] = portafilter
+            shot['portafilter'] = portafilter.copy()
             shot['portafilter_name'] = portafilter.get('name', 'Unknown')
     
     # Enrich basket
     if shot.get('basket_id'):
         basket = factory.get_basket_repository(user_id).find_by_id(shot['basket_id'])
         if basket:
-            shot['basket'] = basket
+            shot['basket'] = basket.copy()
             shot['basket_name'] = basket.get('name', 'Unknown')
     
     # Enrich tamper
     if shot.get('tamper_id'):
         tamper = factory.get_tamper_repository(user_id).find_by_id(shot['tamper_id'])
         if tamper:
-            shot['tamper'] = tamper
+            shot['tamper'] = tamper.copy()
             shot['tamper_name'] = tamper.get('name', 'Unknown')
     
     # Enrich scale
     if shot.get('scale_id'):
         scale = factory.get_scale_repository(user_id).find_by_id(shot['scale_id'])
         if scale:
-            shot['scale'] = scale
+            shot['scale'] = scale.copy()
             shot['scale_name'] = scale.get('name', 'Unknown')
     
     # Enrich recipe
     if shot.get('recipe_id'):
         recipe = factory.get_recipe_repository(user_id).find_by_id(shot['recipe_id'])
         if recipe:
-            shot['recipe'] = recipe
+            shot['recipe'] = recipe.copy()
             shot['recipe_name'] = recipe.get('name', 'Unknown')
     
     # Enrich shot session (avoid circular reference by only including essential fields)
@@ -209,7 +212,7 @@ def get_all_shots():
         
         paginated_shots = shots[start_idx:end_idx]
         
-        # Enrich with lookup data
+        # Enrich with lookup data (use lightweight enrichment to avoid circular references)
         enriched_shots = [enrich_shot(shot, factory, user_id) for shot in paginated_shots]
         
         return jsonify({

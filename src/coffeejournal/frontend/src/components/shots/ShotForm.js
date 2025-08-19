@@ -320,10 +320,23 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
 
       if (onShotSubmitted) {
         onShotSubmitted();
-      } else if (!isEditMode) {
-        navigate(`/shots/${result.id}`);
       } else {
-        navigate(`/shots/${result.id}`);
+        // Determine where to redirect based on origin
+        const sessionIdParam = searchParams.get('session_id');
+        
+        if (sessionIdParam && !isEditMode) {
+          // User came from a shot session page - redirect back to session
+          navigate(`/shot-sessions/${sessionIdParam}`);
+        } else if (formData.shot_session_id && !isEditMode) {
+          // Shot is part of a session - redirect to session page
+          navigate(`/shot-sessions/${formData.shot_session_id}`);
+        } else if (!isEditMode) {
+          // User came from "All shots" page or standalone - redirect to "All shots"
+          navigate('/shots');
+        } else {
+          // Edit mode - stay on shot view page
+          navigate(`/shots/${result.id}`);
+        }
       }
     } catch (err) {
       setError("Failed to save shot: " + err.message);

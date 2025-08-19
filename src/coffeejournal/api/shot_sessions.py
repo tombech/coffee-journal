@@ -15,6 +15,9 @@ def enrich_shot_session_with_shots(session, factory, user_id):
     if not session:
         return session
     
+    # Create a copy to avoid modifying original and prevent circular references
+    session = session.copy() if hasattr(session, 'copy') else dict(session)
+    
     # Get all shots for this session
     shots = factory.get_shot_repository(user_id).find_by_session(session['id'])
     
@@ -23,6 +26,10 @@ def enrich_shot_session_with_shots(session, factory, user_id):
     
     # Basic enrichment for shots (simplified to avoid circular dependencies)
     for i, shot in enumerate(shots):
+        # Create a copy of each shot to avoid circular references
+        shot = shot.copy() if hasattr(shot, 'copy') else dict(shot)
+        shots[i] = shot  # Update the list with the copy
+        
         # Add session-relative shot number (1-based)
         shot['session_shot_number'] = i + 1
         
@@ -228,7 +235,7 @@ def get_all_shot_sessions():
         
         # Optionally enrich with shots
         if include_shots:
-            enriched_sessions = [enrich_shot_session_with_shots(session, factory, user_id) 
+            enriched_sessions = [enrich_shot_session_with_shots(session.copy(), factory, user_id) 
                                for session in paginated_sessions]
         else:
             # Just add shot count and basic enrichment without fetching all shots
@@ -237,6 +244,9 @@ def get_all_shot_sessions():
                 # Count shots
                 shots = factory.get_shot_repository(user_id).find_by_session(session['id'])
                 session['shot_count'] = len(shots)
+                
+                # Create a copy to avoid modifying original data
+                session = session.copy() if hasattr(session, 'copy') else dict(session)
                 
                 # Add product information
                 if session.get('product_id'):
@@ -309,7 +319,7 @@ def get_shot_session(session_id):
             return jsonify({'error': 'Shot session not found'}), 404
         
         # Enrich with shots
-        session = enrich_shot_session_with_shots(session, factory, user_id)
+        session = enrich_shot_session_with_shots(session.copy(), factory, user_id)
         
         return jsonify(session)
     except Exception as e:
@@ -383,7 +393,7 @@ def update_shot_session(session_id):
             return jsonify({'error': 'Shot session not found'}), 404
         
         # Enrich with shots
-        session = enrich_shot_session_with_shots(session, factory, user_id)
+        session = enrich_shot_session_with_shots(session.copy(), factory, user_id)
         
         return jsonify(session)
     except Exception as e:

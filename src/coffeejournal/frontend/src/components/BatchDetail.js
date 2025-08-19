@@ -305,8 +305,13 @@ function BatchDetail() {
               </div>
               
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_coffee_used)}g</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Used</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(batchStats?.total_shots || 0)}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Total Shots</div>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(batchStats?.total_coffee_grams || statistics.total_coffee_used)}g</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Coffee Used (All)</div>
               </div>
               
               <div style={{ textAlign: 'center' }}>
@@ -333,7 +338,7 @@ function BatchDetail() {
             {batch.amount_grams > 0 && (
               <div style={{ marginTop: '20px' }}>
                 <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
-                  Usage Progress ({Math.round(statistics.total_coffee_used)}g of {Math.round(batch.amount_grams)}g used)
+                  Usage Progress ({Math.round(batchStats?.total_coffee_grams || statistics.total_coffee_used)}g of {Math.round(batch.amount_grams)}g used)
                 </div>
                 <div style={{ 
                   width: '100%', 
@@ -343,7 +348,7 @@ function BatchDetail() {
                   overflow: 'hidden'
                 }}>
                   <div style={{ 
-                    width: `${Math.min(100, (statistics.total_coffee_used / batch.amount_grams) * 100)}%`, 
+                    width: `${Math.min(100, ((batchStats?.total_coffee_grams || statistics.total_coffee_used) / batch.amount_grams) * 100)}%`, 
                     height: '100%', 
                     backgroundColor: statistics.coffee_remaining <= 0 ? '#f44336' : '#4caf50',
                     transition: 'width 0.3s ease'

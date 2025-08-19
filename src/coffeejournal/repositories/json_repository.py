@@ -700,6 +700,17 @@ class GrinderRepository(JSONLookupRepository):
             if coffee_amount:
                 total_grams_ground += coffee_amount
         
+        # Get all shots that used this grinder
+        shots = factory.get_shot_repository().find_all()
+        grinder_shots = [s for s in shots if s.get('grinder_id') == grinder_id]
+        
+        total_shots = len(grinder_shots)
+        
+        for shot in grinder_shots:
+            dose_amount = shot.get('dose_grams', 0)
+            if dose_amount:
+                total_grams_ground += dose_amount
+        
         # Get grinder details to add manual offset
         grinder = self.find_by_id(grinder_id)
         manual_offset = grinder.get('manually_ground_grams', 0) if grinder else 0
@@ -708,6 +719,7 @@ class GrinderRepository(JSONLookupRepository):
         
         return {
             'total_brews': total_brews,
+            'total_shots': total_shots,
             'total_grams_ground': total_grams_ground,
             'manually_ground_grams': manual_offset,
             'total_grams_with_manual': total_with_offset,

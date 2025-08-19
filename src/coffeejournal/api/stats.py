@@ -183,18 +183,31 @@ def create_stats_blueprint():
             factory = get_repository_factory()
             
             brew_session_repo = factory.get_brew_session_repository(user_id)
+            shot_repo = factory.get_shot_repository(user_id)
             
             # Get all brew sessions for this batch
             all_sessions = brew_session_repo.find_all()
             batch_sessions = [s for s in all_sessions if s.get('batch_id') == batch_id]
             
-            # Calculate statistics
+            # Get all shots for this batch
+            all_shots = shot_repo.find_all()
+            batch_shots = [s for s in all_shots if s.get('product_batch_id') == batch_id]
+            
+            # Calculate brew session statistics
             total_sessions = len(batch_sessions)
+            total_shots = len(batch_shots)
             scores = []
+            
             for session in batch_sessions:
                 score = calculate_brew_score(session)
                 if score > 0:
                     scores.append(score)
+            
+            # Calculate shot scores
+            for shot in batch_shots:
+                shot_score = shot.get('overall_score', 0)
+                if shot_score and shot_score > 0:
+                    scores.append(shot_score)
             
             # Get top and bottom 5 sessions by score
             sorted_sessions = sorted(batch_sessions, 
@@ -203,8 +216,22 @@ def create_stats_blueprint():
             top_5 = sorted_sessions[:5]
             bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
             
+            # Calculate total coffee used
+            total_coffee_grams = 0
+            for session in batch_sessions:
+                coffee_amount = session.get('amount_coffee_grams', 0)
+                if coffee_amount:
+                    total_coffee_grams += coffee_amount
+            
+            for shot in batch_shots:
+                dose_amount = shot.get('dose_grams', 0)
+                if dose_amount:
+                    total_coffee_grams += dose_amount
+            
             return jsonify({
                 'total_brew_sessions': total_sessions,
+                'total_shots': total_shots,
+                'total_coffee_grams': total_coffee_grams,
                 'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
                 'score_range': {
                     'min': round(min(scores), 1) if scores else 0,
