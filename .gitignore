@@ -221,3 +221,6 @@ temp/
 
 # Test results
 test-results.json
+
+# Node.js dependencies
+node_modules/
