@@ -691,7 +691,7 @@ class ProductRepository(JSONRepositoryBase):
         enhanced_products = []
         for product in products:
             batches = batch_repo.find_by_product(product['id'])
-            active_batches = [b for b in batches if b.get('active', True)]  # Default True if not specified
+            active_batches = [b for b in batches if b.get('is_active', True)]  # Default True if not specified
             
             enhanced_product = product.copy()
             enhanced_product['has_active_batches'] = len(active_batches) > 0
@@ -762,8 +762,8 @@ class BatchRepository(JSONRepositoryBase):
             return []
         
         # Separate active and inactive batches
-        active_batches = [b for b in batches if b.get('active', True)]  # Default True if not specified
-        inactive_batches = [b for b in batches if not b.get('active', True)]
+        active_batches = [b for b in batches if b.get('is_active', True)]  # Default True if not specified
+        inactive_batches = [b for b in batches if not b.get('is_active', True)]
         
         # Sort active batches by roast_date (newest first)
         active_batches.sort(key=lambda b: b.get('roast_date', ''), reverse=True)

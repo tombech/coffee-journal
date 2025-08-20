@@ -451,24 +451,7 @@
     "notes": null,
     "id": 23,
     "created_at": "2025-08-12T14:18:25.527825+00:00",
-    "updated_at": "2025-08-12T14:18:25.527825+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:18:25.527825+00:00"
   },
   {
     "roaster_id": 10,
@@ -510,24 +493,7 @@
     "notes": null,
     "id": 25,
     "created_at": "2025-08-12T14:18:25.723190+00:00",
-    "updated_at": "2025-08-12T14:18:25.723190+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:18:25.723190+00:00"
   },
   {
     "roaster_id": 10,
@@ -945,24 +911,7 @@
     "notes": null,
     "id": 45,
     "created_at": "2025-08-12T14:26:34.263485+00:00",
-    "updated_at": "2025-08-12T14:26:34.263485+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:26:34.263485+00:00"
   },
   {
     "roaster_id": 10,
@@ -1004,24 +953,7 @@
     "notes": null,
     "id": 47,
     "created_at": "2025-08-12T14:26:34.502789+00:00",
-    "updated_at": "2025-08-12T14:26:34.502789+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:26:34.502789+00:00"
   },
   {
     "roaster_id": 10,
@@ -1439,24 +1371,7 @@
     "notes": null,
     "id": 67,
     "created_at": "2025-08-12T14:30:17.658260+00:00",
-    "updated_at": "2025-08-12T14:30:17.658260+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:30:17.658260+00:00"
   },
   {
     "roaster_id": 10,
@@ -1498,24 +1413,7 @@
     "notes": null,
     "id": 69,
     "created_at": "2025-08-12T14:30:17.930033+00:00",
-    "updated_at": "2025-08-12T14:30:17.930033+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T14:30:17.930033+00:00"
   },
   {
     "roaster_id": 10,
@@ -1933,24 +1831,7 @@
     "notes": null,
     "id": 89,
     "created_at": "2025-08-12T15:07:54.801760+00:00",
-    "updated_at": "2025-08-12T15:07:54.801760+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T15:07:54.801760+00:00"
   },
   {
     "roaster_id": 10,
@@ -1992,24 +1873,7 @@
     "notes": null,
     "id": 91,
     "created_at": "2025-08-12T15:07:55.147511+00:00",
-    "updated_at": "2025-08-12T15:07:55.147511+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T15:07:55.147511+00:00"
   },
   {
     "roaster_id": 10,
@@ -2427,24 +2291,7 @@
     "notes": null,
     "id": 111,
     "created_at": "2025-08-12T19:31:10.580259+00:00",
-    "updated_at": "2025-08-12T19:31:10.580259+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T19:31:10.580259+00:00"
   },
   {
     "roaster_id": 10,
@@ -2486,24 +2333,7 @@
     "notes": null,
     "id": 113,
     "created_at": "2025-08-12T19:31:10.979633+00:00",
-    "updated_at": "2025-08-12T19:31:10.979633+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T19:31:10.979633+00:00"
   },
   {
     "roaster_id": 10,
@@ -2921,24 +2751,7 @@
     "notes": null,
     "id": 133,
     "created_at": "2025-08-12T21:02:32.044484+00:00",
-    "updated_at": "2025-08-12T21:02:32.044484+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T21:02:32.044484+00:00"
   },
   {
     "roaster_id": 10,
@@ -2980,24 +2793,7 @@
     "notes": null,
     "id": 135,
     "created_at": "2025-08-12T21:02:32.485439+00:00",
-    "updated_at": "2025-08-12T21:02:32.485439+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-12T21:02:32.485439+00:00"
   },
   {
     "roaster_id": 10,
@@ -3415,24 +3211,7 @@
     "notes": null,
     "id": 155,
     "created_at": "2025-08-13T07:46:13.431139+00:00",
-    "updated_at": "2025-08-13T07:46:13.431139+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:46:13.431139+00:00"
   },
   {
     "roaster_id": 10,
@@ -3474,24 +3253,7 @@
     "notes": null,
     "id": 157,
     "created_at": "2025-08-13T07:46:14.151160+00:00",
-    "updated_at": "2025-08-13T07:46:14.151160+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:46:14.151160+00:00"
   },
   {
     "roaster_id": 10,
@@ -3867,24 +3629,7 @@
     "notes": null,
     "id": 175,
     "created_at": "2025-08-13T07:49:40.247849+00:00",
-    "updated_at": "2025-08-13T07:49:40.247849+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:49:40.247849+00:00"
   },
   {
     "roaster_id": 10,
@@ -3926,24 +3671,7 @@
     "notes": null,
     "id": 177,
     "created_at": "2025-08-13T07:49:40.876081+00:00",
-    "updated_at": "2025-08-13T07:49:40.876081+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:49:40.876081+00:00"
   },
   {
     "roaster_id": 10,
@@ -4361,24 +4089,7 @@
     "notes": null,
     "id": 197,
     "created_at": "2025-08-13T07:53:44.356210+00:00",
-    "updated_at": "2025-08-13T07:53:44.356210+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:53:44.356210+00:00"
   },
   {
     "roaster_id": 10,
@@ -4420,24 +4131,7 @@
     "notes": null,
     "id": 199,
     "created_at": "2025-08-13T07:53:45.091172+00:00",
-    "updated_at": "2025-08-13T07:53:45.091172+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T07:53:45.091172+00:00"
   },
   {
     "roaster_id": 10,
@@ -5065,24 +4759,7 @@
     "notes": null,
     "id": 229,
     "created_at": "2025-08-13T08:01:36.065931+00:00",
-    "updated_at": "2025-08-13T08:01:36.065931+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:01:36.065931+00:00"
   },
   {
     "roaster_id": 10,
@@ -5124,24 +4801,7 @@
     "notes": null,
     "id": 231,
     "created_at": "2025-08-13T08:01:36.883341+00:00",
-    "updated_at": "2025-08-13T08:01:36.883341+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:01:36.883341+00:00"
   },
   {
     "roaster_id": 10,
@@ -5559,24 +5219,7 @@
     "notes": null,
     "id": 251,
     "created_at": "2025-08-13T08:09:30.460130+00:00",
-    "updated_at": "2025-08-13T08:09:30.460130+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:09:30.460130+00:00"
   },
   {
     "roaster_id": 10,
@@ -5618,24 +5261,7 @@
     "notes": null,
     "id": 253,
     "created_at": "2025-08-13T08:09:31.339212+00:00",
-    "updated_at": "2025-08-13T08:09:31.339212+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:09:31.339212+00:00"
   },
   {
     "roaster_id": 10,
@@ -6011,24 +5637,7 @@
     "notes": null,
     "id": 271,
     "created_at": "2025-08-13T08:13:18.620055+00:00",
-    "updated_at": "2025-08-13T08:13:18.620055+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:13:18.620055+00:00"
   },
   {
     "roaster_id": 10,
@@ -6070,24 +5679,7 @@
     "notes": null,
     "id": 273,
     "created_at": "2025-08-13T08:13:19.611895+00:00",
-    "updated_at": "2025-08-13T08:13:19.611895+00:00",
-    "roaster": {
-      "name": "Test Roaster",
-      "id": 10,
-      "created_at": "2025-08-12T14:18:23.420374+00:00",
-      "updated_at": "2025-08-12T14:18:23.420374+00:00"
-    },
-    "bean_type": [
-      {
-        "id": 1,
-        "name": "Arabica",
-        "short_form": "Arabica",
-        "description": "High-quality coffee species with complex flavors"
-      }
-    ],
-    "country": null,
-    "region": [],
-    "decaf_method": null
+    "updated_at": "2025-08-13T08:13:19.611895+00:00"
   },
   {
     "roaster_id": 10,
@@ -6966,5 +6558,26 @@
     "id": 315,
     "created_at": "2025-08-13T20:14:11.520291+00:00",
     "updated_at": "2025-08-13T20:14:11.520291+00:00"
+  },
+  {
+    "roaster_id": 10,
+    "bean_type_id": [
+      1
+    ],
+    "country_id": 2,
+    "region_id": [],
+    "product_name": "Old Coffee (No Active Batches)",
+    "roast_type": null,
+    "description": "This product will have no active batches",
+    "url": null,
+    "image_url": null,
+    "decaf": false,
+    "decaf_method_id": null,
+    "rating": null,
+    "bean_process": null,
+    "notes": null,
+    "id": 316,
+    "created_at": "2025-08-20T14:45:52.808192+00:00",
+    "updated_at": "2025-08-20T14:45:52.808192+00:00"
   }
 ]

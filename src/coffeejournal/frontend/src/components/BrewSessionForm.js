@@ -375,11 +375,11 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
                     key={batch.id} 
                     value={batch.id}
                     style={{
-                      color: batch.active === false ? '#999' : 'inherit',
-                      fontStyle: batch.active === false ? 'italic' : 'normal'
+                      color: batch.is_active === false ? '#999' : 'inherit',
+                      fontStyle: batch.is_active === false ? 'italic' : 'normal'
                     }}
                   >
-                    Roast Date: {formatDateNorwegian(batch.roast_date)} ({batch.amount_grams}g){batch.active === false ? ' (inactive)' : ''}
+                    Roast Date: {formatDateNorwegian(batch.roast_date)} ({batch.amount_grams}g){batch.is_active === false ? ' (inactive)' : ''}
                   </option>
                 ))}
               </select>
