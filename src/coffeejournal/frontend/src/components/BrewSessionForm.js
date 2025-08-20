@@ -85,7 +85,12 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
 
         // If we have an id parameter but no initialData, this is edit mode from URL
         if (id && !initialData) {
-          const sessionResponse = await apiFetch(`/brew_sessions/${id}/detail`);
+          const sessionResponse = await apiFetch(`/brew_sessions/${id}/detail`, {
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache'
+            }
+          });
           if (sessionResponse.ok) {
             const sessionData = await sessionResponse.json();
             const session = sessionData.session;
