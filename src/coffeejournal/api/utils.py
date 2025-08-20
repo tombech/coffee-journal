@@ -337,6 +337,7 @@ def enrich_brew_session_with_lookups(session, factory, user_id=None):
     # Get repositories for the specific user
     brew_method_repo = factory.get_brew_method_repository(user_id)
     recipe_repo = factory.get_recipe_repository(user_id)
+    brewer_repo = factory.get_brewer_repository(user_id)
     grinder_repo = factory.get_grinder_repository(user_id)
     filter_repo = factory.get_filter_repository(user_id)
     kettle_repo = factory.get_kettle_repository(user_id)
@@ -354,6 +355,12 @@ def enrich_brew_session_with_lookups(session, factory, user_id=None):
         session['recipe'] = recipe if recipe else None
     else:
         session['recipe'] = None
+        
+    if session.get('brewer_id'):
+        brewer = brewer_repo.find_by_id(session['brewer_id'])
+        session['brewer'] = brewer if brewer else None
+    else:
+        session['brewer'] = None
         
     if session.get('grinder_id'):
         grinder = grinder_repo.find_by_id(session['grinder_id'])

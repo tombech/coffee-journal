@@ -713,7 +713,8 @@ class GrinderRepository(JSONLookupRepository):
         
         # Get grinder details to add manual offset
         grinder = self.find_by_id(grinder_id)
-        manual_offset = grinder.get('manually_ground_grams', 0) if grinder else 0
+        manual_offset = grinder.get('manually_ground_grams') if grinder else None
+        manual_offset = manual_offset if manual_offset is not None else 0
         
         total_with_offset = total_grams_ground + manual_offset
         

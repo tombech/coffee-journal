@@ -269,6 +269,7 @@ def handle_batch_brew_sessions(batch_id):
         product_repo = factory.get_product_repository(user_id)
         brew_method_repo = factory.get_brew_method_repository(user_id)
         recipe_repo = factory.get_recipe_repository(user_id)
+        brewer_repo = factory.get_brewer_repository(user_id)
         grinder_repo = factory.get_grinder_repository(user_id)
         filter_repo = factory.get_filter_repository(user_id)
         kettle_repo = factory.get_kettle_repository(user_id)
@@ -293,7 +294,7 @@ def handle_batch_brew_sessions(batch_id):
                 
                 session['product_name'] = f"{roaster_name} - {bean_type_str}"
             
-            # Add brew method, recipe, grinder, filter, kettle, and scale objects
+            # Add brew method, recipe, brewer, grinder, filter, kettle, and scale objects
             if session.get('brew_method_id'):
                 method = brew_method_repo.find_by_id(session['brew_method_id'])
                 session['brew_method'] = method if method else None
@@ -305,6 +306,12 @@ def handle_batch_brew_sessions(batch_id):
                 session['recipe'] = recipe if recipe else None
             else:
                 session['recipe'] = None
+            
+            if session.get('brewer_id'):
+                brewer = brewer_repo.find_by_id(session['brewer_id'])
+                session['brewer'] = brewer if brewer else None
+            else:
+                session['brewer'] = None
             
             if session.get('grinder_id'):
                 grinder = grinder_repo.find_by_id(session['grinder_id'])
@@ -341,9 +348,10 @@ def handle_batch_brew_sessions(batch_id):
         if not data:
             return jsonify({'error': 'No data provided'}), 400
         
-        # Get or create brew method, recipe, grinder, filter, kettle, and scale
+        # Get or create brew method, recipe, brewer, grinder, filter, kettle, and scale
         brew_method_repo = factory.get_brew_method_repository(user_id)
         recipe_repo = factory.get_recipe_repository(user_id)
+        brewer_repo = factory.get_brewer_repository(user_id)
         grinder_repo = factory.get_grinder_repository(user_id)
         filter_repo = factory.get_filter_repository(user_id)
         kettle_repo = factory.get_kettle_repository(user_id)
@@ -356,6 +364,10 @@ def handle_batch_brew_sessions(batch_id):
         recipe = None
         if data.get('recipe'):
             recipe = recipe_repo.get_or_create_by_identifier(data['recipe'])
+        
+        brewer = None
+        if data.get('brewer'):
+            brewer = brewer_repo.get_or_create_by_identifier(data['brewer'])
         
         grinder = None
         if data.get('grinder'):
@@ -416,6 +428,7 @@ def handle_batch_brew_sessions(batch_id):
             'product_id': batch.get('product_id'),  # Get product_id from batch
             'recipe_id': recipe['id'] if recipe else data.get('recipe_id'),
             'brew_method_id': brew_method['id'] if brew_method else data.get('brew_method_id'),
+            'brewer_id': brewer['id'] if brewer else data.get('brewer_id'),
             'grinder_id': grinder['id'] if grinder else data.get('grinder_id'),
             'grinder_setting': data.get('grinder_setting'),
             'filter_id': filter_type['id'] if filter_type else data.get('filter_id'),
@@ -457,7 +470,7 @@ def handle_batch_brew_sessions(batch_id):
             
             session['product_name'] = f"{roaster_name} - {bean_type_str}"
         
-        # Add brew method, recipe, grinder, filter, kettle, and scale objects
+        # Add brew method, recipe, brewer, grinder, filter, kettle, and scale objects
         if brew_method:
             session['brew_method'] = brew_method
         elif session.get('brew_method_id'):
@@ -473,6 +486,14 @@ def handle_batch_brew_sessions(batch_id):
             session['recipe'] = rec if rec else None
         else:
             session['recipe'] = None
+        
+        if brewer:
+            session['brewer'] = brewer
+        elif session.get('brewer_id'):
+            brew = brewer_repo.find_by_id(session['brewer_id'])
+            session['brewer'] = brew if brew else None
+        else:
+            session['brewer'] = None
         
         if grinder:
             session['grinder'] = grinder
@@ -899,7 +920,7 @@ def get_brew_session(session_id):
     else:
         session['product_details'] = {}
     
-    # Add brew method, recipe, grinder, filter, kettle, and scale objects
+    # Add brew method, recipe, brewer, grinder, filter, kettle, and scale objects
     if session.get('brew_method_id'):
         brew_method = brew_method_repo.find_by_id(session['brew_method_id'])
         session['brew_method'] = brew_method if brew_method else None
@@ -911,6 +932,13 @@ def get_brew_session(session_id):
         session['recipe'] = recipe if recipe else None
     else:
         session['recipe'] = None
+    
+    if session.get('brewer_id'):
+        brewer_repo = factory.get_brewer_repository(user_id)
+        brewer = brewer_repo.find_by_id(session['brewer_id'])
+        session['brewer'] = brewer if brewer else None
+    else:
+        session['brewer'] = None
     
     if session.get('grinder_id'):
         grinder_repo = factory.get_grinder_repository(user_id)
@@ -1067,9 +1095,10 @@ def update_brew_session(session_id):
     if batch['product_id'] != product_id:
         return jsonify({'error': 'Batch does not belong to the specified product'}), 400
     
-    # Get or create brew method, recipe, grinder, filter, kettle, and scale
+    # Get or create brew method, recipe, brewer, grinder, filter, kettle, and scale
     brew_method_repo = factory.get_brew_method_repository(user_id)
     recipe_repo = factory.get_recipe_repository(user_id)
+    brewer_repo = factory.get_brewer_repository(user_id)
     grinder_repo = factory.get_grinder_repository(user_id)
     filter_repo = factory.get_filter_repository(user_id)
     kettle_repo = factory.get_kettle_repository(user_id)
@@ -1082,6 +1111,10 @@ def update_brew_session(session_id):
     recipe = None
     if data.get('recipe'):
         recipe = recipe_repo.get_or_create_by_identifier(data['recipe'])
+    
+    brewer = None
+    if data.get('brewer'):
+        brewer = brewer_repo.get_or_create_by_identifier(data['brewer'])
     
     grinder = None
     if data.get('grinder'):
@@ -1144,6 +1177,7 @@ def update_brew_session(session_id):
         'product_id': product_id,
         'brew_method_id': brew_method['id'] if brew_method else existing_session.get('brew_method_id'),
         'recipe_id': recipe['id'] if recipe else existing_session.get('recipe_id'),
+        'brewer_id': brewer['id'] if brewer else existing_session.get('brewer_id'),
         'grinder_id': grinder['id'] if grinder else existing_session.get('grinder_id'),
         'grinder_setting': data.get('grinder_setting', existing_session.get('grinder_setting')),
         'filter_id': filter_type['id'] if filter_type else existing_session.get('filter_id'),
