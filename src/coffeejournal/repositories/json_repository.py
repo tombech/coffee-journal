@@ -618,6 +618,130 @@ class ProductRepository(JSONRepositoryBase):
     def __init__(self, data_dir: str):
         super().__init__(data_dir, 'products.json')
     
+    def _calculate_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
+        """Calculate smart default product based on brew session usage patterns."""
+        if factory is None:
+            from .factory import get_repository_factory
+            factory = get_repository_factory()
+        
+        products = self.find_all()
+        if not products:
+            return None
+        
+        if len(products) == 1:
+            return products[0]
+        
+        # Get all brew sessions to calculate product usage
+        sessions = factory.get_brew_session_repository(user_id).find_all()
+        
+        # Calculate frequency and recency scores
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc)
+        product_scores = {}
+        
+        for product in products:
+            product_id = product['id']
+            sessions_with_product = [s for s in sessions if s.get('product_id') == product_id]
+            
+            if not sessions_with_product:
+                # No usage, give minimal score
+                product_scores[product_id] = {'frequency': 0, 'recency': 0, 'total': 0}
+                continue
+            
+            # Frequency score (normalized)
+            frequency_score = len(sessions_with_product)
+            
+            # Recency score - higher score for more recent usage
+            recency_score = 0
+            for session in sessions_with_product:
+                try:
+                    session_time = datetime.fromisoformat(session['timestamp'].replace('Z', '+00:00'))
+                    days_ago = (now - session_time).days
+                    # Exponential decay: more recent = higher score
+                    recency_score += max(0, 100 * (0.95 ** days_ago))
+                except (ValueError, TypeError, KeyError):
+                    continue
+            
+            # Combined score: 70% frequency, 30% recency
+            total_score = (0.7 * frequency_score) + (0.3 * recency_score)
+            product_scores[product_id] = {
+                'frequency': frequency_score,
+                'recency': recency_score,
+                'total': total_score
+            }
+        
+        # Find product with highest score
+        if not product_scores or all(score['total'] == 0 for score in product_scores.values()):
+            # No usage data, return first product
+            return products[0]
+        
+        best_product_id = max(product_scores.keys(), key=lambda pid: product_scores[pid]['total'])
+        return next(p for p in products if p['id'] == best_product_id)
+    
+    def get_products_with_batch_status(self, factory=None, user_id=None) -> List[Dict[str, Any]]:
+        """Get all products with active batch status and smart ordering."""
+        if factory is None:
+            from .factory import get_repository_factory
+            factory = get_repository_factory()
+        
+        products = self.find_all()
+        batch_repo = factory.get_batch_repository(user_id)
+        
+        # Enhance products with batch status
+        enhanced_products = []
+        for product in products:
+            batches = batch_repo.find_by_product(product['id'])
+            active_batches = [b for b in batches if b.get('active', True)]  # Default True if not specified
+            
+            enhanced_product = product.copy()
+            enhanced_product['has_active_batches'] = len(active_batches) > 0
+            enhanced_product['total_batches'] = len(batches)
+            enhanced_product['active_batch_count'] = len(active_batches)
+            enhanced_products.append(enhanced_product)
+        
+        # Get usage-based ordering using smart default logic
+        sessions = factory.get_brew_session_repository(user_id).find_all()
+        
+        # Calculate scores for all products
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc)
+        
+        for product in enhanced_products:
+            product_id = product['id']
+            sessions_with_product = [s for s in sessions if s.get('product_id') == product_id]
+            
+            if not sessions_with_product:
+                product['usage_score'] = 0
+                continue
+            
+            # Calculate usage score (frequency + recency)
+            frequency_score = len(sessions_with_product)
+            recency_score = 0
+            
+            for session in sessions_with_product:
+                try:
+                    session_time = datetime.fromisoformat(session['timestamp'].replace('Z', '+00:00'))
+                    days_ago = (now - session_time).days
+                    recency_score += max(0, 100 * (0.95 ** days_ago))
+                except (ValueError, TypeError, KeyError):
+                    continue
+            
+            product['usage_score'] = (0.7 * frequency_score) + (0.3 * recency_score)
+        
+        # Sort: active products first (by usage), then inactive products (by usage)
+        active_products = [p for p in enhanced_products if p['has_active_batches']]
+        inactive_products = [p for p in enhanced_products if not p['has_active_batches']]
+        
+        # Sort each group by usage score (highest first)
+        active_products.sort(key=lambda p: p['usage_score'], reverse=True)
+        inactive_products.sort(key=lambda p: p['usage_score'], reverse=True)
+        
+        return active_products + inactive_products
+    
+    def get_smart_default(self, factory=None, user_id=None) -> Optional[Dict[str, Any]]:
+        """Get smart default product based on usage patterns."""
+        return self._calculate_smart_default(factory, user_id)
+    
 
 
 class BatchRepository(JSONRepositoryBase):
@@ -629,6 +753,26 @@ class BatchRepository(JSONRepositoryBase):
         """Find all batches for a product."""
         batches = self.find_all()
         return [b for b in batches if b.get('product_id') == product_id]
+    
+    def find_by_product_with_smart_ordering(self, product_id: int) -> List[Dict[str, Any]]:
+        """Find all batches for a product with smart ordering (active first, then by roast date)."""
+        batches = self.find_by_product(product_id)
+        
+        if not batches:
+            return []
+        
+        # Separate active and inactive batches
+        active_batches = [b for b in batches if b.get('active', True)]  # Default True if not specified
+        inactive_batches = [b for b in batches if not b.get('active', True)]
+        
+        # Sort active batches by roast_date (newest first)
+        active_batches.sort(key=lambda b: b.get('roast_date', ''), reverse=True)
+        
+        # Sort inactive batches by roast_date (newest first)  
+        inactive_batches.sort(key=lambda b: b.get('roast_date', ''), reverse=True)
+        
+        # Return active first, then inactive
+        return active_batches + inactive_batches
     
     def delete_by_product(self, product_id: int) -> int:
         """Delete all batches for a product."""

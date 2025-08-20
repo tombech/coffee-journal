@@ -30,7 +30,7 @@ products_bp = Blueprint('products', __name__)
 
 @products_bp.route('/products', methods=['GET'])
 def get_products():
-    """Get all products with optional filtering."""
+    """Get all products with optional filtering and smart ordering."""
     # Get and validate user_id
     user_id = get_user_id_from_request()
     is_valid, error_msg = validate_user_id(user_id)
@@ -40,13 +40,28 @@ def get_products():
     factory = get_repository_factory()
     product_repo = factory.get_product_repository(user_id)
     
-    # Get all products first
-    products = product_repo.find_all()
+    # Check if smart ordering with batch status is requested
+    smart_order = request.args.get('smart_order', 'false').lower() == 'true'
+    
+    if smart_order:
+        # Get products with smart ordering and batch status
+        products = product_repo.get_products_with_batch_status(factory, user_id)
+    else:
+        # Get all products in default order
+        products = product_repo.find_all()
     
     # Enrich all products with lookup objects
     enriched_products = []
     for product in products:
         enriched_product = enrich_product_with_lookups(product.copy(), factory, user_id)
+        
+        # Preserve batch status info if it exists (from smart ordering)
+        if 'has_active_batches' in product:
+            enriched_product['has_active_batches'] = product['has_active_batches']
+            enriched_product['active_batch_count'] = product['active_batch_count']
+            enriched_product['total_batches'] = product['total_batches']
+            enriched_product['usage_score'] = product['usage_score']
+        
         enriched_products.append(enriched_product)
     
     # Apply filters to enriched products
@@ -271,7 +286,14 @@ def handle_product_batches(product_id):
         return jsonify({'error': 'Product not found'}), 404
     
     if request.method == 'GET':
-        batches = factory.get_batch_repository(user_id).find_by_product(product_id)
+        # Check if smart ordering is requested
+        smart_order = request.args.get('smart_order', 'false').lower() == 'true'
+        batch_repo = factory.get_batch_repository(user_id)
+        
+        if smart_order:
+            batches = batch_repo.find_by_product_with_smart_ordering(product_id)
+        else:
+            batches = batch_repo.find_by_product(product_id)
         
         # Enrich with product information and calculate price per cup
         enriched_product = enrich_product_with_lookups(product, factory, user_id)

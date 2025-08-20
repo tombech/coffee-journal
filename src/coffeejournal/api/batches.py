@@ -1291,14 +1291,15 @@ def get_brew_session_defaults():
     
     factory = get_repository_factory()
     
-    # Get smart defaults for each equipment type
+    # Get smart defaults for each equipment type and products
     defaults = {
         'brew_method': None,
         'recipe': None,
         'grinder': None,
         'filter': None,
         'kettle': None,
-        'scale': None
+        'scale': None,
+        'product': None
     }
     
     # Get smart default for each lookup type
@@ -1308,6 +1309,7 @@ def get_brew_session_defaults():
     filter_repo = factory.get_filter_repository(user_id)
     kettle_repo = factory.get_kettle_repository(user_id)
     scale_repo = factory.get_scale_repository(user_id)
+    product_repo = factory.get_product_repository(user_id)
     
     # Fetch smart defaults
     brew_method_default = brew_method_repo.get_smart_default(factory, user_id)
@@ -1333,6 +1335,10 @@ def get_brew_session_defaults():
     scale_default = scale_repo.get_smart_default(factory, user_id)
     if scale_default:
         defaults['scale'] = scale_default
+    
+    product_default = product_repo.get_smart_default(factory, user_id)
+    if product_default:
+        defaults['product'] = product_default
     
     return jsonify(defaults)
 

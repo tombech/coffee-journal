@@ -67,7 +67,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
           apiFetch('/filters'),
           apiFetch('/kettles'),
           apiFetch('/scales'),
-          apiFetch('/products'),
+          apiFetch('/products?smart_order=true'),
           apiFetch('/brew_sessions/defaults'),
         ]);
         setBrewMethods(await brewMethodsRes.json());
@@ -150,6 +150,8 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
             filter: smartDefaults.filter?.name || '',
             kettle: smartDefaults.kettle?.name || '',
             scale: smartDefaults.scale?.name || '',
+            // Apply product smart default
+            product_id: smartDefaults.product?.id || '',
           }));
         }
       } catch (err) {
@@ -190,7 +192,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
   // Fetch batches when product is selected
   const fetchBatchesForProduct = async (productId) => {
     try {
-      const response = await apiFetch(`/products/${productId}/batches`);
+      const response = await apiFetch(`/products/${productId}/batches?smart_order=true`);
       if (response.ok) {
         const batchData = await response.json();
         setBatches(batchData);
@@ -337,12 +339,19 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
               >
                 <option value="">Select a product</option>
                 {products.map((product) => (
-                  <option key={product.id} value={product.id}>
+                  <option 
+                    key={product.id} 
+                    value={product.id}
+                    style={{
+                      color: product.has_active_batches === false ? '#999' : 'inherit',
+                      fontStyle: product.has_active_batches === false ? 'italic' : 'normal'
+                    }}
+                  >
                     {product.product_name} ({
                       typeof product.roaster === 'object' 
                         ? product.roaster?.name || 'Unknown'
                         : product.roaster || 'Unknown'
-                    })
+                    }){product.has_active_batches === false ? ' (no active batches)' : ''}
                   </option>
                 ))}
               </select>
@@ -362,8 +371,15 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
               >
                 <option value="">Select a batch</option>
                 {batches.map((batch) => (
-                  <option key={batch.id} value={batch.id}>
-                    Roast Date: {formatDateNorwegian(batch.roast_date)} ({batch.amount_grams}g)
+                  <option 
+                    key={batch.id} 
+                    value={batch.id}
+                    style={{
+                      color: batch.active === false ? '#999' : 'inherit',
+                      fontStyle: batch.active === false ? 'italic' : 'normal'
+                    }}
+                  >
+                    Roast Date: {formatDateNorwegian(batch.roast_date)} ({batch.amount_grams}g){batch.active === false ? ' (inactive)' : ''}
                   </option>
                 ))}
               </select>
