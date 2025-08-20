@@ -164,6 +164,7 @@ function BrewSessionForm({ product_batch_id = null, onSessionSubmitted, initialD
         // Extract names from lookup objects
         brew_method: initialData.brew_method?.name || '',
         recipe: initialData.recipe?.name || '',
+        brewer: initialData.brewer?.name || '',
         grinder: initialData.grinder?.name || '',
         filter: initialData.filter?.name || '',
         kettle: initialData.kettle?.name || '',
