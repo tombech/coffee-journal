@@ -445,12 +445,21 @@ function ShotTable({
                 fontSize: '12px', 
                 textAlign: 'center', 
                 verticalAlign: 'top', 
-                whiteSpace: 'nowrap',
-                backgroundColor: shot.extraction_status ? getExtractionStatusColor(shot.extraction_status) + '20' : 'transparent',
-                color: shot.extraction_status ? getExtractionStatusColor(shot.extraction_status) : 'inherit',
-                fontWeight: shot.extraction_status ? 'bold' : 'normal'
+                whiteSpace: 'nowrap'
               }}>
-                {shot.extraction_status ? formatExtractionStatus(shot.extraction_status) : '-'}
+                {shot.extraction_status ? (
+                  <span style={{
+                    padding: '2px 4px',
+                    borderRadius: '8px',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    color: 'white',
+                    backgroundColor: getExtractionStatusColor(shot.extraction_status),
+                    textTransform: 'capitalize'
+                  }}>
+                    {formatExtractionStatus(shot.extraction_status)}
+                  </span>
+                ) : '-'}
               </td>
               <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', fontWeight: 'bold' }}>
                 {(typeof shot.calculatedScore === 'number' && shot.calculatedScore > 0) ? shot.calculatedScore.toFixed(1) : 
