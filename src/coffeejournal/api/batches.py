@@ -596,6 +596,7 @@ def get_all_brew_sessions():
     batch_repo = factory.get_batch_repository(user_id)
     brew_method_repo = factory.get_brew_method_repository(user_id)
     recipe_repo = factory.get_recipe_repository(user_id)
+    brewer_repo = factory.get_brewer_repository(user_id)
     grinder_repo = factory.get_grinder_repository(user_id)
     filter_repo = factory.get_filter_repository(user_id)
     kettle_repo = factory.get_kettle_repository(user_id)
@@ -606,6 +607,7 @@ def get_all_brew_sessions():
     all_batches = {b['id']: b for b in batch_repo.find_all()}
     all_brew_methods = {m['id']: m for m in brew_method_repo.find_all()}
     all_recipes = {r['id']: r for r in recipe_repo.find_all()}
+    all_brewers = {b['id']: b for b in brewer_repo.find_all()}
     all_grinders = {g['id']: g for g in grinder_repo.find_all()}
     all_filters = {f['id']: f for f in filter_repo.find_all()}
     all_kettles = {k['id']: k for k in kettle_repo.find_all()}
@@ -682,6 +684,7 @@ def get_all_brew_sessions():
         # Enrich equipment lookups using pre-loaded dictionaries
         session['brew_method'] = all_brew_methods.get(session.get('brew_method_id'))
         session['recipe'] = all_recipes.get(session.get('recipe_id'))
+        session['brewer'] = all_brewers.get(session.get('brewer_id'))
         session['grinder'] = all_grinders.get(session.get('grinder_id'))
         session['filter'] = all_filters.get(session.get('filter_id'))
         session['kettle'] = all_kettles.get(session.get('kettle_id'))

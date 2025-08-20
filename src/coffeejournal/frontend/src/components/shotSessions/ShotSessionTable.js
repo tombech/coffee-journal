@@ -64,7 +64,7 @@ function ShotSessionTable({
     if (!dateString) return '-';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleDateString('nb-NO');
     } catch (error) {
       return dateString;
     }
@@ -416,7 +416,10 @@ function ShotSessionTable({
                   {formatShotCount(session.shot_count || 0)}
                 </span>
               </td>
-              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td 
+                style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', verticalAlign: 'top', whiteSpace: 'nowrap' }}
+                title={`Full date/time: ${new Date(session.created_at).toLocaleString('nb-NO')}`}
+              >
                 {formatDate(session.created_at)}
               </td>
             </tr>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useToast } from './Toast';
 import { apiFetch } from '../config';
 import StarRating from './StarRating';
@@ -8,6 +8,7 @@ import { ICONS } from '../config/icons';
 function BrewSessionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { addToast } = useToast();
   const [session, setSession] = useState(null);
   const [batch, setBatch] = useState(null);
@@ -21,6 +22,14 @@ function BrewSessionDetail() {
   useEffect(() => {
     fetchBrewSessionDetail();
   }, [id]);
+
+  // Refresh data when navigating back from edit page
+  useEffect(() => {
+    // Only refresh if we're on the detail page (not edit page)
+    if (location.pathname === `/brew-sessions/${id}`) {
+      fetchBrewSessionDetail();
+    }
+  }, [location.pathname, id]);
 
   const fetchBrewSessionDetail = async () => {
     setLoading(true);

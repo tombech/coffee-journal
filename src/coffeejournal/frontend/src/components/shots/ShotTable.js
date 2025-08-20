@@ -385,7 +385,7 @@ function ShotTable({
                   maxWidth: '200px',
                   verticalAlign: 'top'
                 }}
-                title={`${shot.product_details?.product_name || 'Unknown'}\n\nBean Type: ${Array.isArray(shot.product_details?.bean_type) ? shot.product_details?.bean_type.map(bt => bt.name).join(', ') : 'Unknown'}\nRoaster: ${shot.product_details?.roaster?.name || 'Unknown'}\nRoast Date: ${shot.product_details?.roast_date ? new Date(shot.product_details.roast_date).toLocaleDateString('nb-NO') : 'Unknown'}${isDecafProduct(shot) ? '\n\n⚠️ DECAF PRODUCT' : ''}`}
+                title={`${shot.product_details?.product_name || 'Unknown'}\n\nBean Type: ${Array.isArray(shot.product_details?.bean_type) ? shot.product_details?.bean_type.map(bt => bt.name).join(', ') : (shot.product_details?.bean_type ? 'Unknown' : 'Unknown')}\nRoaster: ${shot.product_details?.roaster?.name || 'Unknown'}\nRoast Date: ${shot.batch?.roast_date ? new Date(shot.batch.roast_date).toLocaleDateString('nb-NO') : 'Unknown'}${isDecafProduct(shot) ? '\n\n⚠️ DECAF PRODUCT' : ''}`}
               >
                 {shot.product_id ? (
                   <Link to={`/products/${shot.product_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -439,7 +439,17 @@ function ShotTable({
               >
                 {shot.grinder_setting || '-'}
               </td>
-              <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              <td style={{ 
+                padding: '4px', 
+                border: '1px solid #ddd', 
+                fontSize: '12px', 
+                textAlign: 'center', 
+                verticalAlign: 'top', 
+                whiteSpace: 'nowrap',
+                backgroundColor: shot.extraction_status ? getExtractionStatusColor(shot.extraction_status) + '20' : 'transparent',
+                color: shot.extraction_status ? getExtractionStatusColor(shot.extraction_status) : 'inherit',
+                fontWeight: shot.extraction_status ? 'bold' : 'normal'
+              }}>
                 {shot.extraction_status ? formatExtractionStatus(shot.extraction_status) : '-'}
               </td>
               <td style={{ padding: '4px', border: '1px solid #ddd', fontSize: '12px', textAlign: 'center', verticalAlign: 'top', whiteSpace: 'nowrap', fontWeight: 'bold' }}>
