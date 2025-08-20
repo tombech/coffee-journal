@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import BatchForm from './BatchForm';
 import BrewSessionTable from './BrewSessionTable';
+import ShotTable from './shots/ShotTable';
+import ShotSessionTable from './shotSessions/ShotSessionTable';
 import BrewRecommendations from './BrewRecommendations';
 import { useToast } from './Toast';
 import { apiFetch } from '../config';
@@ -23,12 +25,22 @@ function ProductDetail() {
   const [topBrewSessions, setTopBrewSessions] = useState([]);
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
   const [recentBrewSessions, setRecentBrewSessions] = useState([]);
+  const [shots, setShots] = useState([]);
+  const [topShots, setTopShots] = useState([]);
+  const [bottomShots, setBottomShots] = useState([]);
+  const [recentShots, setRecentShots] = useState([]);
+  const [shotSessions, setShotSessions] = useState([]);
+  const [topShotSessions, setTopShotSessions] = useState([]);
+  const [bottomShotSessions, setBottomShotSessions] = useState([]);
+  const [recentShotSessions, setRecentShotSessions] = useState([]);
   const [productStats, setProductStats] = useState(null);
 
   useEffect(() => {
     fetchProductDetails();
     fetchBatches();
     fetchBrewSessions();
+    fetchShots();
+    fetchShotSessions();
     fetchProductStats();
   }, [id]);
 
@@ -100,6 +112,57 @@ function ProductDetail() {
       setRecentBrewSessions(recentForStatsResult.data || []);
     } catch (err) {
       console.error("Error fetching brew sessions:", err);
+    }
+  };
+
+  const fetchShots = async () => {
+    try {
+      // Get product_id from shots through their batches
+      const [recentResponse, topResponse, bottomResponse] = await Promise.all([
+        apiFetch(`/shots?product_id=${id}&page_size=20&sort=timestamp&sort_direction=desc`),
+        apiFetch(`/shots?product_id=${id}&page_size=5&sort=calculated_score&sort_direction=desc`),
+        apiFetch(`/shots?product_id=${id}&page_size=5&sort=calculated_score&sort_direction=asc`)
+      ]);
+      
+      if (recentResponse.ok && topResponse.ok && bottomResponse.ok) {
+        const [recentResult, topResult, bottomResult] = await Promise.all([
+          recentResponse.json(),
+          topResponse.json(),
+          bottomResponse.json()
+        ]);
+        
+        setShots(recentResult.data || []);
+        setTopShots(topResult.data || []);
+        setBottomShots(bottomResult.data || []);
+        setRecentShots(recentResult.data?.slice(0, 5) || []);
+      }
+    } catch (err) {
+      console.error("Error fetching shots:", err);
+    }
+  };
+
+  const fetchShotSessions = async () => {
+    try {
+      const [recentResponse, topResponse, bottomResponse] = await Promise.all([
+        apiFetch(`/shot_sessions?product_id=${id}&page_size=20&sort=created_at&sort_direction=desc`),
+        apiFetch(`/shot_sessions?product_id=${id}&page_size=5&sort=created_at&sort_direction=desc`),
+        apiFetch(`/shot_sessions?product_id=${id}&page_size=5&sort=created_at&sort_direction=asc`)
+      ]);
+      
+      if (recentResponse.ok && topResponse.ok && bottomResponse.ok) {
+        const [recentResult, topResult, bottomResult] = await Promise.all([
+          recentResponse.json(),
+          topResponse.json(),
+          bottomResponse.json()
+        ]);
+        
+        setShotSessions(recentResult.data || []);
+        setTopShotSessions(topResult.data || []);
+        setBottomShotSessions(bottomResult.data || []);
+        setRecentShotSessions(recentResult.data?.slice(0, 5) || []);
+      }
+    } catch (err) {
+      console.error("Error fetching shot sessions:", err);
     }
   };
 
@@ -615,6 +678,16 @@ function ProductDetail() {
             </div>
             
             <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#e65100' }}>{shots.length}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Total Shots</div>
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#3f51b5' }}>{shotSessions.length}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Total Shot Sessions</div>
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{productStats.total_batches}</div>
               <div style={{ fontSize: '12px', color: '#666' }}>Total Batches</div>
             </div>
@@ -633,6 +706,109 @@ function ProductDetail() {
           </div>
         )}
       />
+
+      {/* Shots Section */}
+      {(shots.length > 0 || topShots.length > 0 || bottomShots.length > 0) && (
+        <div style={{ 
+          marginBottom: '30px',
+          padding: '20px', 
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            ☕ Shot Statistics
+          </h3>
+          
+          {/* Top 5 Shots */}
+          {topShots.length > 0 && (
+            <div style={{ marginBottom: '25px' }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Shots</h4>
+              <ShotTable 
+                shots={topShots}
+                showActions={false}
+                showFilters={false}
+                showAddButton={false}
+                showProduct={false}
+                preserveOrder={true}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+              />
+            </div>
+          )}
+          
+          {/* Bottom 5 Shots */}
+          {bottomShots.length > 0 && (
+            <div style={{ marginBottom: '25px' }}>
+              <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Shots</h4>
+              <ShotTable 
+                shots={bottomShots}
+                showActions={false}
+                showFilters={false}
+                showAddButton={false}
+                showProduct={false}
+                preserveOrder={true}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+              />
+            </div>
+          )}
+          
+          {/* Recent 5 Shots */}
+          {recentShots.length > 0 && (
+            <div>
+              <h4 style={{ margin: '0 0 10px 0', color: '#1976d2', fontSize: '16px' }}>🕐 Recent 5 Shots</h4>
+              <ShotTable 
+                shots={recentShots}
+                showActions={false}
+                showFilters={false}
+                showAddButton={false}
+                showProduct={false}
+                preserveOrder={true}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Shot Sessions Section */}
+      {(shotSessions.length > 0 || topShotSessions.length > 0 || bottomShotSessions.length > 0) && (
+        <div style={{ 
+          marginBottom: '30px',
+          padding: '20px', 
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          border: '1px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+            ☕ Shot Session Statistics
+          </h3>
+          
+          {/* Recent Shot Sessions */}
+          {recentShotSessions.length > 0 && (
+            <div>
+              <h4 style={{ margin: '0 0 10px 0', color: '#1976d2', fontSize: '16px' }}>🕐 Recent Shot Sessions</h4>
+              <ShotSessionTable 
+                shotSessions={recentShotSessions}
+                pagination={null}
+                showMobileSearch={false}
+                onDelete={() => {}}
+                onDuplicate={() => {}}
+                onEdit={() => {}}
+                filters={{}}
+                onFiltersChange={() => {}}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Batches Section */}
       <div style={{ 

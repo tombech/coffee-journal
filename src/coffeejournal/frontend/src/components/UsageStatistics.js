@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ICONS } from '../config/icons';
 import BrewSessionTable from './BrewSessionTable';
+import ShotTable from './shots/ShotTable';
 import { apiFetch } from '../config';
 
 function UsageStatistics({ 
@@ -16,10 +17,13 @@ function UsageStatistics({
   const [topSessions, setTopSessions] = useState([]);
   const [bottomSessions, setBottomSessions] = useState([]);
   const [recentSessions, setRecentSessions] = useState([]);
+  const [topShots, setTopShots] = useState([]);
+  const [bottomShots, setBottomShots] = useState([]);
+  const [recentShots, setRecentShots] = useState([]);
   
-  // Fetch top/bottom sessions using the enhanced brew_sessions API
+  // Fetch top/bottom sessions and shots using the enhanced APIs
   useEffect(() => {
-    const fetchBrewSessions = async () => {
+    const fetchBrewSessionsAndShots = async () => {
       if (!filterType || !filterId) {
         // No filtering - use existing statsData if available
         return;
@@ -29,32 +33,53 @@ function UsageStatistics({
         // Construct filter parameter based on type
         const filterParam = `${filterType}=${filterId}`;
         
-        const [topResponse, bottomResponse, recentResponse] = await Promise.all([
+        const [
+          topSessionsResponse, bottomSessionsResponse, recentSessionsResponse,
+          topShotsResponse, bottomShotsResponse, recentShotsResponse
+        ] = await Promise.all([
+          // Brew sessions
           apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=score&sort_direction=desc`),
           apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=score&sort_direction=asc`),
-          apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`)
+          apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`),
+          // Shots
+          apiFetch(`/shots?${filterParam}&page_size=5&sort=calculated_score&sort_direction=desc`),
+          apiFetch(`/shots?${filterParam}&page_size=5&sort=calculated_score&sort_direction=asc`),
+          apiFetch(`/shots?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`)
         ]);
         
-        if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
-          const topResult = await topResponse.json();
-          const bottomResult = await bottomResponse.json();
-          const recentResult = await recentResponse.json();
-          setTopSessions(topResult.data || []);
-          setBottomSessions(bottomResult.data || []);
-          setRecentSessions(recentResult.data || []);
+        if (topSessionsResponse.ok && bottomSessionsResponse.ok && recentSessionsResponse.ok) {
+          const topSessionsResult = await topSessionsResponse.json();
+          const bottomSessionsResult = await bottomSessionsResponse.json();
+          const recentSessionsResult = await recentSessionsResponse.json();
+          setTopSessions(topSessionsResult.data || []);
+          setBottomSessions(bottomSessionsResult.data || []);
+          setRecentSessions(recentSessionsResult.data || []);
+        }
+        
+        if (topShotsResponse.ok && bottomShotsResponse.ok && recentShotsResponse.ok) {
+          const topShotsResult = await topShotsResponse.json();
+          const bottomShotsResult = await bottomShotsResponse.json();
+          const recentShotsResult = await recentShotsResponse.json();
+          setTopShots(topShotsResult.data || []);
+          setBottomShots(bottomShotsResult.data || []);
+          setRecentShots(recentShotsResult.data || []);
         }
       } catch (err) {
-        console.error('Error fetching brew sessions:', err);
+        console.error('Error fetching brew sessions and shots:', err);
       }
     };
     
-    fetchBrewSessions();
+    fetchBrewSessionsAndShots();
   }, [filterType, filterId]);
   
-  // Determine which sessions to show - API fetched or statsData
+  // Determine which sessions and shots to show - API fetched or statsData
   const displayTopSessions = filterType && filterId ? topSessions : (statsData?.top_5_sessions || []);
   const displayBottomSessions = filterType && filterId ? bottomSessions : (statsData?.bottom_5_sessions || []);
   const displayRecentSessions = filterType && filterId ? recentSessions : (statsData?.recent_5_sessions || []);
+  
+  const displayTopShots = filterType && filterId ? topShots : (statsData?.top_5_shots || []);
+  const displayBottomShots = filterType && filterId ? bottomShots : (statsData?.bottom_5_shots || []);
+  const displayRecentShots = filterType && filterId ? recentShots : (statsData?.recent_5_shots || []);
   
   if (!usageData && !statsData && !filterType) return null;
 
@@ -175,6 +200,63 @@ function UsageStatistics({
             onDuplicate={() => {}}
             onEdit={() => {}}
             testId="recent-brew-sessions-table"
+          />
+        </div>
+      )}
+      
+      {/* Top 5 Shots */}
+      {displayTopShots.length > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <h4 style={{ margin: '0 0 10px 0', color: '#2e7d32', fontSize: '16px' }}>🏆 Top 5 Shots</h4>
+          <ShotTable 
+            shots={displayTopShots} 
+            title=""
+            showProduct={showProduct}
+            showActions={false}
+            showFilters={false}
+            showAddButton={false}
+            preserveOrder={true}
+            onDelete={() => {}}
+            onDuplicate={() => {}}
+            onEdit={() => {}}
+          />
+        </div>
+      )}
+      
+      {/* Bottom 5 Shots */}
+      {displayBottomShots.length > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <h4 style={{ margin: '0 0 10px 0', color: '#f44336', fontSize: '16px' }}>📉 Bottom 5 Shots</h4>
+          <ShotTable 
+            shots={displayBottomShots} 
+            title=""
+            showProduct={showProduct}
+            showActions={false}
+            showFilters={false}
+            showAddButton={false}
+            preserveOrder={true}
+            onDelete={() => {}}
+            onDuplicate={() => {}}
+            onEdit={() => {}}
+          />
+        </div>
+      )}
+      
+      {/* Last 5 Shots (Most Recent) */}
+      {displayRecentShots.length > 0 && (
+        <div style={{ marginTop: '20px' }}>
+          <h4 style={{ margin: '0 0 10px 0', color: '#1976d2', fontSize: '16px' }}>🕐 Last 5 Shots</h4>
+          <ShotTable 
+            shots={displayRecentShots} 
+            title=""
+            showProduct={showProduct}
+            showActions={false}
+            showFilters={false}
+            showAddButton={false}
+            preserveOrder={true}
+            onDelete={() => {}}
+            onDuplicate={() => {}}
+            onEdit={() => {}}
           />
         </div>
       )}

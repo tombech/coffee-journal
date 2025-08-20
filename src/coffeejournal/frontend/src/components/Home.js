@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import BrewSessionTable from './BrewSessionTable';
+import ShotTable from './shots/ShotTable';
 import BrewSessionForm from './BrewSessionForm';
 import StarRating from './StarRating';
 import { useToast } from './Toast';
@@ -13,6 +14,9 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [topBrewSessions, setTopBrewSessions] = useState([]);
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
+  const [shots, setShots] = useState([]);
+  const [topShots, setTopShots] = useState([]);
+  const [bottomShots, setBottomShots] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -125,6 +129,9 @@ function Home() {
         productsResponse,
         topBrewsResponse,
         bottomBrewsResponse,
+        shotsResponse,
+        topShotsResponse,
+        bottomShotsResponse,
         topProductsResponse,
         filterOptionsResponse
       ] = await Promise.all([
@@ -132,12 +139,16 @@ function Home() {
         apiFetch('/products'),
         apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=desc'), // Top 5 brews
         apiFetch('/brew_sessions?page_size=5&sort=score&sort_direction=asc'), // Bottom 5 brews  
+        apiFetch('/shots?page_size=15'), // Recent 15 shots
+        apiFetch('/shots?page_size=5&sort=calculated_score&sort_direction=desc'), // Top 5 shots
+        apiFetch('/shots?page_size=5&sort=calculated_score&sort_direction=asc'), // Bottom 5 shots
         apiFetch('/stats/top-products?limit=5'), // Top 5 products
         apiFetch('/brew_sessions/filter_options') // Filter options for dropdowns
       ]);
       
       if (!sessionsResponse.ok || !productsResponse.ok || !topBrewsResponse.ok || 
-          !bottomBrewsResponse.ok || !topProductsResponse.ok || !filterOptionsResponse.ok) {
+          !bottomBrewsResponse.ok || !shotsResponse.ok || !topShotsResponse.ok || 
+          !bottomShotsResponse.ok || !topProductsResponse.ok || !filterOptionsResponse.ok) {
         throw new Error('Failed to fetch data from one or more endpoints');
       }
       
@@ -146,6 +157,9 @@ function Home() {
         productsData,
         topBrewsResult,
         bottomBrewsResult,
+        shotsResult,
+        topShotsResult,
+        bottomShotsResult,
         topProductsData,
         filterOptionsData
       ] = await Promise.all([
@@ -153,6 +167,9 @@ function Home() {
         productsResponse.json(),
         topBrewsResponse.json(),
         bottomBrewsResponse.json(),
+        shotsResponse.json(),
+        topShotsResponse.json(),
+        bottomShotsResponse.json(),
         topProductsResponse.json(),
         filterOptionsResponse.json()
       ]);
@@ -162,6 +179,9 @@ function Home() {
       setProducts(productsData);
       setTopBrewSessions(topBrewsResult.data || []);
       setBottomBrewSessions(bottomBrewsResult.data || []);
+      setShots(shotsResult.data || []);
+      setTopShots(topShotsResult.data || []);
+      setBottomShots(bottomShotsResult.data || []);
       setTopProducts(topProductsData || []);
       setFilterOptions(filterOptionsData);
       
@@ -393,7 +413,7 @@ function Home() {
       />
 
       {/* Analytics Section */}
-      {(topBrewSessions.length > 0 || bottomBrewSessions.length > 0 || topProducts.length > 0) && (
+      {(topBrewSessions.length > 0 || bottomBrewSessions.length > 0 || topShots.length > 0 || bottomShots.length > 0 || topProducts.length > 0) && (
         <div style={{ marginTop: '40px' }}>
           {/* Top 5 Brews */}
           <BrewSessionTable 
@@ -426,6 +446,42 @@ function Home() {
             onDuplicate={() => {}}
             onEdit={() => {}}
           />
+
+          {/* Top 5 Shots */}
+          {topShots.length > 0 && (
+            <ShotTable 
+              shots={topShots} 
+              title="🏆 Top 5 Shots (Global)"
+              showProduct={true}
+              showActions={false}
+              showFilters={false}
+              showAddButton={false}
+              preserveOrder={true}
+              initialSort="calculatedScore"
+              initialSortDirection="desc"
+              onDelete={() => {}}
+              onDuplicate={() => {}}
+              onEdit={() => {}}
+            />
+          )}
+
+          {/* Bottom 5 Shots */}
+          {bottomShots.length > 0 && (
+            <ShotTable 
+              shots={bottomShots} 
+              title="📉 Bottom 5 Shots (Global)"
+              showProduct={true}
+              showActions={false}
+              showFilters={false}
+              showAddButton={false}
+              preserveOrder={true}
+              initialSort="calculatedScore"
+              initialSortDirection="asc"
+              onDelete={() => {}}
+              onDuplicate={() => {}}
+              onEdit={() => {}}
+            />
+          )}
 
           {/* Top 5 Products */}
           <div style={{ marginBottom: '30px' }}>

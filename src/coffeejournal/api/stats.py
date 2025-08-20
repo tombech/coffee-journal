@@ -41,7 +41,7 @@ def create_stats_blueprint():
 
     @stats_bp.route('/top-products', methods=['GET'])
     def get_top_products():
-        """Get top products based on average brew scores with detailed analytics."""
+        """Get top products based on average brew and shot scores with detailed analytics."""
         try:
             # Get query parameters
             limit = request.args.get('limit', 5, type=int)
@@ -49,15 +49,18 @@ def create_stats_blueprint():
             
             factory = get_repository_factory()
             brew_session_repo = factory.get_brew_session_repository(user_id)
+            shot_repo = factory.get_shot_repository(user_id)
             product_repo = factory.get_product_repository(user_id)
             
-            # Get all brew sessions and products
+            # Get all brew sessions, shots, and products
             all_sessions = brew_session_repo.find_all()
+            all_shots = shot_repo.find_all()
             all_products = product_repo.find_all()
             
-            # Group sessions by product and calculate statistics
+            # Group sessions and shots by product and calculate statistics
             product_scores = {}
             
+            # Process brew sessions
             for session in all_sessions:
                 score = calculate_brew_score(session)
                 product_id = session.get('product_id')
@@ -67,10 +70,27 @@ def create_stats_blueprint():
                         product_scores[product_id] = {
                             'scores': [],
                             'sessions': [],
+                            'shots': [],
                             'product': next((p for p in all_products if p['id'] == product_id), None)
                         }
                     product_scores[product_id]['scores'].append(score)
                     product_scores[product_id]['sessions'].append(session)
+            
+            # Process shots
+            for shot in all_shots:
+                shot_score = shot.get('overall_score') or shot.get('calculated_score', 0)
+                product_id = shot.get('product_id')
+                
+                if shot_score and shot_score > 0 and product_id:
+                    if product_id not in product_scores:
+                        product_scores[product_id] = {
+                            'scores': [],
+                            'sessions': [],
+                            'shots': [],
+                            'product': next((p for p in all_products if p['id'] == product_id), None)
+                        }
+                    product_scores[product_id]['scores'].append(shot_score)
+                    product_scores[product_id]['shots'].append(shot)
             
             # Calculate averages and detailed analytics for each product
             result = []
@@ -112,6 +132,8 @@ def create_stats_blueprint():
                     'product': enriched_product,
                     'avg_score': round(avg_score, 1),
                     'brew_count': len(data['sessions']),
+                    'shot_count': len(data['shots']),
+                    'total_count': len(data['sessions']) + len(data['shots']),
                     'score_range': {
                         'min': round(min(scores), 1),
                         'max': round(max(scores), 1)
@@ -129,32 +151,52 @@ def create_stats_blueprint():
 
     @stats_bp.route('/products/<int:product_id>', methods=['GET'])
     def get_product_stats(product_id):
-        """Get detailed statistics for a specific product."""
+        """Get detailed statistics for a specific product including brew sessions and shots."""
         try:
             user_id = get_user_id_from_request()
             factory = get_repository_factory()
             
             brew_session_repo = factory.get_brew_session_repository(user_id)
+            shot_repo = factory.get_shot_repository(user_id)
             batch_repo = factory.get_batch_repository(user_id)
             
-            # Get all brew sessions for this product
+            # Get all brew sessions and shots for this product
             all_sessions = brew_session_repo.find_all()
             product_sessions = [s for s in all_sessions if s.get('product_id') == product_id]
             
+            all_shots = shot_repo.find_all()
+            product_shots = [s for s in all_shots if s.get('product_id') == product_id]
+            
             # Calculate statistics
             total_sessions = len(product_sessions)
+            total_shots = len(product_shots)
             scores = []
+            
+            # Collect scores from brew sessions
             for session in product_sessions:
                 score = calculate_brew_score(session)
                 if score > 0:
                     scores.append(score)
             
+            # Collect scores from shots
+            for shot in product_shots:
+                shot_score = shot.get('overall_score') or shot.get('calculated_score', 0)
+                if shot_score and shot_score > 0:
+                    scores.append(shot_score)
+            
             # Get top and bottom 5 sessions by score
             sorted_sessions = sorted(product_sessions, 
                                     key=lambda s: calculate_brew_score(s), 
                                     reverse=True)
-            top_5 = sorted_sessions[:5]
-            bottom_5 = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            top_5_sessions = sorted_sessions[:5]
+            bottom_5_sessions = sorted_sessions[-5:] if len(sorted_sessions) > 5 else []
+            
+            # Get top and bottom 5 shots by score
+            sorted_shots = sorted([s for s in product_shots if s.get('overall_score') or s.get('calculated_score')], 
+                                key=lambda s: s.get('overall_score') or s.get('calculated_score', 0), 
+                                reverse=True)
+            top_5_shots = sorted_shots[:5]
+            bottom_5_shots = sorted_shots[-5:] if len(sorted_shots) > 5 else []
             
             # Get batch statistics
             all_batches = batch_repo.find_all()
@@ -162,14 +204,19 @@ def create_stats_blueprint():
             
             return jsonify({
                 'total_brew_sessions': total_sessions,
+                'total_shots': total_shots,
                 'total_batches': len(product_batches),
                 'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
                 'score_range': {
                     'min': round(min(scores), 1) if scores else 0,
                     'max': round(max(scores), 1) if scores else 0
                 },
-                'top_5_sessions': top_5,
-                'bottom_5_sessions': bottom_5
+                'top_5_sessions': top_5_sessions,
+                'bottom_5_sessions': bottom_5_sessions,
+                'top_5_shots': top_5_shots,
+                'bottom_5_shots': bottom_5_shots,
+                'recent_5_sessions': product_sessions[-5:] if product_sessions else [],
+                'recent_5_shots': product_shots[-5:] if product_shots else []
             })
             
         except Exception as e:
