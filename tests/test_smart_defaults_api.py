@@ -43,7 +43,8 @@ def test_smart_defaults_endpoint_empty_data(client):
         'grinder': None,
         'filter': None,
         'kettle': None,
-        'scale': None
+        'scale': None,
+        'product': None
     }
 
 

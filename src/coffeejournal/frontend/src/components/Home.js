@@ -219,9 +219,10 @@ function Home() {
     }
   };
 
-  const handleDuplicate = async (sessionId) => {
+  const handleDuplicate = async (sessionId, batchId) => {
     try {
-      const response = await apiFetch(`/brew_sessions/${sessionId}/duplicate`, {
+      // Use the correct endpoint with batch_id
+      const response = await apiFetch(`/batches/${batchId}/brew_sessions/${sessionId}/duplicate`, {
         method: 'POST',
       });
 

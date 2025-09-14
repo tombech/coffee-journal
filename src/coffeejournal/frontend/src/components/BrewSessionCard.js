@@ -101,7 +101,7 @@ function BrewSessionCard({ session, onDelete, onDuplicate }) {
           {ICONS.EDIT}
         </button>
         <button 
-          onClick={() => onDuplicate(session.id)}
+          onClick={() => onDuplicate(session.id, session.product_batch_id)}
           style={{ 
             padding: '6px 8px', 
             border: 'none', 

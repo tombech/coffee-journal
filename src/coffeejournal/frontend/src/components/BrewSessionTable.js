@@ -532,7 +532,7 @@ function BrewSessionTable({
                     ✏️
                   </button>
                   <button 
-                    onClick={() => onDuplicate(session.id)}
+                    onClick={() => onDuplicate(session.id, session.product_batch_id)}
                     title="Duplicate"
                     aria-label="Duplicate brew session"
                     style={{ padding: '2px 4px', margin: '0 1px', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px' }}

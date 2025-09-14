@@ -58,6 +58,7 @@ def enrich_shot(shot, factory, user_id):
             # Enrich product with its lookups
             product = enrich_product_with_lookups(product.copy(), factory, user_id)
             shot['product'] = product
+            shot['product_details'] = product  # Add product_details for frontend compatibility
             shot['product_name'] = product.get('product_name', 'Unknown')
     
     # Enrich batch
