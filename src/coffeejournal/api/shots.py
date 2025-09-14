@@ -225,7 +225,9 @@ def get_all_shots():
                 'total_count': total_count,
                 'total_pages': (total_count + page_size - 1) // page_size,
                 'has_next': end_idx < total_count,
-                'has_previous': page > 1
+                'has_previous': page > 1,
+                'next_page': page + 1 if end_idx < total_count else None,
+                'previous_page': page - 1 if page > 1 else None
             }
         })
     except Exception as e:
