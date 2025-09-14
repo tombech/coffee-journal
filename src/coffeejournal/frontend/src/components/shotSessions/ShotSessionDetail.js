@@ -164,7 +164,8 @@ function ShotSessionDetail() {
 
   const getExtractionStatusColor = (status) => {
     const colors = {
-      'perfect': '#28a745',
+      'perfect': '#17a2b8',
+      'balanced': '#28a745',
       'under-extracted': '#ffc107',
       'over-extracted': '#fd7e14',
       'channeling': '#dc3545'

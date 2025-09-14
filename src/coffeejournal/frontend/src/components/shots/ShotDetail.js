@@ -196,7 +196,8 @@ function ShotDetail() {
 
   const getExtractionStatusColor = (status) => {
     switch(status) {
-      case 'perfect': return '#28a745';
+      case 'perfect': return '#17a2b8';
+      case 'balanced': return '#28a745';
       case 'channeling': return '#dc3545';
       case 'over-extracted': return '#fd7e14';
       case 'under-extracted': return '#ffc107';

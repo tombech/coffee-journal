@@ -9,7 +9,7 @@ from filelock import FileLock, Timeout
 import jsonschema
 from jsonschema import validate, ValidationError
 from .base import BaseRepository, LookupRepository
-from .schemas import get_schema_for_entity
+from .schemas import get_schema_for_entity, SchemaValidationError
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -191,7 +191,7 @@ class JSONRepositoryBase(BaseRepository):
             print(f"DEBUG: Entity data: {entity_copy}")
             print(f"DEBUG: Error: {e.message}")
             print(f"DEBUG: Error path: {e.absolute_path}")
-            raise ValueError(f"Schema validation failed for {self.entity_name}: {e.message}")
+            raise SchemaValidationError(f"Schema validation failed for {self.entity_name}: {e.message}")
     
     def _validate_all_data(self, data: List[Dict[str, Any]]) -> List[str]:
         """Validate all entities in the dataset and return any validation errors."""

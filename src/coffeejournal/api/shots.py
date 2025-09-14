@@ -4,6 +4,7 @@ API endpoints for espresso shot tracking.
 
 from flask import Blueprint, request, jsonify
 from ..repositories.factory import get_repository_factory
+from ..repositories.schemas import SchemaValidationError
 from ..api.utils import (
     get_user_id_from_request, validate_user_id,
     check_required_fields, validate_score_fields,
@@ -267,29 +268,8 @@ def create_shot():
         
         data = request.get_json()
         
-        # Validate required fields
-        required_fields = ['dose_grams', 'yield_grams']
-        missing_fields = check_required_fields(data, required_fields)
-        if missing_fields:
-            return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
         
-        # Validate score fields
-        score_fields = ['sweetness', 'acidity', 'bitterness', 'body', 'aroma', 'crema', 'flavor_profile_match']
-        for field in score_fields:
-            if field in data and data[field] is not None:
-                try:
-                    score = int(data[field])
-                    if score < 1 or score > 10:
-                        return jsonify({'error': f'{field} must be between 1 and 10'}), 400
-                    data[field] = score
-                except (ValueError, TypeError):
-                    return jsonify({'error': f'{field} must be an integer'}), 400
         
-        # Validate extraction status if provided
-        if 'extraction_status' in data and data['extraction_status']:
-            valid_statuses = ['channeling', 'over-extracted', 'under-extracted', 'perfect']
-            if data['extraction_status'] not in valid_statuses:
-                return jsonify({'error': f'extraction_status must be one of: {", ".join(valid_statuses)}'}), 400
         
         # Convert ID fields to integers to ensure consistent data types
         id_fields = ['product_id', 'product_batch_id', 'brewer_id', 'shot_session_id', 
@@ -317,6 +297,8 @@ def create_shot():
         shot = enrich_shot(shot, factory, user_id)
         
         return jsonify(shot), 201
+    except SchemaValidationError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -333,23 +315,7 @@ def update_shot(shot_id):
         
         data = request.get_json()
         
-        # Validate score fields if present
-        score_fields = ['sweetness', 'acidity', 'bitterness', 'body', 'aroma', 'crema', 'flavor_profile_match']
-        for field in score_fields:
-            if field in data and data[field] is not None:
-                try:
-                    score = int(data[field])
-                    if score < 1 or score > 10:
-                        return jsonify({'error': f'{field} must be between 1 and 10'}), 400
-                    data[field] = score
-                except (ValueError, TypeError):
-                    return jsonify({'error': f'{field} must be an integer'}), 400
         
-        # Validate extraction status if provided
-        if 'extraction_status' in data and data['extraction_status']:
-            valid_statuses = ['channeling', 'over-extracted', 'under-extracted', 'perfect']
-            if data['extraction_status'] not in valid_statuses:
-                return jsonify({'error': f'extraction_status must be one of: {", ".join(valid_statuses)}'}), 400
         
         # Convert ID fields to integers to ensure consistent data types
         id_fields = ['product_id', 'product_batch_id', 'brewer_id', 'shot_session_id', 
@@ -378,8 +344,10 @@ def update_shot(shot_id):
         
         # Enrich with lookup data
         shot = enrich_shot(shot, factory, user_id)
-        
+
         return jsonify(shot)
+    except SchemaValidationError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

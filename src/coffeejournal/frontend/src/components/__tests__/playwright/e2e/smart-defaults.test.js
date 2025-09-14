@@ -233,11 +233,16 @@ test.describe('Smart Defaults Functionality', () => {
     expect(data).toHaveProperty('kettle');
     expect(data).toHaveProperty('scale');
     
-    // Fields can be null (no defaults) or objects with id and name
-    Object.values(data).forEach(value => {
+    // Fields can be null (no defaults) or objects with id and name/product_name
+    Object.entries(data).forEach(([key, value]) => {
       if (value !== null) {
         expect(value).toHaveProperty('id');
-        expect(value).toHaveProperty('name');
+        // Products have product_name instead of name
+        if (key === 'product') {
+          expect(value).toHaveProperty('product_name');
+        } else {
+          expect(value).toHaveProperty('name');
+        }
       }
     });
   });

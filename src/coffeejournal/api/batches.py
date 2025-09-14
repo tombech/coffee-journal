@@ -394,33 +394,13 @@ def handle_batch_brew_sessions(batch_id):
         brew_time_seconds = safe_int(data.get('brew_time_seconds'))
         score = safe_float(data.get('score'))
         
-        # Validate tasting scores (1-10 range)
+        # Use safe conversion for tasting scores and overall score
         sweetness = safe_float(data.get('sweetness'))
         acidity = safe_float(data.get('acidity'))
         bitterness = safe_float(data.get('bitterness'))
         body = safe_float(data.get('body'))
         aroma = safe_float(data.get('aroma'))
         flavor_profile_match = safe_float(data.get('flavor_profile_match'))
-        
-        # Validate tasting scores are in range
-        validation_errors = []
-        for field_name, field_value in [
-            ('sweetness', sweetness),
-            ('acidity', acidity),
-            ('bitterness', bitterness),
-            ('body', body),
-            ('aroma', aroma),
-            ('flavor_profile_match', flavor_profile_match)
-        ]:
-            if field_value is not None and (field_value < 1 or field_value > 10):
-                validation_errors.append(f"{field_name} must be between 1 and 10")
-        
-        # Validate overall score is in range (can be float)
-        if score is not None and (score < 1.0 or score > 10.0):
-            validation_errors.append("score must be between 1.0 and 10.0")
-        
-        if validation_errors:
-            return jsonify({'error': '; '.join(validation_errors)}), 400
         
         session_data = {
             'timestamp': data.get('timestamp', datetime.utcnow().isoformat()),

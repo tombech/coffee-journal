@@ -6,6 +6,7 @@ import pytest
 from datetime import datetime, timedelta
 from coffeejournal import create_app
 from coffeejournal.repositories.factory import get_repository_factory
+from coffeejournal.repositories.schemas import SchemaValidationError
 
 
 class TestCoffeeAgeAPIIntegration:
@@ -229,8 +230,8 @@ class TestCoffeeAgeAPIIntegration:
         
         with client.application.app_context():
             factory = get_repository_factory()
-            # This should raise ValueError due to schema validation failure
-            with pytest.raises(ValueError, match="'roast_date' is a required property"):
+            # This should raise SchemaValidationError due to schema validation failure
+            with pytest.raises(SchemaValidationError, match="'roast_date' is a required property"):
                 factory.get_batch_repository(user_id).create(batch_data)
     
     def test_coffee_age_formats(self, client, test_data):

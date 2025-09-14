@@ -756,6 +756,7 @@ function ShotForm({ product_batch_id = null, onShotSubmitted, initialData = null
           >
             <option value="">Select status</option>
             <option value="perfect">Perfect</option>
+            <option value="balanced">Balanced</option>
             <option value="channeling">Channeling</option>
             <option value="over-extracted">Over-extracted</option>
             <option value="under-extracted">Under-extracted</option>

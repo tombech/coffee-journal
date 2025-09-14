@@ -157,7 +157,7 @@ SCHEMAS = {
             "flavor_profile_match": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
             "extraction_status": {
                 "type": ["string", "null"],
-                "enum": ["channeling", "over-extracted", "under-extracted", "perfect", None]
+                "enum": ["channeling", "over-extracted", "under-extracted", "perfect", "balanced", None]
             },
             "notes": {"type": ["string", "null"]},
             "score": {"type": ["number", "null"], "minimum": 1.0, "maximum": 10.0},
