@@ -355,6 +355,11 @@ function ProductList() {
                       <p style={{ margin: '0 0 6px 0', fontSize: '14px', color: '#666' }}>
                         <strong>{Array.isArray(product.bean_type) ? product.bean_type.map(bt => bt.name).join(', ') : 'Unknown'}</strong> • {product.country?.name || 'Unknown'}{Array.isArray(product.region) && product.region.length > 0 ? ` (${product.region.map(r => r.name).join(', ')})` : ''}
                       </p>
+                      {product.bean_process && product.bean_process.length > 0 && (
+                        <p style={{ margin: '0 0 6px 0', fontSize: '13px', color: '#888', fontStyle: 'italic' }}>
+                          Process: {product.bean_process.join(', ')}
+                        </p>
+                      )}
                       {product.roast_type && (
                         <div style={{ margin: '0 0 8px 0' }}>
                           {getRoastVisualization(product.roast_type)}

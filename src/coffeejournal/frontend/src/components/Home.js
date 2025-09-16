@@ -567,6 +567,11 @@ function Home() {
                           <div style={{ marginBottom: '4px', fontSize: '13px', color: '#777' }}>
                             {item.product.roaster?.name || 'Unknown Roaster'}
                           </div>
+                          {item.product.bean_process && item.product.bean_process.length > 0 && (
+                            <div style={{ marginBottom: '4px', fontSize: '12px', color: '#888', fontStyle: 'italic' }}>
+                              Process: {item.product.bean_process.join(', ')}
+                            </div>
+                          )}
                           {item.product.roast_type && (
                             <div style={{ margin: '4px 0' }}>
                               {getRoastVisualization(item.product.roast_type)}
