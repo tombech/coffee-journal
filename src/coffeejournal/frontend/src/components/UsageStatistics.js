@@ -111,12 +111,40 @@ function UsageStatistics({
               <div style={{ textAlign: 'center', marginBottom: '15px' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{usageData.usage_count}</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>
-                  Times Used in {usageData.usage_type === 'products' ? 'Products' : 
-                                 usageData.usage_type === 'brew_sessions' ? 'Brew Sessions' : 
-                                 usageData.usage_type ? usageData.usage_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 
+                  Times Used in {usageData.usage_type === 'products' ? 'Products' :
+                                 usageData.usage_type === 'brew_sessions' ? 'Brew Sessions' :
+                                 usageData.usage_type ? usageData.usage_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) :
                                  'Records'}
                 </div>
               </div>
+
+              {/* Average Scores Display */}
+              {(displayTopSessions.length > 0 || displayTopShots.length > 0) && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                  gap: '15px',
+                  marginBottom: '15px',
+                  textAlign: 'center'
+                }}>
+                  {displayTopSessions.length > 0 && (
+                    <div style={{ padding: '10px', backgroundColor: '#e8f5e9', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#2e7d32' }}>
+                        {(displayTopSessions.reduce((sum, session) => sum + (session.score || 0), 0) / displayTopSessions.length).toFixed(1)}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#666' }}>Avg Brew Score</div>
+                    </div>
+                  )}
+                  {displayTopShots.length > 0 && (
+                    <div style={{ padding: '10px', backgroundColor: '#fff3cd', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#856404' }}>
+                        {(displayTopShots.reduce((sum, shot) => sum + (shot.calculated_score || shot.score || 0), 0) / displayTopShots.length).toFixed(1)}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#666' }}>Avg Shot Score</div>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {usageData.recent_usage && usageData.recent_usage.length > 0 && (
                 <div>

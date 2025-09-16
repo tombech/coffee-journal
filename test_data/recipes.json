@@ -3,7 +3,10 @@
     "id": 1,
     "name": "Standard V60",
     "short_form": "Std V60",
-    "description": "Classic V60 pouring technique"
+    "description": "Classic V60 pouring technique",
+    "is_default": true,
+    "created_at": "2025-09-16T18:26:03.665319+00:00",
+    "updated_at": "2025-09-16T18:26:03.665332+00:00"
   },
   {
     "id": 2,
