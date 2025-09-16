@@ -50,7 +50,6 @@ def create_app(test_config=None):
         app.logger.info(f"🔄 Initializing migration system for data directory: {app.config['DATA_DIR']}")
 
         # Check if data directory exists
-        import os
         if not os.path.exists(app.config['DATA_DIR']):
             app.logger.warning(f"⚠️  Data directory does not exist: {app.config['DATA_DIR']}")
         else:
