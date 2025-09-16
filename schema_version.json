@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.5",
-  "created_date": "2025-08-17",
-  "description": "Clarified scoring system: taste notes (int 1-10), overall score (float 1.0-10.0), product/batch rating (float 0.0-5.0 in 0.5 steps).",
+  "schema_version": "1.6",
+  "created_date": "2025-09-16",
+  "description": "Bean process multiselect: converted bean_process from string to array of standardized processing methods.",
   "entities": {
     "products": {
       "version": "1.3",
@@ -92,5 +92,16 @@
     "calculated_ratio": "Shots automatically calculate dose:yield ratio",
     "crema_scoring": "Added crema as additional taste score element for shots",
     "api_endpoints": "Added /api/shots/*, /api/shot_sessions/*, and new equipment lookup endpoints"
+  },
+  "new_in_v1.5": {
+    "schema_validation": "Clarified scoring system rules for taste notes, overall scores, and star ratings",
+    "shot_equipment": "Added missing shot equipment fields: tamper_id, wdt_tool_id, leveling_tool_id",
+    "validation_rules": "Updated validation rules for consistent score handling across entities"
+  },
+  "new_in_v1.6": {
+    "bean_process_multiselect": "Converted bean_process from string to array of standardized processing methods",
+    "standardized_processes": "Defined standard process types: Washed (wet), Natural (dry), Honey, Semi-washed (wet-hulled), Anaerobic, Carbonic Maceration, Other",
+    "data_migration": "Automated migration of existing bean_process values to new multiselect format",
+    "array_field": "Products can now have multiple processing methods to support bean blends"
   }
 }
