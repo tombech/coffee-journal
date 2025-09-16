@@ -6,6 +6,7 @@ import BrewSessionTable from './BrewSessionTable';
 import ShotTable from './shots/ShotTable';
 import BrewSessionForm from './BrewSessionForm';
 import StarRating from './StarRating';
+import FavoritesSection from './FavoritesSection';
 import { useToast } from './Toast';
 
 function Home() {
@@ -394,6 +395,9 @@ function Home() {
           </button>
         </div>
       )}
+
+      {/* Fun Favorites Section */}
+      <FavoritesSection />
 
       <h3>Recent Brew Sessions</h3>
       <p>Your 15 most recent brew sessions:</p>

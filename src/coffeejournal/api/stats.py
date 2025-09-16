@@ -913,4 +913,252 @@ def create_stats_blueprint():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
+    @stats_bp.route('/favorites', methods=['GET'])
+    def get_favorites():
+        """Get favorites (top-rated items) across all lookup types."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+
+            # Get all repositories
+            product_repo = factory.get_product_repository(user_id)
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            shot_repo = factory.get_shot_repository(user_id)
+            roaster_repo = factory.get_roaster_repository(user_id)
+            bean_type_repo = factory.get_bean_type_repository(user_id)
+            country_repo = factory.get_country_repository(user_id)
+            region_repo = factory.get_region_repository(user_id)
+            brew_method_repo = factory.get_brew_method_repository(user_id)
+            recipe_repo = factory.get_recipe_repository(user_id)
+
+            # Get all data
+            all_products = product_repo.find_all()
+            all_sessions = brew_session_repo.find_all()
+            all_shots = shot_repo.find_all()
+            all_roasters = roaster_repo.find_all()
+            all_bean_types = bean_type_repo.find_all()
+            all_countries = country_repo.find_all()
+            all_regions = region_repo.find_all()
+            all_brew_methods = brew_method_repo.find_all()
+            all_recipes = recipe_repo.find_all()
+
+            def calculate_lookup_stats(lookup_items, get_product_ids_fn, lookup_type):
+                """Helper function to calculate stats for a lookup type."""
+                results = []
+
+                for item in lookup_items:
+                    # Get product IDs that use this lookup item
+                    product_ids = get_product_ids_fn(item['id'])
+
+                    if not product_ids:
+                        continue
+
+                    # Get sessions for these products
+                    item_sessions = [s for s in all_sessions if s.get('product_id') in product_ids]
+                    item_shots = [s for s in all_shots if s.get('product_id') in product_ids]
+
+                    # Calculate scores
+                    scores = []
+
+                    for session in item_sessions:
+                        score = calculate_brew_score(session)
+                        if score > 0:
+                            scores.append(score)
+
+                    for shot in item_shots:
+                        shot_score = shot.get('overall_score') or shot.get('calculated_score', 0)
+                        if shot_score and shot_score > 0:
+                            scores.append(shot_score)
+
+                    if scores:
+                        avg_score = sum(scores) / len(scores)
+                        results.append({
+                            'type': lookup_type,
+                            'item': item,
+                            'avg_score': round(avg_score, 1),
+                            'total_sessions': len(item_sessions),
+                            'total_shots': len(item_shots),
+                            'total_uses': len(item_sessions) + len(item_shots),
+                            'score_count': len(scores)
+                        })
+
+                return results
+
+            favorites = []
+
+            # Roasters
+            def get_roaster_products(roaster_id):
+                return [p['id'] for p in all_products if p.get('roaster_id') == roaster_id]
+
+            roaster_stats = calculate_lookup_stats(all_roasters, get_roaster_products, 'roaster')
+            favorites.extend(roaster_stats)
+
+            # Bean Types
+            def get_bean_type_products(bean_type_id):
+                product_ids = []
+                for p in all_products:
+                    bean_types = p.get('bean_type_id', [])
+                    if not isinstance(bean_types, list):
+                        bean_types = [bean_types] if bean_types else []
+                    if bean_type_id in bean_types:
+                        product_ids.append(p['id'])
+                return product_ids
+
+            bean_type_stats = calculate_lookup_stats(all_bean_types, get_bean_type_products, 'bean_type')
+            favorites.extend(bean_type_stats)
+
+            # Countries
+            def get_country_products(country_id):
+                return [p['id'] for p in all_products if p.get('country_id') == country_id]
+
+            country_stats = calculate_lookup_stats(all_countries, get_country_products, 'country')
+            favorites.extend(country_stats)
+
+            # Regions
+            def get_region_products(region_id):
+                product_ids = []
+                for p in all_products:
+                    regions = p.get('region_id', [])
+                    if not isinstance(regions, list):
+                        regions = [regions] if regions else []
+                    if region_id in regions:
+                        product_ids.append(p['id'])
+                return product_ids
+
+            region_stats = calculate_lookup_stats(all_regions, get_region_products, 'region')
+            favorites.extend(region_stats)
+
+            # Brew Methods
+            def get_brew_method_sessions(method_id):
+                return [s for s in all_sessions if s.get('brew_method_id') == method_id]
+
+            brew_method_results = []
+            for method in all_brew_methods:
+                method_sessions = get_brew_method_sessions(method['id'])
+
+                scores = []
+                for session in method_sessions:
+                    score = calculate_brew_score(session)
+                    if score > 0:
+                        scores.append(score)
+
+                if scores:
+                    avg_score = sum(scores) / len(scores)
+                    brew_method_results.append({
+                        'type': 'brew_method',
+                        'item': method,
+                        'avg_score': round(avg_score, 1),
+                        'total_sessions': len(method_sessions),
+                        'total_shots': 0,
+                        'total_uses': len(method_sessions),
+                        'score_count': len(scores)
+                    })
+
+            favorites.extend(brew_method_results)
+
+            # Recipes (used in both sessions and shots)
+            def get_recipe_sessions_and_shots(recipe_id):
+                recipe_sessions = [s for s in all_sessions if s.get('recipe_id') == recipe_id]
+                recipe_shots = [s for s in all_shots if s.get('recipe_id') == recipe_id]
+                return recipe_sessions, recipe_shots
+
+            recipe_results = []
+            for recipe in all_recipes:
+                recipe_sessions, recipe_shots = get_recipe_sessions_and_shots(recipe['id'])
+
+                scores = []
+                for session in recipe_sessions:
+                    score = calculate_brew_score(session)
+                    if score > 0:
+                        scores.append(score)
+
+                for shot in recipe_shots:
+                    shot_score = shot.get('overall_score') or shot.get('calculated_score', 0)
+                    if shot_score and shot_score > 0:
+                        scores.append(shot_score)
+
+                if scores:
+                    avg_score = sum(scores) / len(scores)
+                    recipe_results.append({
+                        'type': 'recipe',
+                        'item': recipe,
+                        'avg_score': round(avg_score, 1),
+                        'total_sessions': len(recipe_sessions),
+                        'total_shots': len(recipe_shots),
+                        'total_uses': len(recipe_sessions) + len(recipe_shots),
+                        'score_count': len(scores)
+                    })
+
+            favorites.extend(recipe_results)
+
+            # Bean Process (from product bean_process field)
+            bean_process_stats = {}
+            for product in all_products:
+                processes = product.get('bean_process', [])
+                if not processes:
+                    continue
+
+                for process in processes:
+                    if process not in bean_process_stats:
+                        bean_process_stats[process] = {
+                            'product_ids': [],
+                            'name': process
+                        }
+                    bean_process_stats[process]['product_ids'].append(product['id'])
+
+            for process_name, process_data in bean_process_stats.items():
+                product_ids = process_data['product_ids']
+
+                # Get sessions for these products
+                process_sessions = [s for s in all_sessions if s.get('product_id') in product_ids]
+                process_shots = [s for s in all_shots if s.get('product_id') in product_ids]
+
+                scores = []
+                for session in process_sessions:
+                    score = calculate_brew_score(session)
+                    if score > 0:
+                        scores.append(score)
+
+                for shot in process_shots:
+                    shot_score = shot.get('overall_score') or shot.get('calculated_score', 0)
+                    if shot_score and shot_score > 0:
+                        scores.append(shot_score)
+
+                if scores:
+                    avg_score = sum(scores) / len(scores)
+                    favorites.append({
+                        'type': 'bean_process',
+                        'item': {'name': process_name},
+                        'avg_score': round(avg_score, 1),
+                        'total_sessions': len(process_sessions),
+                        'total_shots': len(process_shots),
+                        'total_uses': len(process_sessions) + len(process_shots),
+                        'score_count': len(scores)
+                    })
+
+            # Sort by average score descending
+            favorites.sort(key=lambda x: x['avg_score'], reverse=True)
+
+            # Group by type and get top items per type
+            grouped_favorites = {}
+            for fav in favorites:
+                fav_type = fav['type']
+                if fav_type not in grouped_favorites:
+                    grouped_favorites[fav_type] = []
+                grouped_favorites[fav_type].append(fav)
+
+            # Limit to top 3 per category and require minimum usage
+            result = {}
+            min_uses = 3  # Minimum number of uses to be considered
+
+            for fav_type, items in grouped_favorites.items():
+                # Filter by minimum uses and take top 3
+                filtered_items = [item for item in items if item['total_uses'] >= min_uses]
+                result[fav_type] = filtered_items[:3]
+
+            return jsonify(result)
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
     return stats_bp
