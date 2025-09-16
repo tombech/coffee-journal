@@ -275,17 +275,64 @@ def create_stats_blueprint():
                 if dose_amount:
                     total_coffee_grams += dose_amount
             
+            # Calculate usage statistics
+            batch_repo = factory.get_batch_repository(user_id)
+            batch = batch_repo.find_by_id(batch_id)
+            batch_amount = batch.get('amount_grams', 0) if batch else 0
+
+            coffee_remaining = max(0, batch_amount - total_coffee_grams)
+
+            # Calculate sessions remaining estimate
+            total_uses = total_sessions + total_shots
+            sessions_remaining_estimate = 0
+            average_coffee_per_use = 0
+
+            if total_uses > 0:
+                average_coffee_per_use = total_coffee_grams / total_uses
+                if coffee_remaining > 0 and average_coffee_per_use > 0:
+                    sessions_remaining_estimate = int(coffee_remaining / average_coffee_per_use)
+
+            # Calculate rating breakdown from brew sessions
+            rating_breakdown = {
+                'overall': [],
+                'aroma': [],
+                'acidity': [],
+                'body': [],
+                'flavor': [],
+                'aftertaste': []
+            }
+
+            for session in batch_sessions:
+                for rating_type in rating_breakdown.keys():
+                    value = session.get(f'rating_{rating_type}')
+                    if value and isinstance(value, (int, float)):
+                        rating_breakdown[rating_type].append(value)
+
+            # Calculate averages for rating breakdown
+            for rating_type, values in rating_breakdown.items():
+                if values:
+                    rating_breakdown[rating_type] = {
+                        'avg': round(sum(values) / len(values), 1),
+                        'count': len(values),
+                        'min': min(values),
+                        'max': max(values)
+                    }
+                else:
+                    rating_breakdown[rating_type] = None
+
             return jsonify({
                 'total_brew_sessions': total_sessions,
                 'total_shots': total_shots,
-                'total_coffee_grams': total_coffee_grams,
+                'total_coffee_used': total_coffee_grams,
+                'coffee_remaining': coffee_remaining,
+                'sessions_remaining_estimate': sessions_remaining_estimate,
+                'average_coffee_per_use': round(average_coffee_per_use, 1) if average_coffee_per_use > 0 else 0,
                 'average_score': round(sum(scores) / len(scores), 1) if scores else 0,
                 'score_range': {
                     'min': round(min(scores), 1) if scores else 0,
                     'max': round(max(scores), 1) if scores else 0
                 },
-                'top_5_sessions': top_5,
-                'bottom_5_sessions': bottom_5
+                'rating_breakdown': rating_breakdown
             })
             
         except Exception as e:
