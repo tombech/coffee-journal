@@ -4,6 +4,15 @@ import BrewSessionTable from './BrewSessionTable';
 import ShotTable from './shots/ShotTable';
 import { apiFetch } from '../config';
 
+// Helper function to determine if a lookup type should show shot data
+function shouldShowShotData(filterType) {
+  // Only these equipment types are used in shots
+  const shotEquipmentTypes = [
+    'grinder', 'brewer', 'portafilter', 'basket', 'scale', 'recipe'
+  ];
+  return shotEquipmentTypes.includes(filterType);
+}
+
 function UsageStatistics({ 
   usageData, 
   statsData, 
@@ -33,19 +42,24 @@ function UsageStatistics({
         // Construct filter parameter based on type
         const filterParam = `${filterType}=${filterId}`;
         
-        const [
-          topSessionsResponse, bottomSessionsResponse, recentSessionsResponse,
-          topShotsResponse, bottomShotsResponse, recentShotsResponse
-        ] = await Promise.all([
-          // Brew sessions
+        // Always fetch brew sessions
+        const brewSessionPromises = [
           apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=score&sort_direction=desc`),
           apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=score&sort_direction=asc`),
-          apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`),
-          // Shots
+          apiFetch(`/brew_sessions?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`)
+        ];
+
+        // Only fetch shots for equipment types that are used in shots
+        const shotPromises = shouldShowShotData(filterType) ? [
           apiFetch(`/shots?${filterParam}&page_size=5&sort=calculated_score&sort_direction=desc`),
           apiFetch(`/shots?${filterParam}&page_size=5&sort=calculated_score&sort_direction=asc`),
           apiFetch(`/shots?${filterParam}&page_size=5&sort=timestamp&sort_direction=desc`)
-        ]);
+        ] : [];
+
+        const [
+          topSessionsResponse, bottomSessionsResponse, recentSessionsResponse,
+          ...shotResponses
+        ] = await Promise.all([...brewSessionPromises, ...shotPromises]);
         
         if (topSessionsResponse.ok && bottomSessionsResponse.ok && recentSessionsResponse.ok) {
           const topSessionsResult = await topSessionsResponse.json();
@@ -55,14 +69,23 @@ function UsageStatistics({
           setBottomSessions(bottomSessionsResult.data || []);
           setRecentSessions(recentSessionsResult.data || []);
         }
-        
-        if (topShotsResponse.ok && bottomShotsResponse.ok && recentShotsResponse.ok) {
-          const topShotsResult = await topShotsResponse.json();
-          const bottomShotsResult = await bottomShotsResponse.json();
-          const recentShotsResult = await recentShotsResponse.json();
-          setTopShots(topShotsResult.data || []);
-          setBottomShots(bottomShotsResult.data || []);
-          setRecentShots(recentShotsResult.data || []);
+
+        // Only process shot data if we fetched it
+        if (shouldShowShotData(filterType) && shotResponses.length === 3) {
+          const [topShotsResponse, bottomShotsResponse, recentShotsResponse] = shotResponses;
+          if (topShotsResponse.ok && bottomShotsResponse.ok && recentShotsResponse.ok) {
+            const topShotsResult = await topShotsResponse.json();
+            const bottomShotsResult = await bottomShotsResponse.json();
+            const recentShotsResult = await recentShotsResponse.json();
+            setTopShots(topShotsResult.data || []);
+            setBottomShots(bottomShotsResult.data || []);
+            setRecentShots(recentShotsResult.data || []);
+          }
+        } else {
+          // Clear shot data for non-shot equipment
+          setTopShots([]);
+          setBottomShots([]);
+          setRecentShots([]);
         }
       } catch (err) {
         console.error('Error fetching brew sessions and shots:', err);
