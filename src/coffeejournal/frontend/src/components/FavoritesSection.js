@@ -123,14 +123,14 @@ function FavoritesSection() {
       <h3 style={{
         marginBottom: '20px',
         color: '#2c3e50',
-        textAlign: 'center',
+        textAlign: 'left',
         fontSize: '24px',
         fontWeight: 'bold'
       }}>
         🌟 Your Favorites
       </h3>
       <p style={{
-        textAlign: 'center',
+        textAlign: 'left',
         color: '#666',
         marginBottom: '30px',
         fontSize: '16px'

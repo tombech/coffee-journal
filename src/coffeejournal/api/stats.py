@@ -1161,4 +1161,108 @@ def create_stats_blueprint():
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
+    @stats_bp.route('/home-summary', methods=['GET'])
+    def get_home_summary():
+        """Get summary statistics for the home page."""
+        try:
+            user_id = get_user_id_from_request()
+            factory = get_repository_factory()
+
+            # Get all repositories
+            product_repo = factory.get_product_repository(user_id)
+            batch_repo = factory.get_batch_repository(user_id)
+            brew_session_repo = factory.get_brew_session_repository(user_id)
+            shot_repo = factory.get_shot_repository(user_id)
+
+            # Get all data
+            all_products = product_repo.find_all()
+            all_batches = batch_repo.find_all()
+            all_sessions = brew_session_repo.find_all()
+            all_shots = shot_repo.find_all()
+
+            # Calculate product statistics
+            active_products = []
+            inactive_products = []
+
+            for product in all_products:
+                # Find active batches for this product
+                product_batches = [b for b in all_batches if b.get('product_id') == product['id']]
+                active_batches = [b for b in product_batches if b.get('is_active', True)]
+
+                if active_batches:
+                    active_products.append(product)
+                else:
+                    inactive_products.append(product)
+
+            # Calculate total grams used
+            total_grams_used = 0
+
+            # Calculate coffee used in brew sessions
+            for session in all_sessions:
+                coffee_amount = session.get('amount_coffee_grams', 0)
+                if coffee_amount:
+                    total_grams_used += coffee_amount
+
+            # Calculate coffee used in shots
+            for shot in all_shots:
+                dose_amount = shot.get('dose_grams', 0)
+                if dose_amount:
+                    total_grams_used += dose_amount
+
+            # Calculate total grams in inventory (active batches only)
+            total_grams_inventory = 0
+            total_grams_remaining = 0
+
+            for batch in all_batches:
+                if batch.get('is_active', True):
+                    batch_amount = batch.get('amount_grams', 0)
+                    if batch_amount:
+                        total_grams_inventory += batch_amount
+
+                        # Calculate remaining for this batch
+                        batch_id = batch['id']
+                        batch_sessions = [s for s in all_sessions if s.get('product_batch_id') == batch_id]
+                        batch_shots = [s for s in all_shots if s.get('product_batch_id') == batch_id]
+
+                        batch_used = 0
+                        for session in batch_sessions:
+                            coffee_amount = session.get('amount_coffee_grams', 0)
+                            if coffee_amount:
+                                batch_used += coffee_amount
+
+                        for shot in batch_shots:
+                            dose_amount = shot.get('dose_grams', 0)
+                            if dose_amount:
+                                batch_used += dose_amount
+
+                        batch_remaining = max(0, batch_amount - batch_used)
+                        total_grams_remaining += batch_remaining
+
+            # Calculate estimated sessions remaining
+            total_brewing_events = len(all_sessions) + len(all_shots)
+            estimated_sessions_remaining = 0
+            average_coffee_per_session = 0
+
+            if total_brewing_events > 0 and total_grams_used > 0:
+                average_coffee_per_session = total_grams_used / total_brewing_events
+                if total_grams_remaining > 0 and average_coffee_per_session > 0:
+                    estimated_sessions_remaining = int(total_grams_remaining / average_coffee_per_session)
+
+            return jsonify({
+                'products_with_active_batches': len(active_products),
+                'products_without_active_batches': len(inactive_products),
+                'total_products': len(all_products),
+                'total_brew_sessions': len(all_sessions),
+                'total_shots': len(all_shots),
+                'total_brewing_events': total_brewing_events,
+                'total_grams_used': round(total_grams_used, 1),
+                'total_grams_inventory': round(total_grams_inventory, 1),
+                'total_grams_remaining': round(total_grams_remaining, 1),
+                'average_coffee_per_session': round(average_coffee_per_session, 1) if average_coffee_per_session > 0 else 0,
+                'estimated_sessions_remaining': estimated_sessions_remaining
+            })
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
     return stats_bp

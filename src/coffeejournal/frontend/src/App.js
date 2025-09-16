@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './components/Home';
+import Favourites from './components/Favourites';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import ProductForm from './components/ProductForm';
@@ -46,6 +47,7 @@ function App() {
             <nav>
               <ul>
                 <li><Link to="/">Home</Link></li>
+                <li><Link to="/favourites">Favourites</Link></li>
                 <li><Link to="/brew-sessions">All brews</Link></li>
                 <li><Link to="/shots">All shots</Link></li>
                 <li><Link to="/shot-sessions">Shot sessions</Link></li>
@@ -57,6 +59,7 @@ function App() {
           <main className="App-main" data-testid="app-main">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/favourites" element={<Favourites />} />
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/new" element={<ProductForm />} />
               <Route path="/products/edit/:id" element={<ProductForm />} /> {/* For editing existing product */}
