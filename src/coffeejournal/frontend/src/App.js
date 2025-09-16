@@ -38,12 +38,13 @@ import VersionFooter from './components/VersionFooter';
 import './App.css'; // Import the CSS file
 
 function App() {
+
   return (
     <ToastProvider>
       <Router>
         <div className="App">
-          <header className="App-header">
-            <h1>My Coffee Journal</h1>
+          <header className="App-header-minimal">
+            <h1 style={{ fontSize: '1.6rem', fontWeight: '500', color: '#2c3e50' }}>My Coffee Journal</h1>
             <nav>
               <ul>
                 <li><Link to="/">Home</Link></li>
