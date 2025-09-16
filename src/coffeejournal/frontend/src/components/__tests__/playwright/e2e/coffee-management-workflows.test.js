@@ -84,8 +84,10 @@ test.describe('Coffee Management Workflows', () => {
       await page.getByRole('link', { name: /view.*batch/i }).first().click();
       await expect(page.locator('body')).toContainText('Batch Details');
       
-      // Create brew session from batch
-      await page.getByTestId('add-brew-session-btn').click();
+      // Create brew session from batch - extract batch ID from current URL
+      const currentUrl = page.url();
+      const batchId = currentUrl.match(/batches\/(\d+)/)?.[1];
+      await page.goto(`/brew-sessions/new?batch_id=${batchId}`);
       await expect(page.getByRole('heading', { name: /Add.*Brew.*Session/i })).toBeVisible();
       
       // Fill brew session form

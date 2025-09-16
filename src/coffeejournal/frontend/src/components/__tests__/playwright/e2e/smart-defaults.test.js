@@ -38,9 +38,7 @@ test.describe('Smart Defaults Functionality', () => {
     });
 
     // Create a brew session to establish usage pattern
-    await page.goto(`/batches/${scenario.batch.id}`);
-    
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
     
     // Wait for equipment options to load
@@ -63,7 +61,7 @@ test.describe('Smart Defaults Functionality', () => {
     await expect(page.locator('body')).toContainText(/created.*successfully|added.*successfully/i, { timeout: 2000 });
 
     // Now create another session - should have smart defaults applied
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
     
     // Check that smart defaults are applied (if implemented)
@@ -91,8 +89,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForTimeout(500);
 
     // Create a brew session to establish pattern
-    await page.goto(`/batches/${scenario.batch.id}`);
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -104,7 +101,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForURL(new RegExp(`/batches/${scenario.batch.id}`));
 
     // Now go to the general brew session page (if it exists) or create another from same batch
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -147,8 +144,7 @@ test.describe('Smart Defaults Functionality', () => {
     }
 
     // Create a brew session with different scale to establish usage pattern
-    await page.goto(`/batches/${scenario.batch.id}`);
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -176,7 +172,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForURL(new RegExp(`/batches/${scenario.batch.id}`));
 
     // Create another session - should use manual default, not the frequently used one
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -207,8 +203,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForTimeout(500);
 
     // Go to create brew session - should use first item as default
-    await page.goto(`/batches/${scenario.batch.id}`);
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -260,8 +255,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForTimeout(500);
 
     // Create usage pattern
-    await page.goto(`/batches/${scenario.batch.id}`);
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -273,7 +267,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForURL(new RegExp(`/batches/${scenario.batch.id}`));
 
     // Create another session - should have smart default applied
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -302,8 +296,7 @@ test.describe('Smart Defaults Functionality', () => {
 
     // Create multiple sessions with "Old Frequently Used" (simulating old usage)
     for (let i = 0; i < 3; i++) {
-      await page.goto(`/batches/${scenario.batch.id}`);
-      await page.getByTestId('add-brew-session-btn').click();
+      await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
       
       // Wait for form to load
       await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -316,7 +309,7 @@ test.describe('Smart Defaults Functionality', () => {
     }
 
     // Create one recent session with "Recent Grinder"
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });
@@ -328,7 +321,7 @@ test.describe('Smart Defaults Functionality', () => {
     await page.waitForURL(new RegExp(`/batches/${scenario.batch.id}`));
 
     // Now check which one is selected as default
-    await page.getByTestId('add-brew-session-btn').click();
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
     
     // Wait for form to load
     await expect(page.getByLabel(/coffee grams/i)).toBeVisible({ timeout: 2000 });

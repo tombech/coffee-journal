@@ -155,8 +155,7 @@ test.describe('Batch Management', () => {
     // Should show brew sessions section - target specific heading to avoid strict mode violations
     await expect(page.getByRole('heading', { name: /last.*5.*brew.*sessions/i })).toBeVisible();
     
-    // Should have add brew session button
-    await expect(page.getByRole('button', { name: /add.*brew.*session/i })).toBeVisible({ timeout: 2000 });
+    // The add brew session button has been removed, but brew sessions should still be visible
     
     // Our test brew session should be visible using semantic approach
     // Wait for brew sessions to load first (already checked above)

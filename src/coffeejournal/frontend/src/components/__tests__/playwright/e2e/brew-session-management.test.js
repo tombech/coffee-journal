@@ -67,12 +67,9 @@ test.describe('Brew Session Management', () => {
     // Create test scenario with batch
     const scenario = await testData.createTestScenario();
     
-    // Navigate to our test batch detail page
-    await page.goto(`/batches/${scenario.batch.id}`);
-    
-    // Click add brew session button using semantic selector
-    await page.getByRole('button', { name: /add.*brew.*session/i }).click();
-    
+    // Navigate directly to brew session form with batch ID
+    await page.goto(`/brew-sessions/new?batch_id=${scenario.batch.id}`);
+
     // Wait for form to appear
     await expect(page.getByLabel(/coffee.*grams/i)).toBeVisible({ timeout: 2000 });
     

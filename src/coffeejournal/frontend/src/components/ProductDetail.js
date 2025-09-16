@@ -17,6 +17,7 @@ function ProductDetail() {
   const { addToast } = useToast();
   const [product, setProduct] = useState(null);
   const [batches, setBatches] = useState([]);
+  const [batchStats, setBatchStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showBatchForm, setShowBatchForm] = useState(false);
@@ -79,9 +80,42 @@ function ProductDetail() {
       const data = await response.json();
       console.log('DEBUG: fetchBatches received data:', data);
       setBatches(data);
+
+      // Fetch stats for each batch
+      await fetchBatchStats(data);
     } catch (err) {
       setError("Failed to fetch batches: " + err.message);
       console.error("Error fetching batches:", err);
+    }
+  };
+
+  const fetchBatchStats = async (batchList) => {
+    try {
+      // Fetch stats for all batches in parallel
+      const statsPromises = batchList.map(async (batch) => {
+        try {
+          const response = await apiFetch(`/stats/batches/${batch.id}`);
+          if (response.ok) {
+            const stats = await response.json();
+            return { batchId: batch.id, stats };
+          }
+        } catch (err) {
+          console.warn(`Failed to fetch stats for batch ${batch.id}:`, err);
+        }
+        return { batchId: batch.id, stats: null };
+      });
+
+      const results = await Promise.all(statsPromises);
+
+      // Convert to object with batch ID as key
+      const statsMap = {};
+      results.forEach(({ batchId, stats }) => {
+        statsMap[batchId] = stats;
+      });
+
+      setBatchStats(statsMap);
+    } catch (err) {
+      console.warn('Failed to fetch batch stats:', err);
     }
   };
 
@@ -900,21 +934,45 @@ function ProductDetail() {
                     borderBottom: '2px solid #ddd',
                     fontWeight: 'bold'
                   }}>Price/Cup</th>
-                  <th style={{ 
-                    padding: '12px 8px', 
-                    textAlign: 'left', 
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
                     borderBottom: '2px solid #ddd',
                     fontWeight: 'bold'
                   }}>Rating</th>
-                  <th style={{ 
-                    padding: '12px 8px', 
-                    textAlign: 'left', 
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Total Uses</th>
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Usage</th>
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Uses Left</th>
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #ddd',
+                    fontWeight: 'bold'
+                  }}>Avg Score</th>
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
                     borderBottom: '2px solid #ddd',
                     fontWeight: 'bold'
                   }}>Seller</th>
-                  <th style={{ 
-                    padding: '12px 8px', 
-                    textAlign: 'left', 
+                  <th style={{
+                    padding: '12px 8px',
+                    textAlign: 'left',
                     borderBottom: '2px solid #ddd',
                     fontWeight: 'bold'
                   }}>Notes</th>
@@ -1005,6 +1063,71 @@ function ProductDetail() {
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
                       {batch.rating ? (
                         <StarRating rating={batch.rating} readOnly={true} maxRating={5} />
+                      ) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batchStats[batch.id] ? (
+                        <span style={{
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: '#e3f2fd',
+                          color: '#1976d2'
+                        }}>
+                          {(batchStats[batch.id].total_brew_sessions || 0) + (batchStats[batch.id].total_shots || 0)} uses
+                        </span>
+                      ) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batchStats[batch.id] ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div style={{ fontSize: '12px', color: '#666' }}>
+                            {Math.round(batchStats[batch.id].coffee_remaining || 0)}g left
+                          </div>
+                          <div style={{
+                            width: '80px',
+                            height: '6px',
+                            backgroundColor: '#e0e0e0',
+                            borderRadius: '3px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              width: `${Math.min(100, batch.amount_grams > 0 ? ((batchStats[batch.id].total_coffee_used || 0) / batch.amount_grams) * 100 : 0)}%`,
+                              height: '100%',
+                              backgroundColor: (batchStats[batch.id].coffee_remaining || 0) <= 0 ? '#f44336' : '#4caf50',
+                              transition: 'width 0.3s ease'
+                            }} />
+                          </div>
+                          <div style={{ fontSize: '10px', color: '#999' }}>
+                            {Math.round(batch.amount_grams > 0 ? ((batchStats[batch.id].total_coffee_used || 0) / batch.amount_grams) * 100 : 0)}% used
+                          </div>
+                        </div>
+                      ) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batchStats[batch.id] ? (
+                        <span style={{
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          backgroundColor: (batchStats[batch.id].sessions_remaining_estimate || 0) > 0 ? '#fff3e0' : '#ffebee',
+                          color: (batchStats[batch.id].sessions_remaining_estimate || 0) > 0 ? '#f57c00' : '#c62828'
+                        }}>
+                          {Math.round(batchStats[batch.id].sessions_remaining_estimate || 0)} uses
+                        </span>
+                      ) : '-'}
+                    </td>
+                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                      {batchStats[batch.id] && batchStats[batch.id].average_score > 0 ? (
+                        <span style={{
+                          fontWeight: 'bold',
+                          color: batchStats[batch.id].average_score >= 7 ? '#4caf50' :
+                                batchStats[batch.id].average_score >= 5 ? '#ff9800' : '#f44336'
+                        }}>
+                          {batchStats[batch.id].average_score.toFixed(1)}
+                        </span>
                       ) : '-'}
                     </td>
                     <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>

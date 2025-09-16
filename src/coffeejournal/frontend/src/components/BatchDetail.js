@@ -16,11 +16,14 @@ function BatchDetail() {
   const isEditMode = location.pathname.includes('/edit');
   const [batch, setBatch] = useState(null);
   const [product, setProduct] = useState(null);
-  const [statistics, setStatistics] = useState(null);
+  const [pricePerCup, setPricePerCup] = useState(null);
   const [batchStats, setBatchStats] = useState(null);
   const [topBrewSessions, setTopBrewSessions] = useState([]);
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
   const [recentBrewSessions, setRecentBrewSessions] = useState([]);
+  const [topShots, setTopShots] = useState([]);
+  const [bottomShots, setBottomShots] = useState([]);
+  const [recentShots, setRecentShots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -29,6 +32,7 @@ function BatchDetail() {
     fetchBatchDetail();
     fetchBatchStats();
     fetchBrewSessions();
+    fetchShots();
   }, [id]);
 
   const fetchBatchDetail = async () => {
@@ -41,7 +45,7 @@ function BatchDetail() {
       const data = await response.json();
       setBatch(data.batch);
       setProduct(data.product);
-      setStatistics(data.statistics);
+      setPricePerCup(data.price_per_cup);
     } catch (err) {
       setError("Failed to fetch batch details: " + err.message);
       console.error("Error fetching batch details:", err);
@@ -71,20 +75,45 @@ function BatchDetail() {
         apiFetch(`/brew_sessions?batch_id=${id}&page_size=5&sort=score&sort_direction=asc`),   // Bottom 5 by score
         apiFetch(`/brew_sessions?batch_id=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 by timestamp
       ]);
-      
+
       if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
         const [topResult, bottomResult, recentResult] = await Promise.all([
           topResponse.json(),
           bottomResponse.json(),
           recentResponse.json()
         ]);
-        
+
         setTopBrewSessions(topResult.data || []);
         setBottomBrewSessions(bottomResult.data || []);
         setRecentBrewSessions(recentResult.data || []);
       }
     } catch (err) {
       console.warn(`Failed to fetch brew sessions for batch: ${err.message}`);
+    }
+  };
+
+  const fetchShots = async () => {
+    try {
+      // Fetch top, bottom, and recent shots for this batch
+      const [topResponse, bottomResponse, recentResponse] = await Promise.all([
+        apiFetch(`/shots?product_batch_id=${id}&page_size=5&sort=overall_score&sort_direction=desc`), // Top 5 by score
+        apiFetch(`/shots?product_batch_id=${id}&page_size=5&sort=overall_score&sort_direction=asc`),   // Bottom 5 by score
+        apiFetch(`/shots?product_batch_id=${id}&page_size=5&sort=timestamp&sort_direction=desc`) // Recent 5 by timestamp
+      ]);
+
+      if (topResponse.ok && bottomResponse.ok && recentResponse.ok) {
+        const [topResult, bottomResult, recentResult] = await Promise.all([
+          topResponse.json(),
+          bottomResponse.json(),
+          recentResponse.json()
+        ]);
+
+        setTopShots(topResult.data || []);
+        setBottomShots(bottomResult.data || []);
+        setRecentShots(recentResult.data || []);
+      }
+    } catch (err) {
+      console.warn(`Failed to fetch shots for batch: ${err.message}`);
     }
   };
 
@@ -260,7 +289,7 @@ function BatchDetail() {
           <span>{batch.price != null && !isNaN(batch.price) ? `${Math.round(Number(batch.price))} kr` : '-'}</span>
           
           <strong>Price per Cup:</strong>
-          <span data-testid="price-per-cup">{statistics?.price_per_cup != null && !isNaN(statistics.price_per_cup) ? `${Math.round(Number(statistics.price_per_cup))} kr` : '-'}</span>
+          <span data-testid="price-per-cup">{pricePerCup != null && !isNaN(pricePerCup) ? `${Math.round(Number(pricePerCup))} kr` : '-'}</span>
           
           <strong>Seller:</strong>
           <span>{batch.seller || '-'}</span>
@@ -287,20 +316,23 @@ function BatchDetail() {
       </div>
 
       {/* Usage Statistics */}
-      <UsageStatistics 
+      <UsageStatistics
         statsData={{
           ...batchStats,
           top_5_sessions: topBrewSessions,
           bottom_5_sessions: bottomBrewSessions,
-          recent_5_sessions: recentBrewSessions
+          recent_5_sessions: recentBrewSessions,
+          top_5_shots: topShots,
+          bottom_5_shots: bottomShots,
+          recent_5_shots: recentShots
         }}
         itemName="batch"
         showProduct={false}
-        customStatistics={statistics && (
+        customStatistics={batchStats && (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(statistics.total_brew_sessions)}</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(batchStats?.total_brew_sessions || 0)}</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Brew Sessions</div>
               </div>
               
@@ -310,26 +342,31 @@ function BatchDetail() {
               </div>
               
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(batchStats?.total_coffee_grams || statistics.total_coffee_used)}g</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>{Math.round(batchStats?.total_coffee_used || 0)}g</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Coffee Used (All)</div>
               </div>
-              
+
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{Math.round(statistics.coffee_remaining)}g</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>{Math.round(batchStats?.coffee_remaining || 0)}g</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Remaining</div>
               </div>
-              
+
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff9800' }}>{Math.round(statistics.sessions_remaining_estimate)}</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff9800' }}>{Math.round(batchStats?.sessions_remaining_estimate || 0)}</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Est. Sessions Left</div>
               </div>
-              
-              {statistics.avg_rating && (
+
+              {batchStats?.average_score && batchStats.average_score > 0 && (
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
-                    <StarRating rating={statistics.avg_rating} readOnly={true} maxRating={5} />
+                  <div style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    color: batchStats.average_score >= 7 ? '#4caf50' :
+                           batchStats.average_score >= 5 ? '#ff9800' : '#f44336'
+                  }}>
+                    {batchStats.average_score.toFixed(1)}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>Avg Rating</div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>Avg Score</div>
                 </div>
               )}
             </div>
@@ -338,19 +375,19 @@ function BatchDetail() {
             {batch.amount_grams > 0 && (
               <div style={{ marginTop: '20px' }}>
                 <div style={{ fontSize: '14px', marginBottom: '5px', color: '#666' }}>
-                  Usage Progress ({Math.round(batchStats?.total_coffee_grams || statistics.total_coffee_used)}g of {Math.round(batch.amount_grams)}g used)
+                  Usage Progress ({Math.round(batchStats?.total_coffee_used || 0)}g of {Math.round(batch.amount_grams)}g used)
                 </div>
-                <div style={{ 
-                  width: '100%', 
-                  height: '8px', 
-                  backgroundColor: '#e0e0e0', 
+                <div style={{
+                  width: '100%',
+                  height: '8px',
+                  backgroundColor: '#e0e0e0',
                   borderRadius: '4px',
                   overflow: 'hidden'
                 }}>
-                  <div style={{ 
-                    width: `${Math.min(100, ((batchStats?.total_coffee_grams || statistics.total_coffee_used) / batch.amount_grams) * 100)}%`, 
-                    height: '100%', 
-                    backgroundColor: statistics.coffee_remaining <= 0 ? '#f44336' : '#4caf50',
+                  <div style={{
+                    width: `${Math.min(100, ((batchStats?.total_coffee_used || 0) / batch.amount_grams) * 100)}%`,
+                    height: '100%',
+                    backgroundColor: (batchStats?.coffee_remaining || 0) <= 0 ? '#f44336' : '#4caf50',
                     transition: 'width 0.3s ease'
                   }} />
                 </div>
@@ -360,32 +397,6 @@ function BatchDetail() {
         )}
       />
 
-      {/* Add Brew Session */}
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <button
-          onClick={() => navigate(`/brew-sessions/new?batch_id=${id}`)}
-          title="Add Brew Session"
-          aria-label="Add Brew Session"
-          data-testid="add-brew-session-btn"
-          style={{
-            padding: '12px 20px',
-            background: 'none',
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            margin: '0 auto'
-          }}
-        >
-          {ICONS.CREATE} Add New Brew Session
-        </button>
-      </div>
-
-      
       {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal
         isOpen={showDeleteModal}

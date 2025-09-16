@@ -77,8 +77,7 @@ test.describe('Specialized Features', () => {
       });
       
       // Navigate to brew session creation to test half-star ratings
-      await page.goto(`/batches/${batch.id}`);
-      await page.getByTestId('add-brew-session-btn').click();
+      await page.goto(`/brew-sessions/new?batch_id=${batch.id}`);
       
       await expect(page.getByRole('heading', { name: /Add.*Brew.*Session/i })).toBeVisible();
       
