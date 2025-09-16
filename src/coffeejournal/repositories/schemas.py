@@ -58,7 +58,15 @@ SCHEMAS = {
             "decaf": {"type": "boolean"},
             "decaf_method_id": {"type": ["integer", "null"]},
             "rating": {"type": ["number", "null"], "minimum": 0, "maximum": 5, "multipleOf": 0.5},
-            "bean_process": {"type": ["string", "null"]},
+            "bean_process": {
+                "type": ["array", "null"],
+                "items": {
+                    "type": "string",
+                    "enum": ["Washed (wet)", "Natural (dry)", "Honey", "Semi-washed (wet-hulled)", "Anaerobic", "Carbonic Maceration", "Other"]
+                },
+                "uniqueItems": True,
+                "default": []
+            },
             "notes": {"type": ["string", "null"]},
             "created_at": {"type": "string", "format": "date-time"},
             "updated_at": {"type": "string", "format": "date-time"}
