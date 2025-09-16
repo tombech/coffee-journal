@@ -219,6 +219,17 @@ def _load_migration_modules(manager: MigrationManager):
         from . import migration_1_4_to_1_5
         if "1.4->1.5" not in manager.migrations:
             manager.migrations["1.4->1.5"] = migration_1_4_to_1_5.migrate_v1_4_to_v1_5
-            
+
+        # Load v1_5_to_v1_6 migration (Bean Process Multiselect)
+        try:
+            from . import migration_1_5_to_1_6
+            if "1.5->1.6" not in manager.migrations:
+                manager.migrations["1.5->1.6"] = migration_1_5_to_1_6.migrate_v1_5_to_v1_6
+                logger.info("Successfully loaded 1.5->1.6 migration")
+            else:
+                logger.info("1.5->1.6 migration already registered")
+        except ImportError as e:
+            logger.error(f"Failed to load 1.5->1.6 migration: {e}")
+
     except ImportError as e:
         logger.warning(f"Could not load migration module: {e}")
