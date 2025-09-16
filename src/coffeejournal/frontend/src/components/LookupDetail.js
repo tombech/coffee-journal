@@ -46,7 +46,7 @@ function formatFieldValue(value, fieldName) {
 // Helper function to determine if a field should be displayed
 function shouldDisplayField(fieldName, value) {
   // Skip these fields
-  const skipFields = ['id', 'created_at', 'updated_at'];
+  const skipFields = ['id', 'created_at', 'updated_at', 'is_default'];
   if (skipFields.includes(fieldName)) return false;
 
   // Skip empty values
@@ -310,6 +310,28 @@ function LookupDetail({ type, singularName, pluralName }) {
         >
           {ICONS.BACK}
         </button>
+      </div>
+
+      {/* Default Status */}
+      <div style={{
+        marginBottom: '20px',
+        padding: '12px 16px',
+        backgroundColor: item.is_default ? '#fff3cd' : '#f8f9fa',
+        borderRadius: '8px',
+        border: item.is_default ? '2px solid #ffc107' : '1px solid #dee2e6',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}>
+        <span style={{ fontSize: '18px' }}>
+          {item.is_default ? '⭐' : '☆'}
+        </span>
+        <span style={{
+          fontWeight: item.is_default ? 'bold' : 'normal',
+          color: item.is_default ? '#856404' : '#666'
+        }}>
+          {item.is_default ? 'This is the default selection' : 'Not set as default'}
+        </span>
       </div>
 
       {/* Item Details */}
