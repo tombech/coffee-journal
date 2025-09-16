@@ -6,6 +6,58 @@ import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import UsageStatistics from './UsageStatistics';
 
+// Helper function to format field names for display
+function formatFieldName(fieldName) {
+  // Convert snake_case to Title Case
+  return fieldName
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+// Helper function to format field values for display
+function formatFieldValue(value, fieldName) {
+  if (value === null || value === undefined) return null;
+
+  // Handle boolean values
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
+  }
+
+  // Handle URLs
+  if (fieldName === 'url' || fieldName === 'product_url') {
+    return <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>;
+  }
+
+  // Handle arrays (join with commas)
+  if (Array.isArray(value)) {
+    return value.join(', ');
+  }
+
+  // Handle multiline text (preserve line breaks)
+  if (typeof value === 'string' && (fieldName === 'notes' || fieldName === 'instructions' || fieldName === 'description')) {
+    return <span style={{ whiteSpace: 'pre-wrap' }}>{value}</span>;
+  }
+
+  // Default: return as string
+  return String(value);
+}
+
+// Helper function to determine if a field should be displayed
+function shouldDisplayField(fieldName, value) {
+  // Skip these fields
+  const skipFields = ['id', 'created_at', 'updated_at'];
+  if (skipFields.includes(fieldName)) return false;
+
+  // Skip empty values
+  if (value === null || value === undefined || value === '') return false;
+
+  // Skip empty arrays
+  if (Array.isArray(value) && value.length === 0) return false;
+
+  return true;
+}
+
 // Helper function to map lookup types to brew_sessions API filter parameter names
 function getFilterType(lookupType) {
   const typeMap = {
@@ -263,41 +315,17 @@ function LookupDetail({ type, singularName, pluralName }) {
       {/* Item Details */}
       <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px 15px', alignItems: 'start' }}>
-          <strong>Name:</strong>
-          <span>{item.name}</span>
-          
-          {item.short_form && (
-            <>
-              <strong>Short Form:</strong>
-              <span>{item.short_form}</span>
-            </>
-          )}
-          
-          {item.description && (
-            <>
-              <strong>Description:</strong>
-              <span>{item.description}</span>
-            </>
-          )}
-          
-          {item.url && (
-            <>
-              <strong>Website:</strong>
-              <span>
-                <a href={item.url} target="_blank" rel="noopener noreferrer">{item.url}</a>
-              </span>
-            </>
-          )}
-          
-          {item.notes && (
-            <>
-              <strong>Notes:</strong>
-              <span style={{ whiteSpace: 'pre-wrap' }}>{item.notes}</span>
-            </>
-          )}
-          
-          <strong>Default:</strong>
-          <span>{item.is_default ? 'Yes' : 'No'}</span>
+          {Object.entries(item)
+            .filter(([fieldName, value]) => shouldDisplayField(fieldName, value))
+            .map(([fieldName, value]) => {
+              const formattedValue = formatFieldValue(value, fieldName);
+              return (
+                <React.Fragment key={fieldName}>
+                  <strong>{formatFieldName(fieldName)}:</strong>
+                  <span>{formattedValue}</span>
+                </React.Fragment>
+              );
+            })}
         </div>
       </div>
 
