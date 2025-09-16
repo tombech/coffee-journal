@@ -219,34 +219,14 @@ function LookupDetail({ type, singularName, pluralName }) {
   return (
     <div>
       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <h2 
+        <h2
           id="item-title"
           data-testid="item-title"
-          style={{ 
-            margin: 0, 
-            marginRight: 'auto', 
-            position: 'relative',
-            padding: item.is_default ? '8px 12px' : '8px 0',
-            backgroundColor: item.is_default ? '#fff3cd' : 'transparent',
-            borderRadius: item.is_default ? '8px' : '0',
-            border: item.is_default ? '2px solid #ffc107' : 'none'
+          style={{
+            margin: 0,
+            marginRight: 'auto'
           }}>
-          {item.is_default && (
-            <span style={{ 
-              position: 'absolute',
-              top: '-8px',
-              right: '-8px',
-              fontSize: '20px',
-              color: '#ff9800',
-              textShadow: '0 0 3px rgba(0,0,0,0.3)'
-            }}>
-              {ICONS.DEFAULT}
-            </span>
-          )}
-          <span style={{ fontWeight: item.is_default ? 'bold' : 'normal' }}>
-            {item.name}
-          </span>
-          {item.is_default && <span style={{ marginLeft: '8px', fontSize: '12px', color: '#856404', fontStyle: 'italic' }}>Default</span>}
+          {item.name}
         </h2>
         <button 
           onClick={handleEdit}
