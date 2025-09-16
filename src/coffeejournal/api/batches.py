@@ -78,24 +78,32 @@ def get_batch_detail(batch_id):
     batch_repo = factory.get_batch_repository(user_id)
     product_repo = factory.get_product_repository(user_id)
     session_repo = factory.get_brew_session_repository(user_id)
-    
+    shot_repo = factory.get_shot_repository(user_id)
+
     batch = batch_repo.find_by_id(batch_id)
     if not batch:
         return jsonify({'error': 'Batch not found'}), 404
-    
+
     # Get product information
     product = product_repo.find_by_id(batch['product_id'])
     enriched_product = enrich_product_with_lookups(product, factory, user_id) if product else None
-    
-    # Get all brew sessions for this batch
+
+    # Get all brew sessions and shots for this batch
     sessions = session_repo.find_by_batch(batch_id)
+    shots = shot_repo.find_by_batch(batch_id)
     
     # Calculate statistics
+    # Include coffee from both brew sessions and shots
+    coffee_from_sessions = sum(s.get('amount_coffee_grams', 0) for s in sessions)
+    coffee_from_shots = sum(s.get('dose_grams', 0) for s in shots)
+    total_coffee_used = coffee_from_sessions + coffee_from_shots
+
     stats = {
         'total_brew_sessions': len(sessions),
-        'total_coffee_used': sum(s.get('amount_coffee_grams', 0) for s in sessions),
+        'total_shots': len(shots),
+        'total_coffee_used': total_coffee_used,
         'total_water_used': sum(s.get('amount_water_grams', 0) for s in sessions),
-        'coffee_remaining': max(0, batch.get('amount_grams', 0) - sum(s.get('amount_coffee_grams', 0) for s in sessions)),
+        'coffee_remaining': max(0, batch.get('amount_grams', 0) - total_coffee_used),
         'sessions_remaining_estimate': 0,
         'avg_rating': None,
         'rating_breakdown': {
@@ -109,10 +117,12 @@ def get_batch_detail(batch_id):
     }
     
     # Calculate sessions remaining estimate
-    if sessions and stats['coffee_remaining'] > 0:
-        avg_coffee_per_session = stats['total_coffee_used'] / len(sessions)
-        if avg_coffee_per_session > 0:
-            stats['sessions_remaining_estimate'] = int(stats['coffee_remaining'] / avg_coffee_per_session)
+    # Consider both brew sessions and shots for average consumption
+    total_uses = len(sessions) + len(shots)
+    if total_uses > 0 and stats['coffee_remaining'] > 0:
+        avg_coffee_per_use = stats['total_coffee_used'] / total_uses
+        if avg_coffee_per_use > 0:
+            stats['sessions_remaining_estimate'] = int(stats['coffee_remaining'] / avg_coffee_per_use)
     
     # Calculate rating statistics
     for session in sessions:

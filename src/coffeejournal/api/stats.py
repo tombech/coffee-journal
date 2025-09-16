@@ -234,7 +234,7 @@ def create_stats_blueprint():
             
             # Get all brew sessions for this batch
             all_sessions = brew_session_repo.find_all()
-            batch_sessions = [s for s in all_sessions if s.get('batch_id') == batch_id]
+            batch_sessions = [s for s in all_sessions if s.get('product_batch_id') == batch_id]
             
             # Get all shots for this batch
             all_shots = shot_repo.find_all()
