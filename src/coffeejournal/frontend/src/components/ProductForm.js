@@ -8,6 +8,7 @@ import BeanTypeMultiAutocomplete from './BeanTypeMultiAutocomplete';
 import CountryAutocomplete from './CountryAutocomplete';
 import RegionAutocomplete from './RegionAutocomplete';
 import InlineChipAutocomplete from './InlineChipAutocomplete';
+import BeanProcessMultiSelect from './BeanProcessMultiSelect';
 
 function ProductForm() {
   const { id } = useParams(); // Get ID from URL for edit mode
@@ -27,7 +28,7 @@ function ProductForm() {
     decaf: false,
     decaf_method: { id: null, name: '', isNew: false },
     rating: '',
-    bean_process: '',
+    bean_process: [],
     notes: ''
   });
   const [loading, setLoading] = useState(true);
@@ -85,7 +86,7 @@ function ProductForm() {
         decaf: data.decaf || false,
         decaf_method: data.decaf_method ? { id: data.decaf_method.id, name: data.decaf_method.name, isNew: false } : { id: null, name: '', isNew: false },
         rating: data.rating || '',
-        bean_process: data.bean_process || '',
+        bean_process: Array.isArray(data.bean_process) ? data.bean_process : (data.bean_process ? [data.bean_process] : []),
         notes: data.notes || ''
       });
     } catch (err) {
@@ -431,15 +432,13 @@ function ProductForm() {
               <label htmlFor="bean-process-input" style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '6px', color: '#495057' }}>
                 Bean Process
               </label>
-              <input
-                type="text"
+              <BeanProcessMultiSelect
                 id="bean-process-input"
-                name="bean_process"
                 value={formData.bean_process}
-                onChange={handleChange}
-                placeholder="e.g., Washed, Natural, Honey"
-                data-testid="bean-process-input"
-                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ced4da', borderRadius: '4px', fontSize: '14px' }}
+                onChange={(value) => setFormData(prev => ({ ...prev, bean_process: value }))}
+                placeholder="Select processing methods..."
+                data-testid="bean-process-multiselect"
+                aria-label="Bean Process"
               />
             </div>
             

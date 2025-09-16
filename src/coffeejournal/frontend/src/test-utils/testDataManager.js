@@ -230,7 +230,8 @@ class TestDataManager {
       roaster: `Test Roaster ${this.testId}`,  // Will be auto-created
       bean_type: ['Arabica'],  // Will be auto-created
       country: 'Colombia',  // Will be auto-created
-      region_id: []
+      region_id: [],
+      bean_process: []  // Initialize as empty array for multiselect
     });
     
     const batch = await this.createBatch(product.id, {
@@ -348,7 +349,8 @@ class TestDataManager {
       roaster: `Test Roaster ${this.testId}`,
       bean_type: ['Arabica'],
       country: 'Colombia',
-      region_id: []
+      region_id: [],
+      bean_process: []  // Initialize as empty array for multiselect
     });
     
     const batch = await this.createBatch(product.id, {

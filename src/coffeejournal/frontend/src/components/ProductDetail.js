@@ -616,7 +616,7 @@ function ProductDetail() {
           <span>{product.region?.map(r => r.name).join(', ') || '-'}</span>
           
           <strong>Bean Process:</strong>
-          <span>{product.bean_process || '-'}</span>
+          <span>{Array.isArray(product.bean_process) && product.bean_process.length > 0 ? product.bean_process.join(', ') : (product.bean_process || '-')}</span>
           
           <strong>Product Name:</strong>
           <span>{product.product_name || '-'}</span>
