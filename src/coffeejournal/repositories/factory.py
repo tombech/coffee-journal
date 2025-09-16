@@ -423,6 +423,19 @@ class RepositoryFactory:
                 raise NotImplementedError(f"Storage type {self.storage_type} not implemented")
         return self._repositories[key]
 
+    def invalidate_all_caches(self, user_id: Optional[str] = None):
+        """Invalidate all repository caches for a specific user or globally."""
+        if user_id:
+            # Invalidate caches for specific user
+            keys_to_invalidate = [key for key in self._repositories.keys() if key.endswith(f":{user_id}")]
+        else:
+            # Invalidate all repository caches
+            keys_to_invalidate = list(self._repositories.keys())
+
+        for key in keys_to_invalidate:
+            if key in self._repositories:
+                self._repositories[key].invalidate_cache()
+
 
 # Global factory instance
 _factory = None

@@ -157,6 +157,12 @@ def create_app(test_config=None):
 
             if migration_manager.run_migrations():
                 migration_logger.info("✅ Data migration completed successfully")
+
+                # Invalidate all repository caches to ensure updated schemas are used
+                from .repositories.factory import get_repository_factory
+                factory = get_repository_factory()
+                factory.invalidate_all_caches()
+                migration_logger.info("🔄 Repository caches invalidated after migration")
             else:
                 migration_logger.error("❌ Data migration failed - check logs for details")
         else:

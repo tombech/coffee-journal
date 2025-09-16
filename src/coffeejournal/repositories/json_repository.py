@@ -55,10 +55,11 @@ class JSONRepositoryBase(BaseRepository):
         return FileLock(str(self.lock_filepath), timeout=timeout)
     
     def invalidate_cache(self):
-        """Invalidate the in-memory cache, forcing a reload on next read."""
+        """Invalidate the in-memory cache and schema cache, forcing a reload on next read."""
         with self._thread_lock:
             self._cache = None
             self._cache_mtime = None
+            self._schema = None  # Also invalidate schema cache
     
     def _ensure_file_exists(self):
         """Create file with empty list if it doesn't exist (cross-process safe)."""
@@ -165,7 +166,7 @@ class JSONRepositoryBase(BaseRepository):
         if self._schema is None:
             self._schema = get_schema_for_entity(self.entity_name)
         return self._schema
-    
+
     def _validate_entity(self, entity: Dict[str, Any], skip_fields: List[str] = None) -> None:
         """Validate an entity against its schema."""
         if not self._enable_validation:
