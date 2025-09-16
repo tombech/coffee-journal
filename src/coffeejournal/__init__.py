@@ -46,8 +46,11 @@ def setup_logging(app, data_dir):
     # Set up migration logger
     migration_logger = logging.getLogger('coffeejournal.migrations')
     migration_logger.setLevel(logging.INFO)
-    migration_logger.addHandler(console_handler)
-    migration_logger.addHandler(file_handler)
+    # Only add handlers if not already present (avoid duplication)
+    if not migration_logger.handlers:
+        migration_logger.addHandler(console_handler)
+        migration_logger.addHandler(file_handler)
+    migration_logger.propagate = False  # Prevent duplicate logging
 
     app.logger.info(f"Logging initialized - Console and file: {log_file}")
     return migration_logger
@@ -112,6 +115,15 @@ def create_app(test_config=None):
         migration_logger.info(f"📋 Schema file location: {schema_file}")
         if not os.path.exists(schema_file):
             migration_logger.warning(f"⚠️  Schema file not found: {schema_file}")
+        else:
+            # Read and log schema file contents
+            try:
+                import json
+                with open(schema_file, 'r') as f:
+                    schema_content = json.load(f)
+                migration_logger.info(f"📄 Schema file content version: {schema_content.get('schema_version', 'unknown')}")
+            except Exception as e:
+                migration_logger.warning(f"⚠️  Could not read schema file: {e}")
 
         current_schema = migration_manager.get_current_schema_version()
         current_data = migration_manager.get_data_version()
@@ -120,6 +132,14 @@ def create_app(test_config=None):
         # Check available migrations
         available_migrations = list(migration_manager.migrations.keys())
         migration_logger.info(f"🔧 Available migrations: {available_migrations}")
+
+        # Log specific migration we're looking for
+        expected_migration = f"{current_data}->{current_schema}" if current_data != current_schema else "none needed"
+        migration_logger.info(f"🎯 Expected migration: {expected_migration}")
+
+        # Check if 1.5->1.6 migration is registered
+        if "1.5->1.6" not in available_migrations:
+            migration_logger.warning(f"⚠️  1.5->1.6 migration not found in registered migrations!")
 
         if migration_manager.needs_migration():
             migration_logger.info(f"🚀 Data migration required: {current_data} -> {current_schema}")
