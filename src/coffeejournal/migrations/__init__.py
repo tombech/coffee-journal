@@ -65,15 +65,54 @@ class MigrationManager:
     
     def get_migration_path(self, from_version: str, to_version: str) -> List[str]:
         """Get the sequence of migrations needed to go from one version to another."""
-        # For now, assume direct migrations only
-        # This could be enhanced to handle multi-step migrations
+        # Check for direct migration first
         migration_key = f"{from_version}->{to_version}"
         if migration_key in self.migrations:
             return [migration_key]
-        
-        # No migration path found
-        logger.warning(f"No migration path found from {from_version} to {to_version}")
-        return []
+
+        # Try to find a chained migration path
+        # Parse version numbers for sequential migration
+        try:
+            from_major, from_minor = map(int, from_version.split('.'))
+            to_major, to_minor = map(int, to_version.split('.'))
+
+            # Build sequential migration path
+            migration_path = []
+            current_version = from_version
+
+            while current_version != to_version:
+                # Find next available migration
+                next_migration = None
+                current_major, current_minor = map(int, current_version.split('.'))
+
+                # Look for the next sequential migration
+                for migration_key in self.migrations:
+                    if migration_key.startswith(f"{current_version}->"):
+                        target_version = migration_key.split('->', 1)[1]
+                        target_major, target_minor = map(int, target_version.split('.'))
+
+                        # Check if this migration moves us closer to target
+                        if (target_major > current_major or
+                            (target_major == current_major and target_minor > current_minor)):
+                            if (target_major < to_major or
+                                (target_major == to_major and target_minor <= to_minor)):
+                                next_migration = migration_key
+                                current_version = target_version
+                                break
+
+                if next_migration:
+                    migration_path.append(next_migration)
+                else:
+                    # No next step found
+                    logger.warning(f"No migration path found from {from_version} to {to_version}")
+                    return []
+
+            return migration_path
+
+        except (ValueError, IndexError):
+            # Fallback for non-numeric versions or parsing errors
+            logger.warning(f"No migration path found from {from_version} to {to_version}")
+            return []
     
     def run_migrations(self) -> bool:
         """Run all necessary migrations to bring data up to current schema version."""

@@ -141,7 +141,18 @@ function UsageStatistics({
                 </div>
               </div>
 
-              {/* Average Scores - will be added when backend stats are properly integrated */}
+              {/* Average Score from backend stats */}
+              {statsData && statsData.average_score > 0 && (
+                <div style={{ textAlign: 'center', marginBottom: '15px' }}>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff9800' }}>⭐ {statsData.average_score}</div>
+                  <div style={{ fontSize: '12px', color: '#666' }}>
+                    Average Score
+                    {statsData.score_range && (
+                      <span> (Range: {statsData.score_range.min} - {statsData.score_range.max})</span>
+                    )}
+                  </div>
+                </div>
+              )}
               
               {usageData.recent_usage && usageData.recent_usage.length > 0 && (
                 <div>

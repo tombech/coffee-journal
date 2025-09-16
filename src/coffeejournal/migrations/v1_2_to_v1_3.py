@@ -42,13 +42,18 @@ def migrate_1_2_to_1_3(data_dir: str):
         # Load required data
         products = load_json_file(data_dir, 'products.json')
         countries = load_json_file(data_dir, 'countries.json')
-        
+
+        # Skip migration if no data exists (fresh environment)
+        if not products and not countries:
+            print("Migration v1.2 -> v1.3 skipped - no data files found (fresh environment)")
+            return
+
         # Extract unique regions from products
         regions, region_name_to_id = extract_regions_from_products(products, countries)
-        
+
         # Create regions.json file
         create_regions_file(data_dir, regions)
-        
+
         # Update products to use region_id arrays and remove denormalized fields
         update_products_schema_compliance(data_dir, products, region_name_to_id)
         
@@ -82,6 +87,9 @@ def load_json_file(data_dir: str, filename: str) -> Any:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
+    except FileNotFoundError:
+        # Return empty list for missing files in fresh environments
+        return []
     except Exception as e:
         raise Exception(f"Failed to load {filename}: {e}")
 

@@ -123,7 +123,7 @@ class TestCleanDataValidation:
             "decaf": False,
             "decaf_method_id": None,
             "rating": 4.0,
-            "bean_process": "Washed",
+            "bean_process": ["Washed (wet)"],
             "notes": "",
             "created_at": "2025-07-13T17:48:09.552777+00:00",
             "updated_at": "2025-07-13T17:48:09.552777+00:00"
