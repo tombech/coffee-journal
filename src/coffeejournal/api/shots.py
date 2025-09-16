@@ -166,7 +166,7 @@ def get_all_shots():
         
         # Apply filters
         product_id = request.args.get('product_id', type=int)
-        batch_id = request.args.get('batch_id', type=int)
+        product_batch_id = request.args.get('product_batch_id', type=int)
         session_id = request.args.get('shot_session_id', type=int)
         brewer_id = request.args.get('brewer_id', type=int)
         extraction_status = request.args.get('extraction_status')
@@ -175,8 +175,8 @@ def get_all_shots():
         
         if product_id:
             shots = [s for s in shots if s.get('product_id') == product_id]
-        if batch_id:
-            shots = [s for s in shots if s.get('product_batch_id') == batch_id]
+        if product_batch_id:
+            shots = [s for s in shots if s.get('product_batch_id') == product_batch_id]
         if session_id:
             shots = [s for s in shots if s.get('shot_session_id') == session_id]
         if brewer_id:
