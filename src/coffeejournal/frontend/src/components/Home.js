@@ -557,13 +557,13 @@ function Home() {
                     {/* Left side - Product Info */}
                     <div style={{ flex: '1', paddingRight: '15px' }}>
                       <div style={{ marginTop: '5px', marginBottom: '5px' }}>
+                        <div style={{ marginBottom: '2px', fontSize: '13px', color: '#777' }}>
+                          {item.product.roaster?.name || 'Unknown Roaster'}
+                        </div>
                         <h4 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: 'bold' }}>
                           {item.product.product_name}
                         </h4>
                         <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
-                          <div style={{ marginBottom: '4px', fontSize: '13px', color: '#777' }}>
-                            {item.product.roaster?.name || 'Unknown Roaster'}
-                          </div>
                           <div style={{ marginBottom: '4px', color: '#666' }}>
                             <strong>{Array.isArray(item.product.bean_type) ? item.product.bean_type.map(bt => bt.name).join(', ') : 'Unknown'}</strong> • {item.product.country?.name || 'Unknown'}{Array.isArray(item.product.region) && item.product.region.length > 0 ? ` (${item.product.region.map(r => r.name).join(', ')})` : ''}
                           </div>
