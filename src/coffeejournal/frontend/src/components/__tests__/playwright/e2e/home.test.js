@@ -39,11 +39,14 @@ test.describe('Home Page', () => {
     await expect(page.getByRole('heading', { name: 'My Coffee Journal' })).toBeVisible({ timeout: 2000 });
     
     // Should show analytics sections when data exists using semantic approach
-    await expect(page.locator('body')).toContainText(/top.*brews/i, { timeout: 5000 });
-    await expect(page.locator('body')).toContainText(/recent.*brew.*sessions/i, { timeout: 5000 });
-    
+    await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('body')).toContainText(/brewing events/i, { timeout: 5000 });
+
+    // Should show inventory and stats sections that replaced top products
+    await expect(page.locator('body')).toContainText(/products.*active in inventory/i, { timeout: 5000 });
+    await expect(page.locator('body')).toContainText(/coffee used/i, { timeout: 5000 });
+
     // Should show our test data somewhere on the page using semantic approach
-    // Home page shows roaster and country in the "Top 5 Products" section, but not brew method
     await expect(page.locator('body')).toContainText(scenario.product.product_name);
     await expect(page.locator('body')).toContainText(scenario.roaster.name);
   });
@@ -83,25 +86,29 @@ test.describe('Home Page', () => {
 
   test('keyboard navigation works', async ({ page }) => {
     await page.goto('/');
-    
+
     // Should be able to tab through navigation (complete sequence)
     await page.keyboard.press('Tab');
-    
+
     const homeLink = page.getByRole('link', { name: /home/i });
     await expect(homeLink).toBeFocused();
-    
+
+    await page.keyboard.press('Tab');
+    const favouritesLink = page.getByRole('link', { name: /favourites/i });
+    await expect(favouritesLink).toBeFocused();
+
     await page.keyboard.press('Tab');
     const brewSessionsLink = page.getByRole('link', { name: /brew.*sessions|all.*brews/i });
     await expect(brewSessionsLink).toBeFocused();
-    
+
     await page.keyboard.press('Tab');
     const shotsLink = page.getByRole('link', { name: /all.*shots/i });
     await expect(shotsLink).toBeFocused();
-    
+
     await page.keyboard.press('Tab');
     const shotSessionsLink = page.getByRole('link', { name: /shot.*sessions/i });
     await expect(shotSessionsLink).toBeFocused();
-    
+
     await page.keyboard.press('Tab');
     const settingsLink = page.getByRole('link', { name: /settings/i });
     await expect(settingsLink).toBeFocused();

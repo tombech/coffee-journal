@@ -51,8 +51,8 @@ test.describe('View Icon Enhancement', () => {
     expect(productCardHeadingsWithViewIcon).toBe(0);
     
     // Verify the home page still functions correctly without view icons in product cards
-    await expect(page.getByRole('heading', { name: /Top 5 Products/i })).toBeVisible({ timeout: 5000 });
-    await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('body')).toContainText(/brewing events/i);
   });
 
   test('settings cards are clickable without view icons', async ({ page }) => {
@@ -76,7 +76,7 @@ test.describe('View Icon Enhancement', () => {
     
     // Wait for home page and analytics to load
     await expect(page.getByRole('heading', { name: /Recent Brew Sessions/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Top 5 Products/i })).toBeVisible();
+    await expect(page.locator('body')).toContainText(/brewing events/i);
     
     // Verify that view icons are NOT present in product links (they were explicitly removed)
     const productLinksWithViewIcon = await page.locator('a').filter({ has: page.locator('h4').filter({ hasText: /👁️/ }) }).count();
