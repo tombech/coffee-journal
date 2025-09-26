@@ -1,6 +1,6 @@
 """
 JSON Schema definitions for repository data validation.
-Auto-generated from schema_version.json v1.4
+Auto-generated from schema_version.json v1.7
 """
 
 # Base schema for all entities with audit fields
@@ -195,7 +195,30 @@ SCHEMAS = {
     
     # Lookup tables with standard schema
     "roasters": BASE_LOOKUP_SCHEMA,
-    "bean_types": BASE_LOOKUP_SCHEMA,
+    "bean_types": {
+        **BASE_LOOKUP_SCHEMA,
+        "properties": {
+            **BASE_LOOKUP_SCHEMA["properties"],
+            "main_species": {
+                "type": ["string", "null"],
+                "enum": ["arabica", "robusta", "liberica", None]
+            },
+            "flavor_profile": {"type": ["string", "null"]},
+            "origin_region": {"type": ["string", "null"]},
+            "caffeine_level": {
+                "type": ["string", "null"],
+                "enum": ["low", "medium", "high", None]
+            },
+            "cup_quality_potential": {
+                "type": ["string", "null"],
+                "enum": ["exceptional", "very_good", "good", "fair", None]
+            },
+            "bean_size": {
+                "type": ["string", "null"],
+                "enum": ["large", "medium", "small", None]
+            }
+        }
+    },
     "countries": BASE_LOOKUP_SCHEMA,
     "decaf_methods": BASE_LOOKUP_SCHEMA,
     "brew_methods": {

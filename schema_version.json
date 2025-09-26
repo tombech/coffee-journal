@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.6",
-  "created_date": "2025-09-16",
-  "description": "Bean process multiselect: converted bean_process from string to array of standardized processing methods.",
+  "schema_version": "1.7",
+  "created_date": "2025-09-26",
+  "description": "Enhanced bean types: added detailed variety characteristics including species, flavor profiles, origins, and quality indicators.",
   "entities": {
     "products": {
       "version": "1.3",
@@ -47,6 +47,7 @@
       "audit_fields": ["created_at", "updated_at"],
       "system_fields": ["is_default"],
       "extended_fields": {
+        "bean_types": ["main_species", "flavor_profile", "origin_region", "caffeine_level", "cup_quality_potential", "bean_size"],
         "grinders": ["brand", "grinder_type", "burr_material", "product_url", "manually_ground_grams"],
         "portafilters": ["size", "size_mm", "bottomless", "brand", "material", "handle_type"],
         "baskets": ["basket_type", "hole_count", "capacity_grams", "pressurized", "size", "brand", "material", "holes"],
@@ -103,5 +104,16 @@
     "standardized_processes": "Defined standard process types: Washed (wet), Natural (dry), Honey, Semi-washed (wet-hulled), Anaerobic, Carbonic Maceration, Other",
     "data_migration": "Automated migration of existing bean_process values to new multiselect format",
     "array_field": "Products can now have multiple processing methods to support bean blends"
+  },
+  "new_in_v1.7": {
+    "enhanced_bean_types": "Added comprehensive variety characteristics for detailed coffee bean tracking",
+    "species_classification": "Added main_species field with arabica, robusta, liberica categories",
+    "flavor_profiling": "Added flavor_profile field for detailed variety taste descriptions",
+    "origin_tracking": "Added origin_region field to track variety geographical origins",
+    "quality_indicators": "Added cup_quality_potential field with exceptional/very_good/good/fair levels",
+    "physical_characteristics": "Added bean_size and caffeine_level classifications",
+    "variety_enrichment": "Enriched database with 19 specialty coffee varieties including Geisha, Robusta, Pacamara",
+    "schema_validation": "Updated bean_types schema with enum validation for new classification fields",
+    "web_research": "Populated varieties with current specialty coffee market data from 2024 sources"
   }
 }
