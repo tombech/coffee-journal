@@ -8,6 +8,16 @@ function GrinderUsageChart({ grinderId }) {
   const [error, setError] = useState(null);
   const [grinderName, setGrinderName] = useState('');
 
+  // Helper function to format grams/kilograms
+  const formatWeight = (grams) => {
+    if (grams >= 1000) {
+      // Round to nearest 100g (0.1kg)
+      const kg = Math.round(grams / 100) / 10;
+      return `${kg}kg`;
+    }
+    return `${Math.round(grams)}g`;
+  };
+
   useEffect(() => {
     fetchUsageData();
   }, [grinderId]);
@@ -182,19 +192,19 @@ function GrinderUsageChart({ grinderId }) {
             </div>
             <div>
               <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#1976d2' }}>
-                {Math.round(chartData.reduce((sum, d) => sum + d.gramsGround, 0) / chartData.length)}g
+                {formatWeight(Math.round(chartData.reduce((sum, d) => sum + d.gramsGround, 0) / chartData.length))}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>Avg Daily</div>
             </div>
             <div>
               <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#2e7d32' }}>
-                {chartData[chartData.length - 1].cumulativeTotal}g
+                {formatWeight(chartData[chartData.length - 1].cumulativeTotal)}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>Total Ground</div>
             </div>
             <div>
               <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#d32f2f' }}>
-                {Math.max(...chartData.map(d => d.gramsGround))}g
+                {formatWeight(Math.max(...chartData.map(d => d.gramsGround)))}
               </div>
               <div style={{ fontSize: '12px', color: '#666' }}>Highest Day</div>
             </div>
