@@ -401,23 +401,17 @@ def get_grinder_usage_over_time(user_id, grinder_id):
                         date = timestamp[:10]  # YYYY-MM-DD format
                         daily_usage[date] += coffee_grams
 
-        # Process shots (espresso)
+        # Process shots (espresso) - shots have grinder_id directly
         for shot in all_shots:
-            # Shots don't have grinder_id directly, need to check via shot session
-            shot_session_id = shot.get('shot_session_id')
-            if shot_session_id:
-                # Get shot session to find grinder
-                shot_sessions_repo = factory.get_shot_session_repository(user_id)
-                shot_session = shot_sessions_repo.find_by_id(shot_session_id)
-                if shot_session and shot_session.get('grinder_id') == grinder_id:
-                    # Get the dose amount (grams ground)
-                    dose_grams = shot.get('dose_grams', 0)
-                    if dose_grams and dose_grams > 0:
-                        # Get date from timestamp
-                        timestamp = shot.get('timestamp', '')
-                        if timestamp:
-                            date = timestamp[:10]  # YYYY-MM-DD format
-                            daily_usage[date] += dose_grams
+            if shot.get('grinder_id') == grinder_id:
+                # Get the dose amount (grams ground)
+                dose_grams = shot.get('dose_grams', 0)
+                if dose_grams and dose_grams > 0:
+                    # Get date from timestamp
+                    timestamp = shot.get('timestamp', '')
+                    if timestamp:
+                        date = timestamp[:10]  # YYYY-MM-DD format
+                        daily_usage[date] += dose_grams
 
         # Convert to sorted list of daily usage
         usage_data = []
