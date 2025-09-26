@@ -526,28 +526,32 @@ function ScoresOverTimeChart({ grinderId }) {
           );
         })()}
 
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={getVisibleData()}
-            margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
-          >
-          <CartesianGrid strokeDasharray="2 2" stroke="#f0f0f0" />
-          <XAxis
-            dataKey="timeDisplay"
-            tick={{ fontSize: 12, angle: 0 }}
-            height={50}
-            interval={chartData.length > 20 ? Math.floor(chartData.length / 12) : chartData.length > 10 ? Math.floor(chartData.length / 8) : 0}
-            axisLine={{ stroke: '#ddd' }}
-            tickLine={{ stroke: '#ddd' }}
-          />
-          <YAxis
-            domain={[0, 10]}
-            ticks={[0, 2, 4, 6, 8, 10]}
-            label={{ value: 'Score', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
-            tick={{ fontSize: 12 }}
-            axisLine={{ stroke: '#ddd' }}
-            tickLine={{ stroke: '#ddd' }}
-          />
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              data={getVisibleData()}
+              margin={{ top: 20, right: 80, left: 60, bottom: 70 }}
+            >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#d0d0d0"
+              strokeWidth={1}
+            />
+            <XAxis
+              dataKey="timeDisplay"
+              tick={{ fontSize: 12, angle: 0 }}
+              height={50}
+              interval={chartData.length > 20 ? Math.floor(chartData.length / 12) : chartData.length > 10 ? Math.floor(chartData.length / 8) : 0}
+              axisLine={{ stroke: '#999', strokeWidth: 2 }}
+              tickLine={{ stroke: '#999', strokeWidth: 1 }}
+            />
+            <YAxis
+              domain={[0, 10]}
+              ticks={[0, 2, 4, 6, 8, 10]}
+              label={{ value: 'Score', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+              tick={{ fontSize: 12 }}
+              axisLine={{ stroke: '#999', strokeWidth: 2 }}
+              tickLine={{ stroke: '#999', strokeWidth: 1 }}
+            />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
 
@@ -599,6 +603,43 @@ function ScoresOverTimeChart({ grinderId }) {
 
         </LineChart>
       </ResponsiveContainer>
+
+      {/* Manual right Y-axis labels */}
+      <div style={{
+        position: 'absolute',
+        right: '55px',
+        top: '15px',
+        height: '250px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        fontSize: '12px',
+        color: '#666',
+        pointerEvents: 'none'
+      }}>
+        <span>10</span>
+        <span>8</span>
+        <span>6</span>
+        <span>4</span>
+        <span>2</span>
+        <span>0</span>
+      </div>
+
+      {/* Right Y-axis label */}
+      <div style={{
+        position: 'absolute',
+        right: '20px',
+        top: '40%',
+        transform: 'translateY(-50%) rotate(90deg)',
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal',
+        transformOrigin: 'center',
+        pointerEvents: 'none'
+      }}>
+        Score
+      </div>
       </div>
 
       <div style={{
