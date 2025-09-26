@@ -20,6 +20,16 @@ function GrinderDetail() {
   const [bottomBrewSessions, setBottomBrewSessions] = useState([]);
   const [recentBrewSessions, setRecentBrewSessions] = useState([]);
 
+  // Helper function to format grams/kilograms
+  const formatWeight = (grams) => {
+    if (grams >= 1000) {
+      // Round to nearest 100g (0.1kg)
+      const kg = Math.round(grams / 100) / 10;
+      return `${kg}kg`;
+    }
+    return `${Math.round(grams)}g`;
+  };
+
   useEffect(() => {
     fetchGrinderDetail();
   }, [id]);
@@ -289,21 +299,19 @@ function GrinderDetail() {
               
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
-                  {stats.total_kilos > 0 ? `${Math.round(stats.total_kilos)}kg` : `${Math.round(stats.total_grams_ground)}g`}
+                  {formatWeight(stats.total_grams_ground || stats.total_kilos * 1000)}
                 </div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Coffee Ground (All)</div>
               </div>
               
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{Math.round(stats.manually_ground_grams)}g</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#d32f2f' }}>{formatWeight(stats.manually_ground_grams)}</div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Manual Grinding</div>
               </div>
               
               <div style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
-                  {stats.total_grams_with_manual >= 1000 
-                    ? `${Math.round(stats.total_grams_with_manual / 1000)}kg` 
-                    : `${Math.round(stats.total_grams_with_manual)}g`}
+                  {formatWeight(stats.total_grams_with_manual)}
                 </div>
                 <div style={{ fontSize: '12px', color: '#666' }}>Total Ground</div>
               </div>
