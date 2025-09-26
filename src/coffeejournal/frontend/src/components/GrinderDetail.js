@@ -6,6 +6,7 @@ import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import UsageStatistics from './UsageStatistics';
 import ScoresOverTimeChart from './ScoresOverTimeChart';
+import GrinderUsageChart from './GrinderUsageChart';
 
 function GrinderDetail() {
   const { id } = useParams();
@@ -277,6 +278,9 @@ function GrinderDetail() {
 
       {/* Scores Over Time Chart */}
       <ScoresOverTimeChart grinderId={id} />
+
+      {/* Daily Usage Chart */}
+      <GrinderUsageChart grinderId={id} />
 
       {/* Usage Statistics */}
       <UsageStatistics

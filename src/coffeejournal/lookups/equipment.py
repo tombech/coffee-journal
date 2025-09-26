@@ -367,6 +367,74 @@ def get_grinder_scores_over_time(user_id, grinder_id):
         return jsonify({'error': str(e)}), 500
 
 
+@equipment_bp.route('/grinders/<int:grinder_id>/usage-over-time', methods=['GET'])
+@validate_user_context
+def get_grinder_usage_over_time(user_id, grinder_id):
+    """Get daily usage (grams ground) over time for a specific grinder."""
+    try:
+        from collections import defaultdict
+        from datetime import datetime
+
+        factory = get_repository_factory()
+        grinder = factory.get_grinder_repository(user_id).find_by_id(grinder_id)
+        if not grinder:
+            return jsonify({'error': 'Grinder not found'}), 404
+
+        # Get all brew sessions and shots for this grinder
+        brew_sessions_repo = factory.get_brew_session_repository(user_id)
+        shots_repo = factory.get_shot_repository(user_id)
+        all_sessions = brew_sessions_repo.find_all()
+        all_shots = shots_repo.find_all()
+
+        # Filter sessions for this grinder and group by date
+        daily_usage = defaultdict(float)
+
+        # Process brew sessions
+        for session in all_sessions:
+            if session.get('grinder_id') == grinder_id:
+                # Get the coffee amount (grams ground)
+                coffee_grams = session.get('amount_coffee_grams', 0)
+                if coffee_grams and coffee_grams > 0:
+                    # Get date from timestamp
+                    timestamp = session.get('timestamp', '')
+                    if timestamp:
+                        date = timestamp[:10]  # YYYY-MM-DD format
+                        daily_usage[date] += coffee_grams
+
+        # Process shots (espresso)
+        for shot in all_shots:
+            # Shots don't have grinder_id directly, need to check via shot session
+            shot_session_id = shot.get('shot_session_id')
+            if shot_session_id:
+                # Get shot session to find grinder
+                shot_sessions_repo = factory.get_shot_session_repository(user_id)
+                shot_session = shot_sessions_repo.find_by_id(shot_session_id)
+                if shot_session and shot_session.get('grinder_id') == grinder_id:
+                    # Get the dose amount (grams ground)
+                    dose_grams = shot.get('dose_grams', 0)
+                    if dose_grams and dose_grams > 0:
+                        # Get date from timestamp
+                        timestamp = shot.get('timestamp', '')
+                        if timestamp:
+                            date = timestamp[:10]  # YYYY-MM-DD format
+                            daily_usage[date] += dose_grams
+
+        # Convert to sorted list of daily usage
+        usage_data = []
+        for date, grams in sorted(daily_usage.items()):
+            usage_data.append({
+                'date': date,
+                'grams_ground': round(grams, 1)
+            })
+
+        return jsonify({
+            'grinder_name': grinder.get('name', 'Unknown'),
+            'data': usage_data
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # ==================== FILTERS ====================
 
 @equipment_bp.route('/filters', methods=['GET'])
