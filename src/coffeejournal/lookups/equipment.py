@@ -288,10 +288,81 @@ def get_grinder_stats(user_id, grinder_id):
         grinder = factory.get_grinder_repository(user_id).find_by_id(grinder_id)
         if not grinder:
             return jsonify({'error': 'Grinder not found'}), 404
-        
+
         repo = factory.get_grinder_repository(user_id)
         stats = repo.get_usage_stats(grinder_id)
         return jsonify(stats)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@equipment_bp.route('/grinders/<int:grinder_id>/scores-over-time', methods=['GET'])
+@validate_user_context
+def get_grinder_scores_over_time(user_id, grinder_id):
+    """Get brew session scores over time for a specific grinder."""
+    try:
+        from ..api.utils import enrich_brew_session_with_lookups
+
+        factory = get_repository_factory()
+        grinder = factory.get_grinder_repository(user_id).find_by_id(grinder_id)
+        if not grinder:
+            return jsonify({'error': 'Grinder not found'}), 404
+
+        # Get all brew sessions for this grinder sorted by timestamp
+        brew_sessions_repo = factory.get_brew_session_repository(user_id)
+        all_sessions = brew_sessions_repo.find_all()
+
+        # Filter sessions for this grinder and sort by timestamp
+        grinder_sessions = [s for s in all_sessions if s.get('grinder_id') == grinder_id]
+        grinder_sessions.sort(key=lambda x: x.get('timestamp', ''))
+
+        # Build scores over time data
+        scores_data = []
+        for session in grinder_sessions:
+            # Enrich session with lookup data first to get calculated_score
+            enriched_session = enrich_brew_session_with_lookups(session.copy(), factory, user_id)
+
+            # Check if session has a calculated score
+            calculated_score = enriched_session.get('calculated_score')
+            if calculated_score is not None and calculated_score > 0:
+                # Get product name - try multiple sources
+                product_name = 'Unknown'
+
+                # First try product_details if already enriched
+                if enriched_session.get('product_details') and enriched_session['product_details'].get('product_name'):
+                    product_name = enriched_session['product_details']['product_name']
+
+                # Fallback to direct product lookup via batch
+                elif enriched_session.get('product_batch_id'):
+                    batch = factory.get_batch_repository(user_id).find_by_id(enriched_session['product_batch_id'])
+                    if batch and batch.get('product_id'):
+                        product = factory.get_product_repository(user_id).find_by_id(batch['product_id'])
+                        if product:
+                            product_name = product.get('name', 'Unknown')
+
+                # Another fallback via direct product_id
+                elif enriched_session.get('product_id'):
+                    product = factory.get_product_repository(user_id).find_by_id(enriched_session['product_id'])
+                    if product:
+                        product_name = product.get('name', 'Unknown')
+
+                # Get brew method name
+                brew_method_name = 'Unknown'
+                if enriched_session.get('brew_method') and enriched_session['brew_method']:
+                    brew_method_name = enriched_session['brew_method'].get('name', 'Unknown')
+
+                scores_data.append({
+                    'date': enriched_session.get('timestamp', '')[:10],  # YYYY-MM-DD format
+                    'timestamp': enriched_session.get('timestamp', ''),
+                    'score': calculated_score,
+                    'product_name': product_name,
+                    'brew_method': brew_method_name
+                })
+
+        return jsonify({
+            'grinder_name': grinder.get('name', 'Unknown'),
+            'data': scores_data
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -5,6 +5,7 @@ import { apiFetch } from '../config';
 import { ICONS } from '../config/icons';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import UsageStatistics from './UsageStatistics';
+import ScoresOverTimeChart from './ScoresOverTimeChart';
 
 function GrinderDetail() {
   const { id } = useParams();
@@ -274,8 +275,11 @@ function GrinderDetail() {
         </div>
       </div>
 
+      {/* Scores Over Time Chart */}
+      <ScoresOverTimeChart grinderId={id} />
+
       {/* Usage Statistics */}
-      <UsageStatistics 
+      <UsageStatistics
         statsData={{
           ...stats,
           top_5_sessions: topBrewSessions,
